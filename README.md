@@ -29,7 +29,6 @@ It will also attempt to expand on the previously mentioned gamification elements
    by the [osu!](https://osu.ppy.sh/help/wiki/FAQ) Performance Points system)
 
 ## Potential setbacks
- - copyright infringement
- - formatting: 
+ - copyright infringement - a lot of books and publications are subjects of copyright, which may have a severe impact on the amount and range of books <code>typelonger</code> can use as source material
 
 
