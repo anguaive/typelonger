@@ -1,0 +1,79 @@
+@font-face {
+    font-family: 'Fixedsys';
+    font-weight: normal;
+    font-style: normal;
+    src: url(fsex300.woff2) format('woff2');
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+    font-size: 16px;
+    line-height: 1.1;
+}
+
+:root {
+    --watermark-font-size: 5rem;
+    --watermark-height: 120px;
+    --watermark-color: #dddddd;
+    --accent-color: #ffbb00;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#watermark {
+    color: var(--watermark-color);
+    font-family: Fixedsys;
+    position: absolute;
+    height: var(--watermark-height);
+    transform: translateX(-50%) rotate(-90deg);
+    top: calc(50vh - var(--watermark-height) / 2);
+    left: calc(100vw - var(--watermark-font-size) / 2);
+    font-size: var(--watermark-font-size);
+}
+
+#menu {
+    font-family: Fixedsys;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+#menu li {
+    padding: 32px 32px 0 32px;
+    font-size: 2rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+}
+
+#menu li > a:hover,
+#menu li > a:focus {
+    color: var(--accent-color);
+    transform: translateY(-0.2rem);
+    transition-property: color, transform;
+    transition: 0.2s ease;
+    outline: none;
+}
+
+#menu li > a:active {
+    transform: translateY(-1rem) scale(2);
+    color: transparent;
+}
+
+#menu li > a {
+    display: inline-block;
+    text-decoration-line: none;
+    color: #000;
+}

@@ -1,9 +1,14 @@
 import React from 'react';
+import './App.css';
+import Menu from './Menu';
 
 function App() {
-  return (
-    <h1>typelonger</h1>
-  );
+    return (
+        <>
+            <span id="watermark">typelonger</span>
+            <Menu />
+        </>
+    );
 }
 
 export default App;
