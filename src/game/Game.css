@@ -1,0 +1,56 @@
+#game {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 360px auto 360px;
+    grid-template-rows: 75% auto;
+    grid-template-areas:
+        'quick-stats text-area scorebar'
+        'detailed-stats detailed-stats detailed-stats';
+}
+
+#scorebar {
+    background-color: grey;
+    grid-area: scorebar;
+}
+
+#detailed-stats {
+    background-color: green;
+    grid-area: detailed-stats;
+}
+
+#quick-stats {
+    grid-area: quick-stats;
+}
+
+#quick-stats > .stats-container {
+    font-family: Fixedsys;
+    margin: 2rem auto 0 auto;
+    width: fit-content;
+}
+
+.stats-container > .time {
+    font-size: 3rem;
+}
+
+.stats-container > .wpm,
+.stats-container > .acc {
+    font-size: 2rem;
+}
+
+.pale {
+    opacity: 0.2;
+}
+
+.hidden {
+    display: none;
+}
+
+#text-area {
+    background-color: yellow;
+    grid-area: text-area;
+}
+
+.unit {
+    font-size: 1.2rem;
+    color: grey;
+}
