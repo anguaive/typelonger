@@ -9,12 +9,12 @@
 }
 
 #scorebar {
-    background-color: grey;
+    border: 1px solid grey;
     grid-area: scorebar;
 }
 
 #detailed-stats {
-    background-color: green;
+    border: 1px solid green;
     grid-area: detailed-stats;
 }
 
@@ -26,6 +26,7 @@
     font-family: Fixedsys;
     margin: 2rem auto 0 auto;
     width: fit-content;
+    transition: filter 0.1s ease-out;
 }
 
 .stats-container > .time {
@@ -37,16 +38,8 @@
     font-size: 2rem;
 }
 
-.pale {
-    opacity: 0.2;
-}
-
-.hidden {
-    display: none;
-}
-
 #text-area {
-    background-color: yellow;
+    border: 1px solid yellow;
     grid-area: text-area;
 }
 

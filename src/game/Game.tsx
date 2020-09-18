@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import './Game.css';
 import QuickStats from './QuickStats';
 
@@ -7,12 +7,10 @@ interface GameProps {
     setPaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Game: FunctionComponent<GameProps> = ({ paused, setPaused }) => {
+const Game = ({ paused, setPaused }: GameProps) => {
     const time = 254123,
         wpm = 90,
         acc = 98.56;
-
-    console.log();
 
     return (
         <main id="game">
