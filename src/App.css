@@ -21,11 +21,12 @@ body,
     --watermark-height: 120px;
     --watermark-color: #dddddd;
     --accent-color: #ffbb00;
+    --menu-height: 5rem;
 }
 
 #root {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     justify-content: space-between;
 }
 
@@ -43,6 +44,10 @@ body,
 #menu {
     font-family: Fixedsys;
     margin: 0 auto;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+    height: var(--menu-height);
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 ul {
@@ -53,9 +58,8 @@ ul {
 }
 
 #menu li {
-    padding: 32px 32px 0 32px;
+    padding: 0 32px;
     font-size: 2rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
 }
 
 #menu li > a:hover,
@@ -67,13 +71,46 @@ ul {
     outline: none;
 }
 
-#menu li > a:active {
-    transform: translateY(-1rem) scale(2);
-    color: transparent;
-}
-
 #menu li > a {
     display: inline-block;
     text-decoration-line: none;
     color: #000;
+}
+
+.pale {
+    filter: opacity(0.2);
+}
+
+.hidden {
+    display: none;
+}
+
+.page {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - var(--menu-height));
+    top: 0;
+    left: 0;
+}
+
+.page-enter {
+    opacity: 0;
+    transform: scale(1.1);
+}
+
+.page-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 200ms, transform 200ms ease-out;
+}
+
+.page-exit {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.page-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 200ms, transform 200ms ease-out;
 }
