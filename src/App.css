@@ -97,7 +97,7 @@ ul {
 .page-enter-active {
     opacity: 1;
     transform: scale(1);
-    transition: opacity 200ms, transform 200ms ease-out;
+    transition: opacity 300ms, transform 300ms ease-out;
 }
 
 .page-exit {
@@ -108,5 +108,19 @@ ul {
 .page-exit-active {
     opacity: 0;
     transform: scale(0.9);
-    transition: opacity 200ms, transform 200ms ease-out;
+    transition: opacity 300ms, transform 300ms ease-out;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-between {
+    justify-content: space-between;
 }

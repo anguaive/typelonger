@@ -50,7 +50,7 @@ function App() {
                 <CSSTransition
                     key={location.key}
                     classNames="page"
-                    timeout={100}
+                    timeout={300}
                 >
                     <Switch location={location}>
                         {routes.map((route, i) => (

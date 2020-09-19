@@ -23,7 +23,7 @@ interface MenuProps {
 }
 
 const defaultStyle = {
-    transition: 'opacity 100ms ease-in-out',
+    transition: 'opacity 300ms ease-in-out',
     opacity: 0,
 };
 
@@ -37,7 +37,7 @@ const transitionStyles = {
 
 const Menu = ({ paused }: MenuProps) => {
     return (
-        <Transition in={paused} timeout={100}>
+        <Transition in={paused} timeout={300}>
             {(state) => (
                 <nav
                     id="menu"

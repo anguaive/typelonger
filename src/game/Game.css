@@ -23,10 +23,9 @@
 }
 
 #quick-stats > .stats-container {
-    font-family: Fixedsys;
     margin: 2rem auto 0 auto;
     width: fit-content;
-    transition: filter 0.1s ease-out;
+    transition: filter 300ms ease-out;
 }
 
 .stats-container > .time {
@@ -41,9 +40,4 @@
 #text-area {
     border: 1px solid yellow;
     grid-area: text-area;
-}
-
-.unit {
-    font-size: 1.2rem;
-    color: grey;
 }
