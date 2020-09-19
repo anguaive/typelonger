@@ -1,0 +1,79 @@
+#profile {
+    --profile-row-height: 260px;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: var(--profile-row-height) auto;
+    grid-template-areas:
+        'info info top recent'
+        'graph graph top recent';
+}
+
+#profile > * {
+    margin: 1rem;
+}
+
+#user-info {
+    grid-area: info;
+}
+
+#user-search {
+    grid-area: search;
+}
+
+#top-performances {
+    grid-area: top;
+}
+
+#recent-performances {
+    grid-area: recent;
+}
+
+#performance-graph {
+    grid-area: graph;
+}
+
+.user-info__picture {
+    height: calc(var(--profile-row-height) - 4rem);
+    width: calc(var(--profile-row-height) - 4rem);
+    margin: auto 0 auto 1rem;
+    object-fit: contain;
+    display: inline-block;
+    border: 2px solid black;
+}
+
+.user-info__stuff {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 1rem;
+}
+
+.user-info__names {
+}
+
+.user-info__username {
+    font-size: 3rem;
+}
+
+.user-info__alias {
+    padding-left: 1.2rem;
+    font-size: 1.2rem;
+    filter: opacity(0.5);
+}
+
+.alias-active {
+    padding-left: 0;
+    filter: none;
+}
+
+.alias-active::before {
+    content: '->';
+}
+
+.user-info__stats {
+    margin: 1rem;
+    font-size: 1.3rem;
+}
