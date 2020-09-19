@@ -2,22 +2,22 @@
     font-family: 'Fixedsys';
     font-weight: normal;
     font-style: normal;
-    src: url(fsex300.woff2) format('woff2');
+    src: url(./res/fsex300.woff2) format('woff2');
 }
 
 html,
 body,
 #root {
     height: 100%;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     overflow: hidden;
-    font-size: 16px;
-    line-height: 1.1;
-    font-family: Fixedsys;
 }
 
 :root {
+    font-size: 16px;
+    line-height: 1.1;
+    font-family: Fixedsys;
     --watermark-font-size: 5rem;
     --watermark-color: #dddddd;
     --accent-color: #ffbb00;
@@ -100,7 +100,8 @@ ul {
 }
 
 .container {
-    background-color: lightgrey;
+    border-radius: 0.5rem;
+    background-color: #eeeed9;
     height: 100%;
     width: 100%;
 }

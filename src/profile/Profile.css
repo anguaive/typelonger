@@ -1,12 +1,28 @@
 #profile {
-    --profile-row-height: 260px;
+    --profile-row-height: 244px;
+    --userinfo-expanded-height: calc(100vh - var(--menu-height) - 2rem);
+    --userinfo-transition: 800ms;
+
     height: 100%;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
-    grid-template-rows: var(--profile-row-height) auto;
+    grid-template-rows: calc(var(--profile-row-height) + 1rem) auto;
     grid-template-areas:
         'info info top recent'
         'graph graph top recent';
+}
+
+#user-info-grid {
+    display: grid;
+    position: relative;
+    gap: 1rem 1rem;
+    overflow: hidden;
+    grid-template-columns: calc(var(--profile-row-height) - 2rem) 1fr 1fr;
+    grid-template-rows: 4rem 132px auto;
+    grid-template-areas:
+        'picture name name'
+        'picture aliases stats'
+        'bio bio bio';
 }
 
 #profile > * {
@@ -14,7 +30,9 @@
 }
 
 #user-info {
+    height: calc(var(--profile-row-height) - 1rem);
     grid-area: info;
+    transition: height var(--userinfo-transition);
 }
 
 #user-search {
@@ -34,25 +52,49 @@
 }
 
 .user-info__picture {
-    height: calc(var(--profile-row-height) - 4rem);
-    width: calc(var(--profile-row-height) - 4rem);
-    margin: auto 0 auto 1rem;
+    grid-area: picture;
+    height: calc(var(--profile-row-height) - 3rem);
+    width: calc(var(--profile-row-height) - 3rem);
+    margin: 1rem 0 0 1rem;
     object-fit: contain;
     display: inline-block;
     border: 2px solid black;
 }
 
-.user-info__stuff {
-    width: calc(100% - calc(var(--profile-row-height)));
+.user-info__username {
+    padding-top: 1rem;
     overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 1rem;
+    grid-area: name;
+    font-size: 3rem;
 }
 
-.user-info__username {
-    font-size: 3rem;
+.user-info__bio {
+    padding: 2rem;
+    grid-area: bio;
+}
+
+.user-info__expand {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    transform: rotate(0deg);
+    transition: transform var(--userinfo-transition);
+    opacity: 0.3;
+}
+
+#user-info:hover .user-info__expand {
+    transform: rotate(180deg);
+}
+
+#user-info:hover {
+    height: var(--userinfo-expanded-height);
+}
+
+.user-info__aliases {
+    grid-area: aliases;
 }
 
 .user-info__alias {
@@ -71,6 +113,10 @@
 }
 
 .user-info__stats {
-    margin: 1rem;
-    font-size: 1.3rem;
+    grid-area: stats;
+    font-size: 1.4rem;
+}
+
+.red {
+    background-color: red;
 }
