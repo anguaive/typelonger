@@ -63,7 +63,6 @@ function App() {
                     </Switch>
                 </CSSTransition>
             </TransitionGroup>
-            <span id="watermark">typelonger</span>
         </>
     );
 }

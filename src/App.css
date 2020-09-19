@@ -18,7 +18,6 @@ body,
 
 :root {
     --watermark-font-size: 5rem;
-    --watermark-height: 120px;
     --watermark-color: #dddddd;
     --accent-color: #ffbb00;
     --menu-height: 5rem;
@@ -32,12 +31,9 @@ body,
 
 #watermark {
     color: var(--watermark-color);
-    font-family: Fixedsys;
     position: absolute;
-    height: var(--watermark-height);
-    transform: translateX(-50%) rotate(-90deg);
-    top: calc(50vh - var(--watermark-height) / 2);
-    left: calc(100vw - var(--watermark-font-size) / 2);
+    right: 0;
+    bottom: 0;
     font-size: var(--watermark-font-size);
 }
 
