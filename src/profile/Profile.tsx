@@ -2,7 +2,8 @@ import React from 'react';
 import './Profile.css';
 
 interface Performance {
-    textTitle: string;
+    title: string;
+    when: Date;
     points: number;
     time: number;
     acc: number;

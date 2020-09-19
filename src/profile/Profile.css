@@ -43,15 +43,12 @@
 }
 
 .user-info__stuff {
-    width: 100%;
+    width: calc(100% - calc(var(--profile-row-height)));
     overflow: hidden;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 1rem;
-}
-
-.user-info__names {
+    padding: 1rem;
 }
 
 .user-info__username {
