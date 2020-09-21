@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { ReactComponent as ExpandIcon } from '../res/chevron-circle-down.svg';
 
 interface Performance {
     title: string;
+    section: string;
     when: Date;
     points: number;
     time: number;
@@ -23,7 +24,7 @@ interface Alias {
 }
 
 interface UserProfile {
-    username: string;
+    name: string;
     picture: string;
     since: Date;
     aliases: Alias[];
@@ -31,6 +32,18 @@ interface UserProfile {
 }
 
 const Profile = () => {
+    const [profile, setProfile] = useState<UserProfile>();
+    const [selectedAlias, setSelectedAlias] = useState(0);
+
+    useEffect(() => {
+        fetch('http://localhost:3001/userProfile')
+            .then((response) => response.json())
+            .then((data) => {
+                setProfile(data);
+                console.log(profile);
+            });
+    }, []);
+
     return (
         <main id="profile">
             <section id="user-info">
