@@ -62,8 +62,6 @@ ul {
 #menu li > a:focus {
     color: var(--accent-color);
     transform: translateY(-0.2rem);
-    transition-property: color, transform;
-    transition: 0.2s ease;
     outline: none;
 }
 
@@ -71,6 +69,8 @@ ul {
     display: inline-block;
     text-decoration-line: none;
     color: #000;
+    transition-property: color, transform;
+    transition: 0.2s ease;
 }
 
 .pale {
