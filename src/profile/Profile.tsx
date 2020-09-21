@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { ReactComponent as ExpandIcon } from '../res/chevron-circle-down.svg';
-import { ReactComponent as ClockIcon } from '../res/clock-o.svg';
-import { formatHours, formatTime } from '../utils';
+import { formatHours } from '../utils';
+import PerformanceCard from './PerformanceCard';
 
-interface Performance {
+export interface Performance {
     title: string;
     section: string;
     when: Date;
@@ -44,6 +44,7 @@ const Profile = () => {
                 setProfile(data);
                 console.log(profile);
             });
+        console.log('Updating');
     }, []);
 
     return (
@@ -124,51 +125,7 @@ const Profile = () => {
                         <div className="performance-container">
                             {profile.aliases[selectedAlias].topPerformances.map(
                                 (perf, i) => (
-                                    <div className="performance">
-                                        <div className="performance__title">
-                                            {perf.title}
-                                        </div>
-                                        <div className="performance__section--when">
-                                            <div className="performance__section">
-                                                {perf.section}
-                                            </div>
-                                            <div className="performance__when">
-                                                {new Date(
-                                                    perf.when
-                                                ).toDateString()}
-                                            </div>
-                                        </div>
-                                        <div className="performance__stats">
-                                            <div>
-                                                <div className="icon-container">
-                                                    <div className="icon">
-                                                        <ClockIcon />
-                                                    </div>
-                                                </div>
-                                                <span>
-                                                    {formatTime(perf.time)}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                {perf.points}
-                                                <span className="unit">
-                                                    pts
-                                                </span>
-                                            </div>
-                                            <div>
-                                                {perf.wpm.toFixed(2)}
-                                                <span className="unit">
-                                                    wpm
-                                                </span>
-                                            </div>
-                                            <div>
-                                                {perf.acc.toFixed(2)}
-                                                <span className="unit">
-                                                    acc
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <PerformanceCard {...perf} key={i} />
                                 )
                             )}
                         </div>
@@ -177,7 +134,13 @@ const Profile = () => {
                         <span className="container-title">
                             Recent performances
                         </span>
-                        <div className="container"></div>
+                        <div className="performance-container">
+                            {profile.aliases[
+                                selectedAlias
+                            ].recentPerformances.map((perf, i) => (
+                                <PerformanceCard {...perf} key={i} />
+                            ))}
+                        </div>
                     </section>
                     <section id="performance-graph">
                         <span className="container-title">
