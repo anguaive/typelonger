@@ -114,7 +114,8 @@ ul {
 
 .container {
     border-radius: 0.5rem;
-    background-color: #eeeed9;
+    background-color: white;
+    border: 1px solid grey;
     height: 100%;
     width: 100%;
 }

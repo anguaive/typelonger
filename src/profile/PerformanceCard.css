@@ -4,10 +4,8 @@
     width: 100%;
     height: 100%;
     padding-left: 0.5rem;
-    overflow-x: visible;
     overflow-y: auto;
     scrollbar-width: none;
-    justify-content: space-between;
 }
 
 .gold {
@@ -62,9 +60,11 @@
     );
     background-size: 400% 400%;
     animation: shine 8s ease infinite;
-    border: 0.2rem solid transparent;
-    padding: 0 0.2rem;
+    padding: 0.2rem 0.4rem;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 @keyframes shine {
@@ -79,13 +79,8 @@
     }
 }
 
-.performance-animation * {
-    background: transparent;
-}
-
 .performance:hover {
     transform: translateX(-0.5rem);
-    overflow: visible;
 }
 
 .performance:not(:last-child) {
@@ -112,11 +107,7 @@
 
 .performance__stats > * {
     display: flex;
-    align-items: flex-end;
-}
-
-.icon-container {
-    display: inline-block;
+    align-items: center;
 }
 
 .icon {
