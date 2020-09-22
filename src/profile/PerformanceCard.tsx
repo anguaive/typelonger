@@ -1,4 +1,5 @@
 import React from 'react';
+import './PerformanceCard.css';
 import { Performance } from './Profile';
 import { ReactComponent as ClockIcon } from '../res/clock-o.svg';
 import { formatTime } from '../utils';
