@@ -42,17 +42,23 @@ const Rankings = () => {
                                 <UserCard
                                     user={user}
                                     key={i}
-                                    placing={page * usersPerPage + i + 1}
+                                    placement={page * usersPerPage + i + 1}
                                 />
                             ))}
                     </section>
                     <section id="rankings-actions"></section>
                     <section id="rankings-controls">
-                        <button onClick={() => setPage(0)}>First page</button>
-                        <button onClick={() => page > 0 && setPage(page - 1)}>
+                        <button className="button" onClick={() => setPage(0)}>
+                            First page
+                        </button>
+                        <button
+                            className="button"
+                            onClick={() => page > 0 && setPage(page - 1)}
+                        >
                             Previous page
                         </button>
                         <button
+                            className="button"
                             onClick={() =>
                                 page <
                                     Math.floor(users.length / usersPerPage) &&
@@ -62,6 +68,7 @@ const Rankings = () => {
                             Next page
                         </button>
                         <button
+                            className="button"
                             onClick={() =>
                                 setPage(Math.floor(users.length / usersPerPage))
                             }
