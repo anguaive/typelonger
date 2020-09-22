@@ -6,7 +6,7 @@ import Menu from './Menu';
 import Game from './game/Game';
 import Matchmaking from './Matchmaking';
 import Profile from './profile/Profile';
-import Rankings from './Rankings';
+import Rankings from './rankings/Rankings';
 import Settings from './Settings';
 import NoMatch from './NoMatch';
 
