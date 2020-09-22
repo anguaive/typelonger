@@ -1,4 +1,199 @@
 {
+    "users": [
+        {
+            "aliasname": "elvia",
+            "username": "ElviaCochran",
+            "points": 2637,
+            "time": 9564147,
+            "wpm": 78.1034,
+            "acc": 97.6651
+        },
+        {
+            "aliasname": "flowers",
+            "username": "FlowersNguyen",
+            "points": 2626,
+            "time": 3980706,
+            "wpm": 61.1423,
+            "acc": 95.2963
+        },
+        {
+            "aliasname": "pearlie123",
+            "username": "PearlieLevine",
+            "points": 2598,
+            "time": 6144577,
+            "wpm": 150.15,
+            "acc": 99.0545
+        },
+        {
+            "aliasname": "saundders",
+            "username": "ChanSaunders",
+            "points": 2596,
+            "time": 345981,
+            "wpm": 79.1306,
+            "acc": 98.3719
+        },
+        {
+            "aliasname": "gayle",
+            "username": "GayleVelasquez",
+            "points": 2410,
+            "time": 1408684,
+            "wpm": 95.429,
+            "acc": 99.3134
+        },
+        {
+            "aliasname": "careyQWERTY",
+            "username": "CareySilva",
+            "points": 2356,
+            "time": 5745044,
+            "wpm": 79.7178,
+            "acc": 95.5189
+        },
+        {
+            "aliasname": "graham19782",
+            "username": "GrahamMejia",
+            "points": 2331,
+            "time": 6796422,
+            "wpm": 153.7444,
+            "acc": 99.0352
+        },
+        {
+            "aliasname": "lessd",
+            "username": "LessieDiaz",
+            "points": 2310,
+            "time": 3549846,
+            "wpm": 90.5225,
+            "acc": 98.4785
+        },
+        {
+            "aliasname": "cpetersen87",
+            "username": "ChasityPetersen",
+            "points": 2299,
+            "time": 7857931,
+            "wpm": 141.4686,
+            "acc": 96.8696
+        },
+        {
+            "aliasname": "cooleymak",
+            "username": "CooleyVaughn",
+            "points": 2289,
+            "time": 3181663,
+            "wpm": 71.2961,
+            "acc": 98.1174
+        },
+        {
+            "aliasname": "lorr_qwerty",
+            "username": "LorrieCantu",
+            "points": 2226,
+            "time": 6347188,
+            "wpm": 60.6229,
+            "acc": 97.4825
+        },
+        {
+            "aliasname": "lorr_workman",
+            "username": "LorrieCantu",
+            "points": 2208,
+            "time": 1416443,
+            "wpm": 65.1758,
+            "acc": 98.2636
+        },
+        {
+            "aliasname": "annaBB2",
+            "username": "AnnabelleBell",
+            "points": 2178,
+            "time": 3301341,
+            "wpm": 94.1468,
+            "acc": 98.556
+        },
+        {
+            "aliasname": "HH",
+            "username": "HarveyHaley",
+            "points": 2174,
+            "time": 1295321,
+            "wpm": 131.1566,
+            "acc": 95.8984
+        },
+        {
+            "aliasname": "matilda",
+            "username": "MatildaSutton",
+            "points": 2146,
+            "time": 2263847,
+            "wpm": 98.2123,
+            "acc": 99.7014
+        },
+        {
+            "aliasname": "bdawson",
+            "username": "BeachDawson",
+            "points": 2087,
+            "time": 3259945,
+            "wpm": 94.8265,
+            "acc": 96.4163
+        },
+        {
+            "aliasname": "ebrownie",
+            "username": "EllaBrown",
+            "points": 2043,
+            "time": 551270,
+            "wpm": 59.8924,
+            "acc": 98.9671
+        },
+        {
+            "aliasname": "shauna",
+            "username": "ShaunaBuckner",
+            "points": 2040,
+            "time": 7525028,
+            "wpm": 144.5858,
+            "acc": 98.1442
+        },
+        {
+            "aliasname": "rush001",
+            "username": "RushContreras",
+            "points": 2019,
+            "time": 1042273,
+            "wpm": 73.2299,
+            "acc": 99.1049
+        },
+        {
+            "aliasname": "ccasey",
+            "username": "ClaudiaCasey",
+            "points": 1989,
+            "time": 986149,
+            "wpm": 141.8457,
+            "acc": 99.4933
+        },
+        {
+            "aliasname": "pearldowns",
+            "username": "PearlDowns",
+            "points": 1987,
+            "time": 8425858,
+            "wpm": 138.0674,
+            "acc": 97.4879
+        },
+        {
+            "aliasname": "gingerman",
+            "username": "GingerLancaster",
+            "points": 1967,
+            "time": 1256067,
+            "wpm": 115.1873,
+            "acc": 97.741
+        },
+        {
+            "aliasname": "reynolds_qwerty",
+            "username": "LoweReynolds",
+            "points": 1920,
+            "time": 3777089,
+            "wpm": 169.4087,
+            "acc": 96.1583
+        },
+        {
+            "aliasname": "simon_colemak",
+            "username": "SimonChambers",
+            "points": 1890,
+            "time": 2611024,
+            "wpm": 141.4607,
+            "acc": 96.6846
+        }
+    ],
+
     "userProfile": {
         "name": "Username",
         "picture": "https://www.eatliver.com/wp-content/uploads/2019/01/tank-cat10.jpg",
