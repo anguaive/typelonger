@@ -41,6 +41,7 @@
     transition: transform 300ms ease;
     flex-grow: 1;
     cursor: pointer;
+    position: relative;
     background: linear-gradient(
         45deg,
         var(--color1),
@@ -60,11 +61,31 @@
     );
     background-size: 400% 400%;
     animation: shine 8s ease infinite;
-    padding: 0.2rem 0.4rem;
     height: 100%;
+}
+
+.performance-layout__perf,
+.performance-layout__actions {
+    padding: 0.2rem 0.4rem;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
     display: flex;
+    transition: opacity 200ms ease;
+}
+
+.performance-layout__perf {
     flex-direction: column;
     justify-content: space-between;
+}
+
+.performance-layout__actions {
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 @keyframes shine {

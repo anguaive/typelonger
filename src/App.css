@@ -31,7 +31,7 @@ body,
     --perf-bronze1: #aa682a;
     --perf-bronze2: #b46727;
     --perf-bronze3: #f3b164;
-    --perf-normal: #ccc0c0;
+    --perf-normal: #ead8d2;
     --white-shine-color: rgba(255, 255, 255, 0.7);
     --silver-shine-color: rgba(255, 255, 255, 0.4);
     --no-shine-color: rgba(0, 0, 0, 0);
@@ -90,8 +90,13 @@ ul {
     filter: opacity(0.2);
 }
 
-.hidden {
+/* Needs to have higher specificity to overwrite other styles */
+body .hidden {
     display: none;
+}
+
+body .invis {
+    opacity: 0;
 }
 
 .page {
@@ -142,16 +147,22 @@ ul {
     transition: opacity 300ms, transform 300ms ease-out;
 }
 
-.flex-row {
-    display: flex;
-    flex-direction: row;
+.button {
+    height: fit-content;
+    width: fit-content;
+    font-family: Fixedsys;
+    display: inline-block;
+    border-radius: 0.5rem;
+    border: none;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.3);
+    outline: none;
+    padding: 0.3rem;
+    cursor: pointer;
+    transition: transform 100ms ease;
+    font-size: 1.2rem;
 }
 
-.flex-col {
-    display: flex;
-    flex-direction: column;
-}
-
-.flex-between {
-    justify-content: space-between;
+.button:hover {
+    transform: scale(1.1);
 }
