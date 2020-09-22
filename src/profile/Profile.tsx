@@ -42,9 +42,7 @@ const Profile = () => {
             .then((response) => response.json())
             .then((data) => {
                 setProfile(data);
-                console.log(profile);
             });
-        console.log('Updating');
         // For some reason eslint complains about the empty deps array,
         // even though it's the RECOMMENDED way of running the hook
         // on mount only
