@@ -6,7 +6,7 @@ import { formatTime } from '../utils';
 
 const PerformanceCard = (perf: Performance) => {
     return (
-        <div className="performance">
+        <div className={['performance', perf.rank].join(' ')}>
             <div className="performance-animation">
                 <div className="performance__title">{perf.title}</div>
                 <div className="performance__section--when">

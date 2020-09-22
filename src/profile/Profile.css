@@ -2,14 +2,19 @@
     --profile-row-height: 244px;
     --userinfo-expanded-height: calc(100vh - var(--menu-height) - 2rem);
     --userinfo-transition: 800ms;
-
     height: 100%;
+    overflow: hidden;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
-    grid-template-rows: calc(var(--profile-row-height) + 1rem) auto;
+    grid-template-rows: calc(var(--profile-row-height) + 1rem) 1fr;
     grid-template-areas:
         'info info top recent'
         'graph graph top recent';
+    z-index: 9999;
+}
+
+#profile > * {
+    padding: 1rem;
 }
 
 #user-info-grid {
@@ -25,10 +30,6 @@
         'bio bio bio';
 }
 
-#profile > * {
-    margin: 1rem;
-}
-
 #user-info {
     height: calc(var(--profile-row-height) - 1rem);
     grid-area: info;
@@ -41,6 +42,7 @@
 
 #top-performances {
     grid-area: top;
+    overflow: visible;
 }
 
 #recent-performances {
@@ -136,12 +138,4 @@
 .user-info__stats {
     grid-area: stats;
     font-size: 1.4rem;
-}
-
-.performance-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 100%;
-    width: 100%;
 }
