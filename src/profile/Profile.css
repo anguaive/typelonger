@@ -9,7 +9,6 @@
     grid-template-areas:
         'info info top recent'
         'graph graph top recent';
-    z-index: 9999;
 }
 
 #profile > * {
@@ -46,6 +45,7 @@
 
 #recent-performances {
     grid-area: recent;
+    overflow: visible;
 }
 
 #performance-graph {
@@ -93,7 +93,6 @@
 #user-info:hover {
     height: var(--userinfo-expanded-height);
 }
-
 .user-info__aliases {
     grid-area: aliases;
 }
@@ -136,5 +135,24 @@
 
 .user-info__stats {
     grid-area: stats;
+    position: absolute;
     font-size: 1.4rem;
+}
+
+.new-alias-enter {
+    opacity: 0;
+}
+
+.new-alias-enter-active {
+    opacity: 1;
+    transition: opacity 300ms;
+}
+
+.new-alias-exit {
+    opacity: 1;
+}
+
+.new-alias-exit-active {
+    opacity: 0;
+    transition: opacity 300ms;
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { ReactComponent as ExpandIcon } from '../res/chevron-circle-down.svg';
 import { formatHours } from '../utils';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PerformanceCard from './PerformanceCard';
 
 export interface Performance {
@@ -85,65 +86,107 @@ const Profile = () => {
                                     </button>
                                 ))}
                             </div>
-                            <div className="user-info__stats">
-                                <div className="user-info__stat">
-                                    {profile.since}{' '}
-                                    <span className="unit">since</span>
-                                </div>
-                                <div className="user-info__stat">
-                                    {formatHours(
-                                        profile.aliases[selectedAlias].time || 0
-                                    )}{' '}
-                                    <span className="unit">hours</span>
-                                </div>
-                                <div className="user-info__stat">
-                                    {profile.aliases[selectedAlias].points}{' '}
-                                    <span className="unit">points</span> ( #xyz
-                                    )
-                                </div>
-                                <div className="user-info__stat">
-                                    {profile.aliases[selectedAlias].wpm.toFixed(
-                                        2
-                                    )}{' '}
-                                    <span className="unit">wpm</span>
-                                </div>
-                                <div className="user-info__stat">
-                                    {profile.aliases[selectedAlias].acc.toFixed(
-                                        2
-                                    )}{' '}
-                                    <span className="unit">acc</span>
-                                </div>
-                            </div>
+                            <TransitionGroup component={null}>
+                                <CSSTransition
+                                    key={selectedAlias}
+                                    timeout={300}
+                                    classNames="new-alias"
+                                >
+                                    <>
+                                        <div className="user-info__stats">
+                                            <div className="user-info__stat">
+                                                {profile.since}{' '}
+                                                <span className="unit">
+                                                    since
+                                                </span>
+                                            </div>
+                                            <div className="user-info__stat">
+                                                {formatHours(
+                                                    profile.aliases[
+                                                        selectedAlias
+                                                    ].time || 0
+                                                )}{' '}
+                                                <span className="unit">
+                                                    hours
+                                                </span>
+                                            </div>
+                                            <div className="user-info__stat">
+                                                {
+                                                    profile.aliases[
+                                                        selectedAlias
+                                                    ].points
+                                                }{' '}
+                                                <span className="unit">
+                                                    points
+                                                </span>{' '}
+                                                ( #xyz )
+                                            </div>
+                                            <div className="user-info__stat">
+                                                {profile.aliases[
+                                                    selectedAlias
+                                                ].wpm.toFixed(2)}{' '}
+                                                <span className="unit">
+                                                    wpm
+                                                </span>
+                                            </div>
+                                            <div className="user-info__stat">
+                                                {profile.aliases[
+                                                    selectedAlias
+                                                ].acc.toFixed(2)}{' '}
+                                                <span className="unit">
+                                                    acc
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </>
+                                </CSSTransition>
+                            </TransitionGroup>
                             <div className="user-info__bio">{profile.bio}</div>
                             <div className="user-info__expand">
                                 <ExpandIcon />
                             </div>
                         </div>
                     </section>
-                    <section id="top-performances">
-                        <span className="container-title">
-                            Top performances
-                        </span>
-                        <div className="performance-container">
-                            {profile.aliases[selectedAlias].topPerformances.map(
-                                (perf, i) => (
-                                    <PerformanceCard {...perf} key={i} />
-                                )
-                            )}
-                        </div>
-                    </section>
-                    <section id="recent-performances">
-                        <span className="container-title">
-                            Recent performances
-                        </span>
-                        <div className="performance-container">
-                            {profile.aliases[
-                                selectedAlias
-                            ].recentPerformances.map((perf, i) => (
-                                <PerformanceCard {...perf} key={i} />
-                            ))}
-                        </div>
-                    </section>
+                    <TransitionGroup component={null}>
+                        <CSSTransition
+                            key={selectedAlias}
+                            timeout={300}
+                            classNames="new-alias"
+                        >
+                            <section id="top-performances">
+                                <span className="container-title">
+                                    Top performances
+                                </span>
+                                <div className="performance-container">
+                                    {profile.aliases[
+                                        selectedAlias
+                                    ].topPerformances.map((perf, i) => (
+                                        <PerformanceCard {...perf} key={i} />
+                                    ))}
+                                </div>
+                            </section>
+                        </CSSTransition>
+                    </TransitionGroup>
+                    <TransitionGroup component={null}>
+                        <CSSTransition
+                            key={selectedAlias}
+                            timeout={300}
+                            classNames="new-alias"
+                        >
+                            <section id="recent-performances">
+                                <span className="container-title">
+                                    Recent performances
+                                </span>
+                                <div className="performance-container">
+                                    {profile.aliases[
+                                        selectedAlias
+                                    ].recentPerformances.map((perf, i) => (
+                                        <PerformanceCard {...perf} key={i} />
+                                    ))}
+                                </div>
+                            </section>
+                        </CSSTransition>
+                    </TransitionGroup>
                     <section id="performance-graph">
                         <span className="container-title">
                             Performance graph

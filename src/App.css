@@ -107,11 +107,6 @@ body .invis {
     left: 0;
 }
 
-.page-enter {
-    opacity: 0;
-    transform: scale(1.1);
-}
-
 .unit {
     font-size: 0.8em;
     filter: opacity(0.6);
@@ -128,6 +123,11 @@ body .invis {
 .container-title {
     display: inline-block;
     margin-left: 0.5rem;
+}
+
+.page-enter {
+    opacity: 0;
+    transform: scale(1.1);
 }
 
 .page-enter-active {
