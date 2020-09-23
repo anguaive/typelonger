@@ -13,6 +13,7 @@
     --color2: var(--perf-gold2);
     --color3: var(--perf-gold3);
     --shine-color: var(--white-shine-color);
+    --border-color: transparent;
 }
 
 .silver {
@@ -20,6 +21,7 @@
     --color2: var(--perf-silver2);
     --color3: var(--perf-silver3);
     --shine-color: var(--silver-shine-color);
+    --border-color: transparent;
 }
 
 .bronze {
@@ -27,6 +29,7 @@
     --color2: var(--perf-bronze2);
     --color3: var(--perf-bronze3);
     --shine-color: var(--no-shine-color);
+    --border-color: transparent;
 }
 
 .normal {
@@ -34,13 +37,14 @@
     --color2: var(--perf-normal);
     --color3: var(--perf-normal);
     --shine-color: var(--no-shine-color);
+    --border-color: var(--panel-border-color);
 }
 
 .performance {
-    border-radius: 0.5rem;
     transition: transform var(--medium-transition) ease;
     flex-grow: 1;
     flex-shrink: 1;
+    border-radius: 0.5rem;
     flex-basis: content;
     cursor: pointer;
     position: relative;
@@ -61,8 +65,10 @@
         var(--shine-color),
         rgba(0, 0, 0, 0)
     );
+    border-radius: 0.5rem;
     background-size: 400% 400%;
     animation: shine 8s ease infinite;
+    border: 1px solid var(--border-color);
     height: 100%;
 }
 
