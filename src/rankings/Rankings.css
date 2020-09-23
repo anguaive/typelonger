@@ -25,12 +25,12 @@
     background-color: lightblue;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: flex-start;
 }
 
 #rankings-controls button {
-    width: 64px;
-    height: 64px;
+    width: max(3.2vw, 48px);
+    height: max(3.2vw, 48px);
     margin: 0.5rem;
 }

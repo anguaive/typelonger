@@ -88,7 +88,7 @@ ul {
     transition: 0.2s ease;
 }
 
-:root .pale {
+#root .pale {
     /* difference between opacity and filter: opacity() is that
      * some browsers provide hardware acceleration for the latter
      * https://css-tricks.com/almanac/properties/f/filter/
@@ -97,20 +97,20 @@ ul {
 }
 
 /* Needs to have higher specificity to overwrite other styles */
-:root .hidden {
+#root .hidden {
     display: none;
 }
 
-:root .invis {
+#root .invis {
     filter: opacity(0);
 }
 
-.page {
+#root .page {
     width: 100%;
-    height: var(--page-height);
+    height: calc(100% - var(--menu-height) - 0.5rem);
 }
 
-.unit {
+#root .unit {
     font-size: 0.8em;
     filter: opacity(0.6);
 }

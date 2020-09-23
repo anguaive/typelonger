@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './App.css';
@@ -9,6 +9,7 @@ import Profile from './profile/Profile';
 import Rankings from './rankings/Rankings';
 import Settings from './Settings';
 import NoMatch from './NoMatch';
+import Search from './search/Search';
 
 interface AppRoute {
     path: string;
@@ -17,7 +18,27 @@ interface AppRoute {
 
 function App() {
     const [paused, setPaused] = useState(true);
+    const [searchHidden, setSearchHidden] = useState(false);
     const location = useLocation();
+
+    const keyboardHandler = useCallback(
+        (event: KeyboardEvent) => {
+            event.preventDefault();
+            console.log(event.key);
+            if (event.key === 's') {
+                setSearchHidden(false);
+            }
+        },
+
+        []
+    );
+
+    useEffect(() => {
+        document.addEventListener('keyup', keyboardHandler, false);
+        return () => {
+            document.removeEventListener('keyup', keyboardHandler, false);
+        };
+    });
 
     const routes: AppRoute[] = [
         {
@@ -46,6 +67,7 @@ function App() {
     return (
         <>
             <Menu paused={paused} />
+            <Search hidden={searchHidden} setHidden={setSearchHidden} />
             <TransitionGroup component={null}>
                 <CSSTransition
                     key={location.key}
