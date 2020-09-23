@@ -71,8 +71,6 @@ ul {
 }
 
 #menu li > a {
-    text-decoration-line: none;
-    color: #000;
     transition-property: color, transform;
     transition: 0.2s ease;
 }
@@ -167,4 +165,9 @@ ul {
 .button:active {
     box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.4);
     transform: translate(2px, 2px);
+}
+
+a {
+    text-decoration: none;
+    color: #000;
 }
