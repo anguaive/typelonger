@@ -27,7 +27,7 @@
 .user-card__username {
     font-size: 1.2rem;
     margin-left: 1rem;
-    opacity: 0.5;
+    filter: opacity(50%);
 }
 
 .user-card__stats-container {

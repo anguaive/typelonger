@@ -40,6 +40,8 @@
     border-radius: 0.5rem;
     transition: transform var(--medium-transition) ease;
     flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: content;
     cursor: pointer;
     position: relative;
     background: linear-gradient(
@@ -114,7 +116,7 @@
 
 .performance__section,
 .performance__when {
-    opacity: 0.5;
+    filter: opacity(50%);
     font-size: 0.8rem;
 }
 

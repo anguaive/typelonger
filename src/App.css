@@ -40,24 +40,15 @@ body,
 
 #root {
     display: flex;
-    flex-direction: column-reverse;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-end;
 }
-
-#watermark {
-    color: var(--watermark-color);
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    font-size: var(--watermark-font-size);
-}
-
 #menu {
     margin: 0 auto;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
     height: var(--menu-height);
     display: flex;
-    flex-direction: column-reverse;
+    align-items: flex-end;
 }
 
 ul {
@@ -65,39 +56,42 @@ ul {
     padding: 0;
     margin: 0;
     display: flex;
+    justify-content: space-between;
 }
 
 #menu li {
-    padding: 0 32px;
-    font-size: 2rem;
+    font-size: max(1.5rem, 2.5vw);
+    padding: 0 max(1.5rem, 2.5vw);
 }
 
-#menu li > a:hover,
-#menu li > a:focus {
+#menu li > a:hover {
     color: var(--accent-color);
     transform: translateY(-0.2rem);
     outline: none;
 }
 
 #menu li > a {
-    display: inline-block;
     text-decoration-line: none;
     color: #000;
     transition-property: color, transform;
     transition: 0.2s ease;
 }
 
-.pale {
+:root .pale {
+    /* difference between opacity and filter: opacity() is that
+     * some browsers provide hardware acceleration for the latter
+     * https://css-tricks.com/almanac/properties/f/filter/
+     */
     filter: opacity(0.2);
 }
 
 /* Needs to have higher specificity to overwrite other styles */
-body .hidden {
+:root .hidden {
     display: none;
 }
 
-body .invis {
-    opacity: 0;
+:root .invis {
+    filter: opacity(0);
 }
 
 .page {
@@ -115,8 +109,7 @@ body .invis {
 
 .container {
     border-radius: 0.5rem;
-    background-color: white;
-    border: 1px solid grey;
+    background-color: lightgrey;
     height: 100%;
     width: 100%;
 }
@@ -157,8 +150,8 @@ body .invis {
     display: inline-block;
     border-radius: 0.5rem;
     border: none;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 3px 2px rgba(0, 0, 0, 0.4);
     outline: none;
     padding: 0.3rem;
     cursor: pointer;
@@ -169,4 +162,9 @@ body .invis {
 
 .button:hover {
     transform: scale(1.1);
+}
+
+.button:active {
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.4);
+    transform: translate(2px, 2px);
 }

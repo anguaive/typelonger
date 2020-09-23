@@ -3,6 +3,7 @@
     --userinfo-expanded-height: calc(100vh - var(--menu-height) - 2rem);
     height: 100%;
     display: grid;
+    height: 100%;
     grid-template-columns: 25% 25% 25% 25%;
     grid-template-rows: calc(var(--profile-row-height) + 1rem) 1fr;
     grid-template-areas:
