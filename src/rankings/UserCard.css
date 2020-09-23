@@ -6,6 +6,7 @@
     background-color: var(--perf-normal);
     width: calc(100% - 4rem);
     margin: 0.5rem 2rem;
+    flex-grow: 1;
     padding: 0 1rem;
     border: 1px solid black;
     cursor: pointer;

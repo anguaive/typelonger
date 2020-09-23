@@ -37,22 +37,24 @@ const transitionStyles = {
 
 const Menu = ({ paused }: MenuProps) => {
     return (
-        <Transition in={paused} timeout={300}>
-            {(state) => (
-                <nav
-                    id="menu"
-                    style={{ ...defaultStyle, ...transitionStyles[state] }}
-                >
-                    <ul>
-                        {links.map((route, i) => (
-                            <li key={i}>
-                                <Link to={route.path}>{route.name}</Link>
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
-            )}
-        </Transition>
+        <div id="menu-bar">
+            <Transition in={paused} timeout={300}>
+                {(state) => (
+                    <nav
+                        id="menu"
+                        style={{ ...defaultStyle, ...transitionStyles[state] }}
+                    >
+                        <ul>
+                            {links.map((route, i) => (
+                                <li key={i}>
+                                    <Link to={route.path}>{route.name}</Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                )}
+            </Transition>
+        </div>
     );
 };
 

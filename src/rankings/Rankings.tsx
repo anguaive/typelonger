@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Rankings.css';
 import UserCard from './UserCard';
+import { ReactComponent as DoubleUpArrow } from '../res/angle-double-up.svg';
+import { ReactComponent as UpArrow } from '../res/angle-up.svg';
+import { ReactComponent as DownArrow } from '../res/angle-down.svg';
+import { ReactComponent as DoubleDownArrow } from '../res/angle-double-down.svg';
 
 export interface UserListView {
     aliasname: string;
@@ -48,32 +52,35 @@ const Rankings = () => {
                     </section>
                     <section id="rankings-actions"></section>
                     <section id="rankings-controls">
-                        <button className="button" onClick={() => setPage(0)}>
-                            First page
+                        <button
+                            className="button svg-button"
+                            onClick={() => setPage(0)}
+                        >
+                            <DoubleUpArrow />
                         </button>
                         <button
-                            className="button"
+                            className="button svg-button"
                             onClick={() => page > 0 && setPage(page - 1)}
                         >
-                            Previous page
+                            <UpArrow />
                         </button>
                         <button
-                            className="button"
+                            className="button svg-button"
                             onClick={() =>
                                 page <
                                     Math.floor(users.length / usersPerPage) &&
                                 setPage(page + 1)
                             }
                         >
-                            Next page
+                            <DownArrow />
                         </button>
                         <button
-                            className="button"
+                            className="button svg-button"
                             onClick={() =>
                                 setPage(Math.floor(users.length / usersPerPage))
                             }
                         >
-                            Last page
+                            <DoubleDownArrow />
                         </button>
                         Displaying [{page * usersPerPage + 1}-
                         {Math.min((page + 1) * usersPerPage, users.length)}] of{' '}

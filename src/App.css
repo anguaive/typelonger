@@ -38,15 +38,18 @@ body,
     --no-shine-color: rgba(0, 0, 0, 0);
 }
 
-#root {
+#menu-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-}
-#menu {
-    margin: 0 auto;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+    justify-content: space-around;
     height: var(--menu-height);
+}
+
+#menu {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
     display: flex;
     align-items: flex-end;
 }
@@ -93,11 +96,8 @@ ul {
 }
 
 .page {
-    position: absolute;
     width: 100%;
     height: calc(100% - var(--menu-height));
-    top: 0;
-    left: 0;
 }
 
 .unit {
@@ -168,6 +168,7 @@ ul {
 }
 
 a {
+    display: inline-block;
     text-decoration: none;
     color: #000;
 }
