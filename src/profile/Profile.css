@@ -1,7 +1,6 @@
 #profile {
     --profile-row-height: 244px;
     --userinfo-expanded-height: calc(100vh - var(--menu-height) - 2rem);
-    --userinfo-transition: 800ms;
     height: 100%;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
@@ -31,7 +30,7 @@
 #user-info {
     height: calc(var(--profile-row-height) - 1rem);
     grid-area: info;
-    transition: height var(--userinfo-transition);
+    transition: height var(--long-transition);
 }
 
 #user-search {
@@ -82,7 +81,7 @@
     height: 2rem;
     display: flex;
     transform: rotate(0deg);
-    transition: transform var(--userinfo-transition);
+    transition: transform var(--long-transition);
     opacity: 0.3;
 }
 
@@ -107,7 +106,8 @@
     padding-left: 1.2rem;
     font-size: 1.2rem;
     filter: opacity(0.5);
-    transition: transform 300ms, color 300ms;
+    transition: transform var(--medium-transition),
+        color var(--medium-transition);
 }
 
 .user-info__alias:hover {
@@ -145,7 +145,7 @@
 
 .new-alias-enter-active {
     opacity: 1;
-    transition: opacity 300ms;
+    transition: opacity var(--medium-transition);
 }
 
 .new-alias-exit {
@@ -154,5 +154,5 @@
 
 .new-alias-exit-active {
     opacity: 0;
-    transition: opacity 300ms;
+    transition: opacity var(--medium-transition);
 }

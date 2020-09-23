@@ -8,7 +8,7 @@
     margin: 0.5rem 2rem;
     padding: 0 1rem;
     border: 1px solid black;
-    transition: transform 300ms ease;
+    transition: transform var(--medium-transition) ease;
 }
 
 .user-card:hover {

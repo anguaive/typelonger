@@ -18,8 +18,9 @@ body,
     font-size: 16px;
     line-height: 1.1;
     font-family: Fixedsys;
-    --watermark-font-size: 5rem;
-    --watermark-color: #dddddd;
+    --quick-transition: 100ms;
+    --medium-transition: 300ms;
+    --long-transition: 600ms;
     --accent-color: #ffbb00;
     --menu-height: 5rem;
     --perf-gold1: #f0b52b;
@@ -133,7 +134,8 @@ body .invis {
 .page-enter-active {
     opacity: 1;
     transform: scale(1);
-    transition: opacity 300ms, transform 300ms ease-out;
+    transition: opacity var(--medium-transition),
+        transform var(--medium-transition) ease-out;
 }
 
 .page-exit {
@@ -144,7 +146,8 @@ body .invis {
 .page-exit-active {
     opacity: 0;
     transform: scale(0.9);
-    transition: opacity 300ms, transform 300ms ease-out;
+    transition: opacity var(--medium-transition),
+        transform var(--medium-transition) ease-out;
 }
 
 .button {
@@ -159,7 +162,8 @@ body .invis {
     outline: none;
     padding: 0.3rem;
     cursor: pointer;
-    transition: transform 100ms ease;
+    transition: transform var(--quick-transition),
+        box-shadow var(--quick-transition) ease;
     font-size: 1.2rem;
 }
 
