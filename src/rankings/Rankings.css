@@ -10,7 +10,6 @@
 
 #rankings-list {
     grid-area: list;
-    background-color: lightgrey;
     height: 100%;
     display: flex;
     flex-direction: column;
