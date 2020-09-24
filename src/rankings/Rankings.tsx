@@ -52,39 +52,53 @@ const Rankings = () => {
                     </section>
                     <section id="rankings-actions"></section>
                     <section id="rankings-controls">
-                        <button
-                            className="button svg-button"
-                            onClick={() => setPage(0)}
-                        >
-                            <DoubleUpArrow />
-                        </button>
-                        <button
-                            className="button svg-button"
-                            onClick={() => page > 0 && setPage(page - 1)}
-                        >
-                            <UpArrow />
-                        </button>
-                        <button
-                            className="button svg-button"
-                            onClick={() =>
-                                page <
-                                    Math.floor(users.length / usersPerPage) &&
-                                setPage(page + 1)
-                            }
-                        >
-                            <DownArrow />
-                        </button>
-                        <button
-                            className="button svg-button"
-                            onClick={() =>
-                                setPage(Math.floor(users.length / usersPerPage))
-                            }
-                        >
-                            <DoubleDownArrow />
-                        </button>
-                        Displaying [{page * usersPerPage + 1}-
-                        {Math.min((page + 1) * usersPerPage, users.length)}] of{' '}
-                        {users.length} results
+                        <div className="rankings-buttons">
+                            <button
+                                className="button svg-button"
+                                onClick={() => setPage(0)}
+                            >
+                                <DoubleUpArrow />
+                            </button>
+                            <button
+                                className="button svg-button"
+                                onClick={() => page > 0 && setPage(page - 1)}
+                            >
+                                <UpArrow />
+                            </button>
+                            <button
+                                className="button svg-button"
+                                onClick={() =>
+                                    page <
+                                        Math.floor(
+                                            users.length / usersPerPage
+                                        ) && setPage(page + 1)
+                                }
+                            >
+                                <DownArrow />
+                            </button>
+                            <button
+                                className="button svg-button"
+                                onClick={() =>
+                                    setPage(
+                                        Math.floor(users.length / usersPerPage)
+                                    )
+                                }
+                            >
+                                <DoubleDownArrow />
+                            </button>
+                        </div>
+                        <div className="rankings-indicator">
+                            <div>Displaying</div>
+                            <div>
+                                [{page * usersPerPage + 1}-
+                                {Math.min(
+                                    (page + 1) * usersPerPage,
+                                    users.length
+                                )}
+                                ] of {users.length}
+                            </div>
+                            <div>results</div>
+                        </div>
                     </section>
                 </main>
             ) : null}{' '}
