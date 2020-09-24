@@ -18,13 +18,12 @@ interface AppRoute {
 
 function App() {
     const [paused, setPaused] = useState(true);
-    const [searchHidden, setSearchHidden] = useState(false);
+    const [searchHidden, setSearchHidden] = useState(true);
     const location = useLocation();
 
     const keyboardHandler = useCallback(
         (event: KeyboardEvent) => {
             event.preventDefault();
-            console.log(event.key);
             if (event.key === 's') {
                 setSearchHidden(false);
             }
