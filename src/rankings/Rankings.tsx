@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Rankings.css';
 import UserCard from './UserCard';
+import Radio from '../radio/Radio';
 import { ReactComponent as DoubleUpArrow } from '../res/angle-double-up.svg';
 import { ReactComponent as UpArrow } from '../res/angle-up.svg';
 import { ReactComponent as DownArrow } from '../res/angle-down.svg';
@@ -16,8 +17,12 @@ export interface UserListView {
 }
 
 const Rankings = () => {
+    const sortOptions = ['rank', 'time', 'wpm', 'acc'];
+    const positionOptions = ['top', 'near me'];
     const [users, setUsers] = useState<UserListView[]>();
-    const [page, setPage] = useState<number>(0);
+    const [page, setPage] = useState(0);
+    const [sort, setSort] = useState(0);
+    const [position, setPosition] = useState(0);
     const usersPerPage = 10;
 
     useEffect(() => {
@@ -50,7 +55,18 @@ const Rankings = () => {
                                 />
                             ))}
                     </section>
-                    <section id="rankings-actions"></section>
+                    <section id="rankings-actions">
+                        <Radio
+                            values={positionOptions}
+                            selected={position}
+                            setSelected={setPosition}
+                        />
+                        <Radio
+                            values={sortOptions}
+                            selected={sort}
+                            setSelected={setSort}
+                        />
+                    </section>
                     <section id="rankings-controls">
                         <div className="rankings-buttons">
                             <button

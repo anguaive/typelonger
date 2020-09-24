@@ -5,8 +5,8 @@
     cursor: pointer;
     background-color: transparent;
     font-family: Fixedsys;
-    padding-left: 1.2rem;
-    font-size: 1.2rem;
+    padding-left: 1em;
+    font-size: 1em;
     filter: opacity(0.5);
     transition: transform var(--medium-transition),
         color var(--medium-transition);

@@ -17,7 +17,15 @@
 
 #rankings-actions {
     grid-area: actions;
-    background-color: pink;
+    display: flex;
+    flex-direction: column;
+    padding-top: 4rem;
+    padding-left: 4rem;
+    font-size: 2rem;
+}
+
+#rankings-actions > *:not(:last-child) {
+    margin-bottom: 2rem;
 }
 
 #rankings-controls {

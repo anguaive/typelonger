@@ -9,7 +9,7 @@ interface RadioProps {
 
 const Radio = ({ values, selected, setSelected }: RadioProps) => {
     return (
-        <>
+        <section className="radio-container">
             {values.map((value, i) => (
                 <button
                     key={i}
@@ -24,7 +24,7 @@ const Radio = ({ values, selected, setSelected }: RadioProps) => {
                     {value}
                 </button>
             ))}
-        </>
+        </section>
     );
 };
 
