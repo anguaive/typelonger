@@ -1,0 +1,36 @@
+.radio {
+    padding: 0;
+    border: none;
+    display: block;
+    cursor: pointer;
+    background-color: transparent;
+    font-family: Fixedsys;
+    padding-left: 1.2rem;
+    font-size: 1.2rem;
+    filter: opacity(0.5);
+    transition: transform var(--medium-transition),
+        color var(--medium-transition);
+}
+
+.radio:hover {
+    transform: translateX(0.1rem);
+    color: var(--accent-color);
+}
+
+.radio:focus {
+    outline: none;
+}
+
+.radio-active {
+    padding-left: 0;
+    filter: none;
+}
+
+.radio-active:hover {
+    transform: none;
+    color: inherit;
+}
+
+.radio-active::before {
+    content: '->';
+}

@@ -4,6 +4,7 @@ import { ReactComponent as ExpandIcon } from '../res/chevron-circle-down.svg';
 import { formatHours } from '../utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PerformanceCard from './PerformanceCard';
+import Radio from '../radio/Radio';
 
 export interface Performance {
     title: string;
@@ -68,23 +69,13 @@ const Profile = () => {
                                 {profile.name}
                             </div>
                             <div className="user-info__aliases">
-                                {profile.aliases.map((alias, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => {
-                                            setSelectedAlias(i);
-                                            console.log(profile.aliases[i]);
-                                        }}
-                                        className={
-                                            'user-info__alias' +
-                                            (i === selectedAlias
-                                                ? ' alias-active'
-                                                : '')
-                                        }
-                                    >
-                                        {alias.name}
-                                    </button>
-                                ))}
+                                <Radio
+                                    values={profile.aliases.map(
+                                        (alias) => alias.name
+                                    )}
+                                    selected={selectedAlias}
+                                    setSelected={setSelectedAlias}
+                                />
                             </div>
                             <TransitionGroup component={null}>
                                 <CSSTransition
