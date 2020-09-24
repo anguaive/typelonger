@@ -5,38 +5,10 @@ import { formatHours } from '../utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PerformanceCard from './PerformanceCard';
 import Radio from '../radio/Radio';
-
-export interface Performance {
-    title: string;
-    section: string;
-    when: Date;
-    points: number;
-    time: number;
-    acc: number;
-    wpm: number;
-    rank: 'Normal' | 'Bronze' | 'Silver' | 'Gold';
-}
-
-interface Alias {
-    name: string;
-    points: number;
-    time: number;
-    acc: number;
-    wpm: number;
-    topPerformances: Performance[];
-    recentPerformances: Performance[];
-}
-
-interface UserProfile {
-    name: string;
-    picture: string;
-    since: Date;
-    aliases: Alias[];
-    bio: string;
-}
+import { User } from '../scheme';
 
 const Profile = () => {
-    const [profile, setProfile] = useState<UserProfile>();
+    const [profile, setProfile] = useState<User>();
     const [selectedAlias, setSelectedAlias] = useState(0);
 
     useEffect(() => {

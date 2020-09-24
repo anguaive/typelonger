@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './PerformanceCard.css';
-import { Performance } from './Profile';
+import { Performance } from '../scheme';
 import { ReactComponent as ClockIcon } from '../res/clock-o.svg';
 import { formatTime } from '../utils';
 

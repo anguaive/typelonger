@@ -1,7 +1,7 @@
 {
     "users": [
         {
-            "aliasname": "elvia",
+            "name": "elvia",
             "username": "ElviaCochran",
             "points": 2637,
             "time": 9564147,
@@ -9,7 +9,7 @@
             "acc": 97.6651
         },
         {
-            "aliasname": "flowers",
+            "name": "flowers",
             "username": "FlowersNguyen",
             "points": 2626,
             "time": 3980706,
@@ -17,7 +17,7 @@
             "acc": 95.2963
         },
         {
-            "aliasname": "pearlie123",
+            "name": "pearlie123",
             "username": "PearlieLevine",
             "points": 2598,
             "time": 6144577,
@@ -25,7 +25,7 @@
             "acc": 99.0545
         },
         {
-            "aliasname": "saundders",
+            "name": "saundders",
             "username": "ChanSaunders",
             "points": 2596,
             "time": 345981,
@@ -33,7 +33,7 @@
             "acc": 98.3719
         },
         {
-            "aliasname": "gayle",
+            "name": "gayle",
             "username": "GayleVelasquez",
             "points": 2410,
             "time": 1408684,
@@ -41,7 +41,7 @@
             "acc": 99.3134
         },
         {
-            "aliasname": "careyQWERTY",
+            "name": "careyQWERTY",
             "username": "CareySilva",
             "points": 2356,
             "time": 5745044,
@@ -49,7 +49,7 @@
             "acc": 95.5189
         },
         {
-            "aliasname": "graham19782",
+            "name": "graham19782",
             "username": "GrahamMejia",
             "points": 2331,
             "time": 6796422,
@@ -57,7 +57,7 @@
             "acc": 99.0352
         },
         {
-            "aliasname": "lessd",
+            "name": "lessd",
             "username": "LessieDiaz",
             "points": 2310,
             "time": 3549846,
@@ -65,7 +65,7 @@
             "acc": 98.4785
         },
         {
-            "aliasname": "cpetersen87",
+            "name": "cpetersen87",
             "username": "ChasityPetersen",
             "points": 2299,
             "time": 7857931,
@@ -73,7 +73,7 @@
             "acc": 96.8696
         },
         {
-            "aliasname": "cooleymak",
+            "name": "cooleymak",
             "username": "CooleyVaughn",
             "points": 2289,
             "time": 3181663,
@@ -81,7 +81,7 @@
             "acc": 98.1174
         },
         {
-            "aliasname": "lorr_qwerty",
+            "name": "lorr_qwerty",
             "username": "LorrieCantu",
             "points": 2226,
             "time": 6347188,
@@ -89,7 +89,7 @@
             "acc": 97.4825
         },
         {
-            "aliasname": "lorr_workman",
+            "name": "lorr_workman",
             "username": "LorrieCantu",
             "points": 2208,
             "time": 1416443,
@@ -97,7 +97,7 @@
             "acc": 98.2636
         },
         {
-            "aliasname": "annaBB2",
+            "name": "annaBB2",
             "username": "AnnabelleBell",
             "points": 2178,
             "time": 3301341,
@@ -105,7 +105,7 @@
             "acc": 98.556
         },
         {
-            "aliasname": "HH",
+            "name": "HH",
             "username": "HarveyHaley",
             "points": 2174,
             "time": 1295321,
@@ -113,7 +113,7 @@
             "acc": 95.8984
         },
         {
-            "aliasname": "matilda",
+            "name": "matilda",
             "username": "MatildaSutton",
             "points": 2146,
             "time": 2263847,
@@ -121,7 +121,7 @@
             "acc": 99.7014
         },
         {
-            "aliasname": "bdawson",
+            "name": "bdawson",
             "username": "BeachDawson",
             "points": 2087,
             "time": 3259945,
@@ -129,7 +129,7 @@
             "acc": 96.4163
         },
         {
-            "aliasname": "ebrownie",
+            "name": "ebrownie",
             "username": "EllaBrown",
             "points": 2043,
             "time": 551270,
@@ -137,7 +137,7 @@
             "acc": 98.9671
         },
         {
-            "aliasname": "shauna",
+            "name": "shauna",
             "username": "ShaunaBuckner",
             "points": 2040,
             "time": 7525028,
@@ -145,7 +145,7 @@
             "acc": 98.1442
         },
         {
-            "aliasname": "rush001",
+            "name": "rush001",
             "username": "RushContreras",
             "points": 2019,
             "time": 1042273,
@@ -153,7 +153,7 @@
             "acc": 99.1049
         },
         {
-            "aliasname": "ccasey",
+            "name": "ccasey",
             "username": "ClaudiaCasey",
             "points": 1989,
             "time": 986149,
@@ -161,7 +161,7 @@
             "acc": 99.4933
         },
         {
-            "aliasname": "pearldowns",
+            "name": "pearldowns",
             "username": "PearlDowns",
             "points": 1987,
             "time": 8425858,
@@ -169,7 +169,7 @@
             "acc": 97.4879
         },
         {
-            "aliasname": "gingerman",
+            "name": "gingerman",
             "username": "GingerLancaster",
             "points": 1967,
             "time": 1256067,
@@ -177,7 +177,7 @@
             "acc": 97.741
         },
         {
-            "aliasname": "reynolds_qwerty",
+            "name": "reynolds_qwerty",
             "username": "LoweReynolds",
             "points": 1920,
             "time": 3777089,
@@ -185,7 +185,7 @@
             "acc": 96.1583
         },
         {
-            "aliasname": "simon_colemak",
+            "name": "simon_colemak",
             "username": "SimonChambers",
             "points": 1890,
             "time": 2611024,

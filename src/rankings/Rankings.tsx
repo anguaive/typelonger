@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Rankings.css';
+import { Alias } from '../scheme';
 import UserCard from './UserCard';
 import Radio from '../radio/Radio';
 import { ReactComponent as DoubleUpArrow } from '../res/angle-double-up.svg';
@@ -7,51 +8,42 @@ import { ReactComponent as UpArrow } from '../res/angle-up.svg';
 import { ReactComponent as DownArrow } from '../res/angle-down.svg';
 import { ReactComponent as DoubleDownArrow } from '../res/angle-double-down.svg';
 
-export interface UserListView {
-    aliasname: string;
-    username: string;
-    time: number;
-    points: number;
-    wpm: number;
-    acc: number;
-}
-
 const Rankings = () => {
     const sortOptions = ['rank', 'time', 'wpm', 'acc'];
     const positionOptions = ['top', 'near me'];
-    const [users, setUsers] = useState<UserListView[]>();
+    const [items, setItems] = useState<Alias[]>();
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState(0);
     const [position, setPosition] = useState(0);
-    const usersPerPage = 10;
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetch('http://localhost:3001/users')
             .then((response) => response.json())
             .then((data) => {
-                setUsers(data);
+                setItems(data);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <>
-            {users !== undefined ? (
+            {items !== undefined ? (
                 <main id="rankings">
                     <section id="rankings-list">
-                        {users
+                        {items
                             .slice(
-                                page * usersPerPage,
+                                page * itemsPerPage,
                                 Math.min(
-                                    (page + 1) * usersPerPage,
-                                    users.length
+                                    (page + 1) * itemsPerPage,
+                                    items.length
                                 )
                             )
-                            .map((user, i) => (
+                            .map((item, i) => (
                                 <UserCard
-                                    user={user}
+                                    alias={item}
                                     key={i}
-                                    placement={page * usersPerPage + i + 1}
+                                    placement={page * itemsPerPage + i + 1}
                                 />
                             ))}
                     </section>
@@ -86,7 +78,7 @@ const Rankings = () => {
                                 onClick={() =>
                                     page <
                                         Math.floor(
-                                            users.length / usersPerPage
+                                            items.length / itemsPerPage
                                         ) && setPage(page + 1)
                                 }
                             >
@@ -96,7 +88,7 @@ const Rankings = () => {
                                 className="button svg-button"
                                 onClick={() =>
                                     setPage(
-                                        Math.floor(users.length / usersPerPage)
+                                        Math.floor(items.length / itemsPerPage)
                                     )
                                 }
                             >
@@ -106,12 +98,12 @@ const Rankings = () => {
                         <div className="rankings-indicator">
                             <div>Displaying</div>
                             <div>
-                                [{page * usersPerPage + 1}-
+                                [{page * itemsPerPage + 1}-
                                 {Math.min(
-                                    (page + 1) * usersPerPage,
-                                    users.length
+                                    (page + 1) * itemsPerPage,
+                                    items.length
                                 )}
-                                ] of {users.length}
+                                ] of {items.length}
                             </div>
                             <div>results</div>
                         </div>
