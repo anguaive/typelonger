@@ -22,25 +22,27 @@ export interface Alias {
 
 export interface User {
     name: string;
-    picture: string;
+    picture?: string;
     since: Date;
     aliases: Alias[];
     bio: string;
 }
 
-interface Section {
+export interface Section {
     title: string;
-    content: string;
+    content?: string;
     length: number;
-    difficulty: number;
+    difficulty?: number;
     topPerformances: Performance[];
     ownTopPerformance: Performance;
 }
 
-interface Text {
+export interface Text {
     title: string;
-    coverPicture: string;
+    coverPicture?: string;
     author: string;
+    dateOfUpload: Date;
+    dateOfCreation: Date;
     isbn: string;
     genre: string;
     popularity: number;
