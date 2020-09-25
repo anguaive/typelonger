@@ -1,4 +1,543 @@
 {
+    "texts": [
+        {
+            "title": "Safe Haven",
+            "author": "Layney Russel",
+            "dateOfUpload": "2020-04-01 11:34:25",
+            "dateOfCreation": "2020-07-04 21:45:07",
+            "isbn": "400491258-X",
+            "genre": "Drama|Mystery|Romance",
+            "popularity": 85,
+            "sections": [
+                {
+                    "title": "Morning for the Osone Family",
+                    "length": 17804,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Take a Giant Step",
+                    "length": 10155,
+                    "difficulty": 3
+                },
+                {
+                    "title": "House of Exorcism, The (a.k.a. Lisa and the Devil) (Casa dell'esorcismo, La)",
+                    "length": 14983,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Alice in Wonderland",
+                    "length": 55299,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Curse of the Werewolf, The",
+                    "length": 69311,
+                    "difficulty": 8
+                }
+            ]
+        },
+        {
+            "title": "20,000 Leagues Under the Sea",
+            "author": "Jennie McKinless",
+            "dateOfUpload": "2020-05-15 14:35:35",
+            "dateOfCreation": "2020-06-11 18:04:24",
+            "isbn": "427009468-0",
+            "genre": "Action|Adventure|Sci-Fi",
+            "popularity": 34,
+            "sections": [
+                {
+                    "title": "Urbanized",
+                    "length": 22468,
+                    "difficulty": 8
+                },
+                {
+                    "title": "No Rest for the Brave (Pas de repos pour les braves)",
+                    "length": 12747,
+                    "difficulty": 9
+                }
+            ]
+        },
+        {
+            "title": "Girl of Your Dreams, The (Niña de tus ojos, La)",
+            "author": "Emmerich Piola",
+            "dateOfUpload": "2020-04-03 02:43:39",
+            "dateOfCreation": "2020-05-29 14:33:55",
+            "isbn": "782840114-0",
+            "genre": "Comedy|Drama",
+            "popularity": 5,
+            "sections": [
+                {
+                    "title": "Fireproof",
+                    "length": 47672,
+                    "difficulty": 6
+                },
+                {
+                    "title": "Cambridge Spies",
+                    "length": 31897,
+                    "difficulty": 3
+                },
+                {
+                    "title": "Needful Things",
+                    "length": 46801,
+                    "difficulty": 5
+                },
+                {
+                    "title": "Place in the Sun, A (En plats i solen)",
+                    "length": 94161,
+                    "difficulty": 7
+                },
+                {
+                    "title": "Unholy Wife, The",
+                    "length": 32928,
+                    "difficulty": 3
+                },
+                {
+                    "title": "High Tension (Haute tension) (Switchblade Romance)",
+                    "length": 44328,
+                    "difficulty": 5
+                }
+            ]
+        },
+        {
+            "title": "Pom Poko (a.k.a. Raccoon War, The) (Heisei tanuki gassen pompoko)",
+            "author": "Alaric Skuce",
+            "dateOfUpload": "2020-07-31 20:03:33",
+            "dateOfCreation": "2019-12-25 05:27:15",
+            "isbn": "813546347-2",
+            "genre": "Animation|Comedy|Drama|Fantasy",
+            "popularity": 34,
+            "sections": [
+                {
+                    "title": "Bell, Book and Candle",
+                    "length": 53026,
+                    "difficulty": 6
+                },
+                {
+                    "title": "Disco Dancer",
+                    "length": 89358,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Cooperstown",
+                    "length": 62253,
+                    "difficulty": 3
+                }
+            ]
+        },
+        {
+            "title": "Loverboy",
+            "author": "Colleen Henrie",
+            "dateOfUpload": "2019-12-21 10:49:21",
+            "dateOfCreation": "2020-03-19 12:46:25",
+            "isbn": "868986661-2",
+            "genre": "Comedy",
+            "popularity": 29,
+            "sections": [
+                {
+                    "title": "Division III: Football's Finest",
+                    "length": 70555,
+                    "difficulty": 2
+                },
+                {
+                    "title": "Brooklyn",
+                    "length": 62811,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Prophecy",
+                    "length": 56344,
+                    "difficulty": 8
+                },
+                {
+                    "title": "River Runs Through It, A",
+                    "length": 25577,
+                    "difficulty": 2
+                },
+                {
+                    "title": "Scenesters, The",
+                    "length": 33551,
+                    "difficulty": 10
+                },
+                {
+                    "title": "Nancy Drew: Detective",
+                    "length": 65691,
+                    "difficulty": 7
+                },
+                {
+                    "title": "Weather Underground, The",
+                    "length": 69208,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Männerherzen... und die ganz ganz große Liebe",
+                    "length": 48612,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Dead Times (Temps morts, Les)",
+                    "length": 91573,
+                    "difficulty": 1
+                },
+                {
+                    "title": "Children Who Chase Lost Voices from Deep Below (Hoshi o ou kodomo) (Journey to Agartha)",
+                    "length": 64117,
+                    "difficulty": 5
+                },
+                {
+                    "title": "Lola (Twinky) (London Affair)",
+                    "length": 39802,
+                    "difficulty": 1
+                },
+                {
+                    "title": "Moon",
+                    "length": 95896,
+                    "difficulty": 6
+                },
+                {
+                    "title": "Enid Is Sleeping",
+                    "length": 51815,
+                    "difficulty": 2
+                },
+                {
+                    "title": "Panic",
+                    "length": 59983,
+                    "difficulty": 1
+                },
+                {
+                    "title": "Dr. No",
+                    "length": 31119,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Songcatcher",
+                    "length": 40150,
+                    "difficulty": 9
+                },
+                {
+                    "title": "The Case of the Lucky Legs",
+                    "length": 65961,
+                    "difficulty": 2
+                },
+                {
+                    "title": "Student of Prague, The (a.k.a. Bargain with Satan, A) (Student von Prag, Der)",
+                    "length": 41495,
+                    "difficulty": 1
+                },
+                {
+                    "title": "Juice",
+                    "length": 46942,
+                    "difficulty": 1
+                }
+            ]
+        },
+        {
+            "title": "Smash-Up: The Story of a Woman",
+            "author": "Eleen Scotchmer",
+            "dateOfUpload": "2019-11-05 11:35:08",
+            "dateOfCreation": "2020-08-25 07:47:57",
+            "isbn": "743609258-8",
+            "genre": "Drama|Romance",
+            "popularity": 17,
+            "sections": [
+                {
+                    "title": "Family, The (Famiglia, La)",
+                    "length": 71017,
+                    "difficulty": 3
+                },
+                {
+                    "title": "Ten Minutes Older: The Trumpet",
+                    "length": 97722,
+                    "difficulty": 6
+                },
+                {
+                    "title": "You Only Live Once",
+                    "length": 93465,
+                    "difficulty": 2
+                },
+                {
+                    "title": "S.W.A.T.",
+                    "length": 68930,
+                    "difficulty": 2
+                },
+                {
+                    "title": "Life is a Bed of Roses (Vie est un roman, La)",
+                    "length": 18831,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Very British Gangster, A",
+                    "length": 69761,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Halloween",
+                    "length": 61316,
+                    "difficulty": 1
+                },
+                {
+                    "title": "Imposter, The",
+                    "length": 37818,
+                    "difficulty": 9
+                },
+                {
+                    "title": "Humoresque",
+                    "length": 32454,
+                    "difficulty": 10
+                },
+                {
+                    "title": "Tigrero: A Film That Was Never Made",
+                    "length": 77943,
+                    "difficulty": 6
+                },
+                {
+                    "title": "Dogma",
+                    "length": 19080,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Métisse (Café au Lait)",
+                    "length": 89688,
+                    "difficulty": 5
+                }
+            ]
+        },
+        {
+            "title": "Waste Land",
+            "author": "Nealson Germon",
+            "dateOfUpload": "2020-05-11 19:58:50",
+            "dateOfCreation": "2020-04-11 16:52:04",
+            "isbn": "544080167-7",
+            "genre": "Documentary",
+            "popularity": 54,
+            "sections": [
+                {
+                    "title": "Family, The (Famiglia, La)",
+                    "length": 71017,
+                    "difficulty": 3
+                },
+                {
+                    "title": "Ten Minutes Older: The Trumpet",
+                    "length": 97722,
+                    "difficulty": 6
+                },
+                {
+                    "title": "You Only Live Once",
+                    "length": 93465,
+                    "difficulty": 2
+                },
+                {
+                    "title": "S.W.A.T.",
+                    "length": 68930,
+                    "difficulty": 2
+                },
+                {
+                    "title": "Life is a Bed of Roses (Vie est un roman, La)",
+                    "length": 18831,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Very British Gangster, A",
+                    "length": 69761,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Halloween",
+                    "length": 61316,
+                    "difficulty": 1
+                },
+                {
+                    "title": "Imposter, The",
+                    "length": 37818,
+                    "difficulty": 9
+                },
+                {
+                    "title": "Humoresque",
+                    "length": 32454,
+                    "difficulty": 10
+                },
+                {
+                    "title": "Tigrero: A Film That Was Never Made",
+                    "length": 77943,
+                    "difficulty": 6
+                },
+                {
+                    "title": "Dogma",
+                    "length": 19080,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Métisse (Café au Lait)",
+                    "length": 89688,
+                    "difficulty": 5
+                }
+            ]
+        },
+        {
+            "title": "Children of Huang Shi, The",
+            "author": "Norry Mugleston",
+            "dateOfUpload": "2020-07-23 12:23:50",
+            "dateOfCreation": "2020-07-13 02:12:08",
+            "isbn": "491583721-1",
+            "genre": "Drama|War",
+            "popularity": 85,
+            "sections": [
+                {
+                    "title": "Soldier, The",
+                    "length": 79286,
+                    "difficulty": 7
+                },
+                {
+                    "title": "Resistance",
+                    "length": 93525,
+                    "difficulty": 1
+                }
+            ]
+        },
+        {
+            "title": "Vasermil",
+            "author": "Dorotea Pinckney",
+            "dateOfUpload": "2020-01-23 19:41:53",
+            "dateOfCreation": "2020-09-11 23:45:50",
+            "isbn": "942565143-4",
+            "genre": "Drama",
+            "popularity": 98
+        },
+        {
+            "title": "El Niño",
+            "author": "Tadeas Vasey",
+            "dateOfUpload": "2020-04-25 11:57:24",
+            "dateOfCreation": "2019-12-30 10:38:07",
+            "isbn": "809290618-1",
+            "genre": "Drama|Thriller",
+            "popularity": 35
+        },
+        {
+            "title": "Battle in Heaven (Batalla en el cielo)",
+            "author": "Baird Pogson",
+            "dateOfUpload": "2020-08-29 10:07:51",
+            "dateOfCreation": "2019-12-10 22:01:01",
+            "isbn": "991772154-1",
+            "genre": "Comedy|Drama|Romance",
+            "popularity": 8
+        },
+        {
+            "title": "Escape from the Planet of the Apes",
+            "author": "Brigg Zanitti",
+            "dateOfUpload": "2020-03-17 14:19:15",
+            "dateOfCreation": "2019-12-09 11:35:22",
+            "isbn": "134946403-1",
+            "genre": "Action|Sci-Fi",
+            "popularity": 96
+        },
+        {
+            "title": "Love Games",
+            "author": "Norry O'Currane",
+            "dateOfUpload": "2020-04-04 07:15:06",
+            "dateOfCreation": "2020-09-01 00:53:20",
+            "isbn": "009287838-5",
+            "genre": "Animation|Drama|Romance",
+            "popularity": 69
+        },
+        {
+            "title": "Treasure Hunter, The (Ci ling)",
+            "author": "Dorris Biles",
+            "dateOfUpload": "2020-08-28 12:29:35",
+            "dateOfCreation": "2019-11-03 13:11:59",
+            "isbn": "962520121-1",
+            "genre": "Action|Adventure|Fantasy|Romance|Sci-Fi",
+            "popularity": 55
+        },
+        {
+            "title": "Rocky III",
+            "author": "Henry Frere",
+            "dateOfUpload": "2020-04-20 05:50:23",
+            "dateOfCreation": "2020-02-24 13:58:11",
+            "isbn": "536361436-7",
+            "genre": "Action|Drama",
+            "popularity": 17
+        },
+        {
+            "title": "Way Home, The (Jibeuro)",
+            "author": "Byrle Syde",
+            "dateOfUpload": "2020-06-20 19:28:23",
+            "dateOfCreation": "2020-04-20 14:41:36",
+            "isbn": "844243091-1",
+            "genre": "Drama",
+            "popularity": 75
+        },
+        {
+            "title": "Going Overboard",
+            "author": "Bond Layborn",
+            "dateOfUpload": "2020-05-28 04:52:06",
+            "dateOfCreation": "2019-11-19 04:10:09",
+            "isbn": "001770364-6",
+            "genre": "Comedy",
+            "popularity": 82
+        },
+        {
+            "title": "Abandon Ship! (Seven Waves Away)",
+            "author": "Eleanora Grouvel",
+            "dateOfUpload": "2019-11-14 11:30:18",
+            "dateOfCreation": "2020-06-12 09:09:53",
+            "isbn": "027575139-2",
+            "genre": "Adventure|Drama",
+            "popularity": 3
+        },
+        {
+            "title": "Once in the Life",
+            "author": "Erie Mossdale",
+            "dateOfUpload": "2020-08-29 14:39:27",
+            "dateOfCreation": "2020-05-27 10:42:15",
+            "isbn": "647210656-8",
+            "genre": "Crime|Drama",
+            "popularity": 1
+        },
+        {
+            "title": "Dave Chappelle: For What it's Worth",
+            "author": "Tyrus Berecloth",
+            "dateOfUpload": "2020-06-16 07:22:17",
+            "dateOfCreation": "2020-08-22 01:31:17",
+            "isbn": "690465830-4",
+            "genre": "Comedy",
+            "popularity": 93
+        },
+        {
+            "title": "Mind Reader, The",
+            "author": "Kitti Duignan",
+            "dateOfUpload": "2020-04-23 07:05:01",
+            "dateOfCreation": "2020-03-22 01:02:26",
+            "isbn": "330745589-3",
+            "genre": "Drama|Romance",
+            "popularity": 27
+        },
+        {
+            "title": "Waiting Room (Bekleme odasi)",
+            "author": "Dorella Robbe",
+            "dateOfUpload": "2020-01-28 07:54:05",
+            "dateOfCreation": "2020-01-24 16:46:26",
+            "isbn": "672151623-3",
+            "genre": "Drama",
+            "popularity": 5
+        },
+        {
+            "title": "Godzilla vs. The Sea Monster (Gojira-Ebira-Mosura: Nankai no daiketto)",
+            "author": "Reider Gosden",
+            "dateOfUpload": "2019-12-01 03:46:08",
+            "dateOfCreation": "2020-08-06 18:06:12",
+            "isbn": "374442675-0",
+            "genre": "Action|Adventure|Fantasy|Sci-Fi",
+            "popularity": 53
+        },
+        {
+            "title": "I Will Follow You Into the Dark",
+            "author": "Iseabal Camilleri",
+            "dateOfUpload": "2020-06-06 09:13:33",
+            "dateOfCreation": "2020-07-20 10:36:54",
+            "isbn": "621175936-3",
+            "genre": "Drama|Horror|Romance",
+            "popularity": 7
+        }
+    ],
     "users": [
         {
             "name": "elvia",
