@@ -1,3 +1,96 @@
-.text-details {
+#text-details {
+    --text-info-row-height: 480px;
+    --cover-height: calc(var(--text-info-row-height) - 4rem);
+    --cover-width: calc(var(--cover-height) / 1.6);
     display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-rows: var(--text-info-row-height) 1fr;
+    grid-template-areas:
+        'info info sections'
+        'best-perfs your-perfs sections';
+}
+
+#text-details > * {
+    padding: 1rem;
+}
+
+#text-info {
+    grid-area: info;
+}
+
+#text-info-grid {
+    display: grid;
+    gap: 0 1rem;
+    grid-template-columns: calc(var(--cover-width) + 2rem) 3fr 2fr;
+    grid-template-rows: min-content min-content 1fr min-content;
+    grid-template-areas:
+        'cover title stats'
+        'cover author stats'
+        'cover genre stats'
+        'cover isbn dates';
+}
+
+.text-info__title {
+    grid-area: title;
+    font-size: 3rem;
+    padding-top: 1rem;
+}
+
+.text-info__cover-picture {
+    grid-area: cover;
+    height: var(--cover-height);
+    width: var(--cover-width);
+    margin: 1rem 0 0 1rem;
+    object-fit: contain;
+    display: inline-block;
+    border: 2px solid black;
+}
+
+.text-info__author {
+    grid-area: author;
+    font-size: 1.8rem;
+    filter: opacity(0.5);
+}
+
+.text-info__genre {
+    grid-area: genre;
+    font-size: 1.2rem;
+    filter: opacity(0.4);
+}
+
+.text-info__isbn {
+    grid-area: isbn;
+    align-self: end;
+    padding-bottom: 1rem;
+    font-size: 1.5rem;
+    filter: opacity(0.5);
+}
+
+.text-info__stats {
+    grid-area: stats;
+    font-size: 1.8rem;
+    align-self: start;
+    justify-self: center;
+    padding-top: 2rem;
+}
+
+.text-info__dates {
+    grid-area: dates;
+    font-size: 1.5rem;
+    place-self: center;
+    padding-bottom: 2rem;
+}
+
+#text-sections {
+    grid-area: sections;
+}
+
+#text-best-performances {
+    grid-area: best-perfs;
+}
+
+#your-best-performances {
+    grid-area: your-perfs;
 }
