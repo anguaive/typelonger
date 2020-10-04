@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import PerformanceCard from '../profile/PerformanceCard';
 import './TextDetails.css';
 import { Text } from '../scheme';
 
 const TextDetails = () => {
     const [text, setText] = useState<Text>();
+    const [selectedSection, setSelectedSection] = useState(0);
 
     useEffect(() => {
         fetch('http://localhost:3001/texts')
@@ -62,15 +64,64 @@ const TextDetails = () => {
             </section>
             <section id="text-sections">
                 <span className="container-title">Sections</span>
-                <div className="container"></div>
+                <div className="section-container">
+                    {text.sections.map((section, i) => (
+                        <div
+                            className={[
+                                'section',
+                                selectedSection === i
+                                    ? 'section-selected'
+                                    : null,
+                            ].join(' ')}
+                            onClick={() => setSelectedSection(i)}
+                        >
+                            <div className="section__title">
+                                {section.title}
+                            </div>
+                            <div className="section__stats-container">
+                                <div>
+                                    {section.length}
+                                    <span className="unit">words</span>
+                                </div>
+                                <div>
+                                    {section.difficulty}
+                                    <span className="unit">difficulty</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </section>
             <section id="text-best-performances">
                 <span className="container-title">Best Performances</span>
-                <div className="container"></div>
+                <div className="performance-container">
+                    {text.sections[selectedSection].topPerformances ? (
+                        text.sections[
+                            selectedSection
+                        ].topPerformances!.map((perf, i) => (
+                            <PerformanceCard {...perf} key={i} />
+                        ))
+                    ) : (
+                        <div className="no-performances">
+                            This section has no performances
+                        </div>
+                    )}
+                </div>
             </section>
             <section id="your-best-performances">
                 <span className="container-title">Your best performance</span>
-                <div className="container"></div>
+                <div className="performance-container">
+                    {text.sections[selectedSection].ownTopPerformance ? (
+                        <PerformanceCard
+                            {...text.sections[selectedSection]
+                                .ownTopPerformance!}
+                        />
+                    ) : (
+                        <div className="no-performances">
+                            You haven't completed this section yet
+                        </div>
+                    )}
+                </div>
             </section>
         </main>
     );

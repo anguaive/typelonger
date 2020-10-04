@@ -45,6 +45,8 @@
     flex-grow: 1;
     flex-shrink: 1;
     border-radius: 0.5rem;
+    max-height: 100px;
+    max-width: 500px;
     flex-basis: content;
     cursor: pointer;
     position: relative;

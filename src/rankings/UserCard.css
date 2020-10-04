@@ -21,6 +21,7 @@
 
 .alias-card:hover {
     transform: translateX(-0.5rem);
+    border: 1px solid black;
 }
 
 .alias-card__placement {

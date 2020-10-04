@@ -5,7 +5,7 @@
     display: grid;
     height: 100%;
     width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 2fr 2fr 3fr;
     grid-template-rows: var(--text-info-row-height) 1fr;
     grid-template-areas:
         'info info sections'
@@ -55,6 +55,7 @@
 }
 
 .text-info__genre {
+    margin-top: 1rem;
     grid-area: genre;
     font-size: 1.2rem;
     filter: opacity(0.4);
@@ -93,4 +94,68 @@
 
 #your-best-performances {
     grid-area: your-perfs;
+}
+
+.section-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0.5rem;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.section-container > *:hover {
+    transform: translateX(-0.5rem);
+}
+
+.section {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    background-color: var(--panel-color);
+    border: 1px solid var(--panel-border-color);
+    padding: 0 1rem;
+    min-height: 64px;
+    transition: transform var(--medium-transition) ease,
+        border var(--quick-transition) ease;
+}
+
+.section-selected {
+    border: 1px solid black;
+}
+
+.section:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+
+.section__title {
+    font-size: 1.5rem;
+}
+
+.section__stats-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: auto;
+    font-size: 1.3rem;
+}
+
+.section__stats-container > * {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section__stats-container > *:not(:last-child) {
+    padding-right: 1rem;
+}
+
+.no-performances {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    filter: opacity(0.5);
+    font-size: 2rem;
 }

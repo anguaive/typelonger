@@ -23,142 +23,86 @@ const Profile = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    if (profile === undefined) {
+        return null;
+    }
+
     return (
-        <>
-            {profile !== undefined ? (
-                <main id="profile">
-                    <section id="user-info">
-                        <span className="container-title">
-                            User information
-                        </span>
-                        <div id="user-info-grid" className="container">
-                            <img
-                                src={profile.picture}
-                                className="user-info__picture"
-                                alt="User"
-                            />
-                            <div className="user-info__username">
-                                {profile.name}
-                            </div>
-                            <div className="user-info__aliases">
-                                <Radio
-                                    values={profile.aliases.map(
-                                        (alias) => alias.name
-                                    )}
-                                    selected={selectedAlias}
-                                    setSelected={setSelectedAlias}
-                                />
-                            </div>
-                            <TransitionGroup component={null}>
-                                <CSSTransition
-                                    key={selectedAlias}
-                                    timeout={300}
-                                    classNames="new-alias"
-                                >
-                                    <>
-                                        <div className="user-info__stats">
-                                            <div className="user-info__stat">
-                                                {profile.since}{' '}
-                                                <span className="unit">
-                                                    since
-                                                </span>
-                                            </div>
-                                            <div className="user-info__stat">
-                                                {formatHours(
-                                                    profile.aliases[
-                                                        selectedAlias
-                                                    ].time || 0
-                                                )}{' '}
-                                                <span className="unit">
-                                                    hours
-                                                </span>
-                                            </div>
-                                            <div className="user-info__stat">
-                                                {
-                                                    profile.aliases[
-                                                        selectedAlias
-                                                    ].points
-                                                }{' '}
-                                                <span className="unit">
-                                                    points
-                                                </span>{' '}
-                                                ( #xyz )
-                                            </div>
-                                            <div className="user-info__stat">
-                                                {profile.aliases[
-                                                    selectedAlias
-                                                ].wpm.toFixed(2)}{' '}
-                                                <span className="unit">
-                                                    wpm
-                                                </span>
-                                            </div>
-                                            <div className="user-info__stat">
-                                                {profile.aliases[
-                                                    selectedAlias
-                                                ].acc.toFixed(2)}{' '}
-                                                <span className="unit">
-                                                    acc
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </>
-                                </CSSTransition>
-                            </TransitionGroup>
-                            <div className="user-info__bio">{profile.bio}</div>
-                            <div className="user-info__expand">
-                                <ExpandIcon />
-                            </div>
+        <main id="profile">
+            <section id="user-info">
+                <span className="container-title">User information</span>
+                <div id="user-info-grid" className="container">
+                    <img src={profile.picture} className="user-info__picture" alt="User" />
+                    <div className="user-info__username">{profile.name}</div>
+                    <div className="user-info__aliases">
+                        <Radio
+                            values={profile.aliases.map((alias) => alias.name)}
+                            selected={selectedAlias}
+                            setSelected={setSelectedAlias}
+                        />
+                    </div>
+                    <TransitionGroup component={null}>
+                        <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
+                            <>
+                                <div className="user-info__stats">
+                                    <div className="user-info__stat">
+                                        {profile.since} <span className="unit">since</span>
+                                    </div>
+                                    <div className="user-info__stat">
+                                        {formatHours(profile.aliases[selectedAlias].time || 0)}{' '}
+                                        <span className="unit">hours</span>
+                                    </div>
+                                    <div className="user-info__stat">
+                                        {profile.aliases[selectedAlias].points}{' '}
+                                        <span className="unit">points</span> ( #xyz )
+                                    </div>
+                                    <div className="user-info__stat">
+                                        {profile.aliases[selectedAlias].wpm.toFixed(2)}{' '}
+                                        <span className="unit">wpm</span>
+                                    </div>
+                                    <div className="user-info__stat">
+                                        {profile.aliases[selectedAlias].acc.toFixed(2)}{' '}
+                                        <span className="unit">acc</span>
+                                    </div>
+                                </div>
+                            </>
+                        </CSSTransition>
+                    </TransitionGroup>
+                    <div className="user-info__bio">{profile.bio}</div>
+                    <div className="user-info__expand">
+                        <ExpandIcon />
+                    </div>
+                </div>
+            </section>
+            <TransitionGroup component={null}>
+                <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
+                    <section id="top-performances">
+                        <span className="container-title">Top performances</span>
+                        <div className="performance-container">
+                            {profile.aliases[selectedAlias].topPerformances.map((perf, i) => (
+                                <PerformanceCard {...perf} key={i} />
+                            ))}
                         </div>
                     </section>
-                    <TransitionGroup component={null}>
-                        <CSSTransition
-                            key={selectedAlias}
-                            timeout={300}
-                            classNames="new-alias"
-                        >
-                            <section id="top-performances">
-                                <span className="container-title">
-                                    Top performances
-                                </span>
-                                <div className="performance-container">
-                                    {profile.aliases[
-                                        selectedAlias
-                                    ].topPerformances.map((perf, i) => (
-                                        <PerformanceCard {...perf} key={i} />
-                                    ))}
-                                </div>
-                            </section>
-                        </CSSTransition>
-                    </TransitionGroup>
-                    <TransitionGroup component={null}>
-                        <CSSTransition
-                            key={selectedAlias}
-                            timeout={300}
-                            classNames="new-alias"
-                        >
-                            <section id="recent-performances">
-                                <span className="container-title">
-                                    Recent performances
-                                </span>
-                                <div className="performance-container">
-                                    {profile.aliases[
-                                        selectedAlias
-                                    ].recentPerformances.map((perf, i) => (
-                                        <PerformanceCard {...perf} key={i} />
-                                    ))}
-                                </div>
-                            </section>
-                        </CSSTransition>
-                    </TransitionGroup>
-                    <section id="performance-graph">
-                        <span className="container-title">
-                            Performance graph
-                        </span>
-                        <div className="container"></div>
+                </CSSTransition>
+            </TransitionGroup>
+            <TransitionGroup component={null}>
+                <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
+                    <section id="recent-performances">
+                        <span className="container-title">Recent performances</span>
+                        <div className="performance-container">
+                            {profile.aliases[selectedAlias].recentPerformances.map((perf, i) => (
+                                <PerformanceCard {...perf} key={i} />
+                            ))}
+                        </div>
                     </section>
-                </main>
-            ) : null}
-        </>
+                </CSSTransition>
+            </TransitionGroup>
+            <section id="performance-graph">
+                <span className="container-title">Performance graph</span>
+                <div className="container"></div>
+            </section>
+        </main>
     );
 };
 
