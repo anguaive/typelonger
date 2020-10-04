@@ -2,9 +2,10 @@
     "texts": [
         {
             "title": "Safe Haven",
+			"coverPicture": "https://elyssarpress.com/wp-content/uploads/2019/12/book-cover-placeholder.png",
             "author": "Layney Russel",
-            "dateOfUpload": "2020-04-01 11:34:25",
-            "dateOfCreation": "2020-07-04 21:45:07",
+            "dateOfUpload": "2020-10-02T12:29:30.050Z",
+            "dateOfCreation": "2020-10-02T12:29:30.050Z",
             "isbn": "400491258-X",
             "genre": "Drama|Mystery|Romance",
             "popularity": 85,
@@ -12,7 +13,136 @@
                 {
                     "title": "Morning for the Osone Family",
                     "length": 17804,
+                    "difficulty": 4,
+					"topPerformances": [ {
+						"title": "Safe Haven",
+						"section": "Morning for the Osone Family",
+						"when": "2020-10-02T12:29:30.050Z",
+						"points": 145,
+						"time": 53455,
+						"acc": 99.94,
+						"wpm": 121.11,
+						"rank": "gold",
+						"aliasName": "jane_fdn",
+						"userName": "jane123"
+					},
+					{
+						"title": "Safe Haven",
+						"section": "Morning for the Osone Family",
+						"when": "2020-10-02T12:29:30.050Z",
+						"points": 129,
+						"time": 54869,
+						"acc": 98.44,
+						"wpm": 112.82,
+						"rank": "silver",
+						"aliasName": "macy123",
+						"userName": "macy123"
+					},
+					{
+						"title": "Safe Haven",
+						"section": "Morning for the Osone Family",
+						"when": "2020-10-02T12:29:30.050Z",
+						"points": 123,
+						"time": 58323,
+						"acc": 98.56,
+						"wpm": 108.34,
+						"rank": "bronze",
+						"aliasName": "Alias-123",
+						"userName": "Username"
+					}
+					],
+					"ownTopPerformance": {
+						"title": "Safe Haven",
+						"section": "Morning for the Osone Family",
+						"when": "2020-10-02T12:29:30.050Z",
+						"points": 123,
+						"time": 58323,
+						"acc": 98.56,
+						"wpm": 108.34,
+						"rank": "bronze",
+						"aliasName": "Alias-123",
+						"userName": "Username"
+					}
+                },
+                {
+                    "title": "Take a Giant Step",
+                    "length": 10155,
+                    "difficulty": 3
+                },
+                {
+                    "title": "House of Exorcism, The (a.k.a. Lisa and the Devil) (Casa dell'esorcismo, La)",
+                    "length": 14983,
                     "difficulty": 4
+                },
+                {
+                    "title": "Alice in Wonderland",
+                    "length": 55299,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Curse of the Werewolf, The",
+                    "length": 69311,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Take a Giant Step",
+                    "length": 10155,
+                    "difficulty": 3
+                },
+                {
+                    "title": "House of Exorcism, The (a.k.a. Lisa and the Devil) (Casa dell'esorcismo, La)",
+                    "length": 14983,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Alice in Wonderland",
+                    "length": 55299,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Curse of the Werewolf, The",
+                    "length": 69311,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Take a Giant Step",
+                    "length": 10155,
+                    "difficulty": 3
+                },
+                {
+                    "title": "House of Exorcism, The (a.k.a. Lisa and the Devil) (Casa dell'esorcismo, La)",
+                    "length": 14983,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Alice in Wonderland",
+                    "length": 55299,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Curse of the Werewolf, The",
+                    "length": 69311,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Take a Giant Step",
+                    "length": 10155,
+                    "difficulty": 3
+                },
+                {
+                    "title": "House of Exorcism, The (a.k.a. Lisa and the Devil) (Casa dell'esorcismo, La)",
+                    "length": 14983,
+                    "difficulty": 4
+                },
+                {
+                    "title": "Alice in Wonderland",
+                    "length": 55299,
+                    "difficulty": 8
+                },
+                {
+                    "title": "Curse of the Werewolf, The",
+                    "length": 69311,
+                    "difficulty": 8
                 },
                 {
                     "title": "Take a Giant Step",

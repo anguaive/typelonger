@@ -7,6 +7,8 @@ export interface Performance {
     acc: number;
     wpm: number;
     rank: 'Normal' | 'Bronze' | 'Silver' | 'Gold';
+    aliasName?: string;
+    userName?: string;
 }
 
 export interface Alias {
@@ -33,8 +35,8 @@ export interface Section {
     content?: string;
     length: number;
     difficulty?: number;
-    topPerformances: Performance[];
-    ownTopPerformance: Performance;
+    topPerformances?: Performance[];
+    ownTopPerformance?: Performance;
 }
 
 export interface Text {
