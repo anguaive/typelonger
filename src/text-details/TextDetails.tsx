@@ -75,11 +75,20 @@ const TextDetails = () => {
                     {text.sections.map((section, i) => (
                         <Card
                             key={i}
-                            actions={getSectionActions(
-                                section,
-                                location,
-                                history
-                            )}
+                            cardStyle={
+                                text.sections[i].ownTopPerformance
+                                    ? 'normal'
+                                    : 'inactive'
+                            }
+                            selected={i === selectedSection}
+                            actions={[
+                                {
+                                    text: 'View details',
+                                    handler: () => setSelectedSection(i),
+                                },
+                                { text: 'To lobby', handler: () => {} },
+                                { text: 'Play', handler: () => {} },
+                            ]}
                         >
                             <div className="section__title">
                                 {section.title}

@@ -6,10 +6,12 @@ const Card = ({
     children,
     actions,
     cardStyle,
+    selected,
 }: {
     children: ReactNode;
     actions?: Action[];
     cardStyle?: string;
+    selected?: boolean;
 }) => {
     const [displayActions, setDisplayActions] = useState<boolean>(false);
 
@@ -19,7 +21,12 @@ const Card = ({
             onMouseEnter={() => actions && setDisplayActions(true)}
             onMouseLeave={() => actions && setDisplayActions(false)}
         >
-            <div className="card-animation">
+            <div
+                className={[
+                    'card-animation',
+                    selected ? 'card-selected' : null,
+                ].join(' ')}
+            >
                 <div
                     className={[
                         'card-layout',
