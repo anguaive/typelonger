@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import PerformanceCard from '../profile/PerformanceCard';
+import { useLocation } from 'react-router-dom';
+import PerformanceCard from '../cards/PerformanceCard';
+import Card from '../cards/Card';
 import './TextDetails.css';
 import { Text } from '../scheme';
+import { getPerfActions, getSectionActions } from '../utils';
 
 const TextDetails = () => {
     const [text, setText] = useState<Text>();
     const [selectedSection, setSelectedSection] = useState(0);
+    const location = useLocation();
 
     useEffect(() => {
         fetch('http://localhost:3001/texts')
@@ -19,6 +23,8 @@ const TextDetails = () => {
     if (text === undefined) {
         return null;
     }
+
+    const ownTopPerf = text.sections[selectedSection].ownTopPerformance;
 
     return (
         <main id="text-details">
@@ -66,15 +72,7 @@ const TextDetails = () => {
                 <span className="container-title">Sections</span>
                 <div className="section-container">
                     {text.sections.map((section, i) => (
-                        <div
-                            className={[
-                                'section',
-                                selectedSection === i
-                                    ? 'section-selected'
-                                    : null,
-                            ].join(' ')}
-                            onClick={() => setSelectedSection(i)}
-                        >
+                        <Card key={i} actions={getSectionActions(section)}>
                             <div className="section__title">
                                 {section.title}
                             </div>
@@ -88,7 +86,7 @@ const TextDetails = () => {
                                     <span className="unit">difficulty</span>
                                 </div>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </div>
             </section>
@@ -96,11 +94,17 @@ const TextDetails = () => {
                 <span className="container-title">Best Performances</span>
                 <div className="performance-container">
                     {text.sections[selectedSection].topPerformances ? (
-                        text.sections[
-                            selectedSection
-                        ].topPerformances!.map((perf, i) => (
-                            <PerformanceCard {...perf} key={i} />
-                        ))
+                        text.sections[selectedSection].topPerformances!.map(
+                            (perf, i) => (
+                                <Card
+                                    key={i}
+                                    cardStyle={perf.rank}
+                                    actions={getPerfActions(perf, location)}
+                                >
+                                    <PerformanceCard {...perf} />
+                                </Card>
+                            )
+                        )
                     ) : (
                         <div className="no-performances">
                             This section has no performances
@@ -111,11 +115,13 @@ const TextDetails = () => {
             <section id="your-best-performances">
                 <span className="container-title">Your best performance</span>
                 <div className="performance-container">
-                    {text.sections[selectedSection].ownTopPerformance ? (
-                        <PerformanceCard
-                            {...text.sections[selectedSection]
-                                .ownTopPerformance!}
-                        />
+                    {ownTopPerf ? (
+                        <Card
+                            cardStyle={ownTopPerf.rank}
+                            actions={getPerfActions(ownTopPerf, location)}
+                        >
+                            <PerformanceCard {...ownTopPerf} />
+                        </Card>
                     ) : (
                         <div className="no-performances">
                             You haven't completed this section yet

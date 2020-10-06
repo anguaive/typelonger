@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './Rankings.css';
 import { Alias } from '../scheme';
-import UserCard from './UserCard';
+import { getUserActions } from '../utils';
+import UserCard from '../cards/UserCard';
+import Card from '../cards/Card';
 import Radio from '../radio/Radio';
 import { ReactComponent as DoubleUpArrow } from '../res/angle-double-up.svg';
 import { ReactComponent as UpArrow } from '../res/angle-up.svg';
@@ -26,91 +28,82 @@ const Rankings = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    if (items === undefined) {
+        return null;
+    }
+
     return (
-        <>
-            {items !== undefined ? (
-                <main id="rankings">
-                    <section id="rankings-list">
-                        {items
-                            .slice(
-                                page * itemsPerPage,
-                                Math.min(
-                                    (page + 1) * itemsPerPage,
-                                    items.length
-                                )
-                            )
-                            .map((item, i) => (
-                                <UserCard
-                                    alias={item}
-                                    key={i}
-                                    placement={page * itemsPerPage + i + 1}
-                                />
-                            ))}
-                    </section>
-                    <section id="rankings-actions">
-                        <Radio
-                            values={positionOptions}
-                            selected={position}
-                            setSelected={setPosition}
-                        />
-                        <Radio
-                            values={sortOptions}
-                            selected={sort}
-                            setSelected={setSort}
-                        />
-                    </section>
-                    <section id="rankings-controls">
-                        <div className="rankings-buttons">
-                            <button
-                                className="button svg-button"
-                                onClick={() => setPage(0)}
-                            >
-                                <DoubleUpArrow />
-                            </button>
-                            <button
-                                className="button svg-button"
-                                onClick={() => page > 0 && setPage(page - 1)}
-                            >
-                                <UpArrow />
-                            </button>
-                            <button
-                                className="button svg-button"
-                                onClick={() =>
-                                    page <
-                                        Math.floor(
-                                            items.length / itemsPerPage
-                                        ) && setPage(page + 1)
-                                }
-                            >
-                                <DownArrow />
-                            </button>
-                            <button
-                                className="button svg-button"
-                                onClick={() =>
-                                    setPage(
-                                        Math.floor(items.length / itemsPerPage)
-                                    )
-                                }
-                            >
-                                <DoubleDownArrow />
-                            </button>
-                        </div>
-                        <div className="rankings-indicator">
-                            <div>Displaying</div>
-                            <div>
-                                [{page * itemsPerPage + 1}-
-                                {Math.min(
-                                    (page + 1) * itemsPerPage,
-                                    items.length
-                                )}
-                                ] of {items.length}
-                            </div>
-                            <div>results</div>
-                        </div>
-                    </section>
-                </main>
-            ) : null}{' '}
-        </>
+        <main id="rankings">
+            <section id="rankings-list">
+                {items
+                    .slice(
+                        page * itemsPerPage,
+                        Math.min((page + 1) * itemsPerPage, items.length)
+                    )
+                    .map((item, i) => (
+                        <Card key={i} actions={getUserActions(item)}>
+                            <UserCard
+                                alias={item}
+                                placement={page * itemsPerPage + i + 1}
+                            />
+                        </Card>
+                    ))}
+            </section>
+            <section id="rankings-actions" className="list-actions">
+                <Radio
+                    values={positionOptions}
+                    selected={position}
+                    setSelected={setPosition}
+                />
+                <Radio
+                    values={sortOptions}
+                    selected={sort}
+                    setSelected={setSort}
+                />
+            </section>
+            <section id="rankings-controls" className="list-controls">
+                <div className="list-buttons">
+                    <button
+                        className="button svg-button"
+                        onClick={() => setPage(0)}
+                    >
+                        <DoubleUpArrow />
+                    </button>
+                    <button
+                        className="button svg-button"
+                        onClick={() => page > 0 && setPage(page - 1)}
+                    >
+                        <UpArrow />
+                    </button>
+                    <button
+                        className="button svg-button"
+                        onClick={() =>
+                            page < Math.floor(items.length / itemsPerPage) &&
+                            setPage(page + 1)
+                        }
+                    >
+                        <DownArrow />
+                    </button>
+                    <button
+                        className="button svg-button"
+                        onClick={() =>
+                            setPage(Math.floor(items.length / itemsPerPage))
+                        }
+                    >
+                        <DoubleDownArrow />
+                    </button>
+                </div>
+                <div className="list-results-indicator">
+                    <div>Displaying</div>
+                    <div>
+                        [{page * itemsPerPage + 1}-
+                        {Math.min((page + 1) * itemsPerPage, items.length)}] of{' '}
+                        {items.length}
+                    </div>
+                    <div>results</div>
+                </div>
+            </section>
+        </main>
     );
 };
 

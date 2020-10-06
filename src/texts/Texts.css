@@ -1,0 +1,36 @@
+#texts {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 65% 35%;
+    grid-template-areas:
+        'list actions'
+        'list controls';
+}
+
+#texts-list {
+    grid-area: list;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#texts-list > .card {
+    flex-grow: 1;
+    width: calc(100% - 2rem);
+    height: calc((var(--page-height) - 11rem) / 10);
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+#texts-list > .card:first-child {
+    margin-top: 1rem;
+}
+
+#texts-actions {
+    grid-area: actions;
+}
+
+#texts-controls {
+    grid-area: controls;
+}

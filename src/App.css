@@ -29,6 +29,7 @@ body,
     --panel-color: #fff;
     --panel-border-color: #d8d8d8;
     --accent-color: #ffbb00;
+    --card-hover-color: #000;
     --perf-gold1: #f0b52b;
     --perf-gold2: #d4af37;
     --perf-gold3: #f0a326;
@@ -182,4 +183,49 @@ a {
     display: inline-block;
     text-decoration: none;
     color: #000;
+}
+
+.list-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.list-results-indicator {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: max(1rem, 2vw);
+}
+
+.list-controls button {
+    /* Using magic viewport numbers for button dimensions...
+     * Not sure if a good idea
+     */
+    width: 4.8vh;
+    height: 4.8vh;
+    margin: 0.5rem;
+}
+
+.list-actions {
+    grid-area: actions;
+    display: flex;
+    flex-direction: column;
+    padding-top: 4rem;
+    padding-left: 4rem;
+    font-size: 2rem;
+}
+
+.list-actions > *:not(:last-child) {
+    margin-bottom: 2rem;
+}
+
+.list-controls {
+    display: flex;
+    flex-direction: row;
 }

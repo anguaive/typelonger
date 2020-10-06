@@ -10,7 +10,8 @@ import Rankings from './rankings/Rankings';
 import Settings from './Settings';
 import NoMatch from './NoMatch';
 import Search from './search/Search';
-import TextDetails from './text-details/TextDetails'
+import TextDetails from './text-details/TextDetails';
+import Texts from './texts/Texts';
 
 interface AppRoute {
     path: string;
@@ -60,11 +61,15 @@ function App() {
         {
             path: '/settings',
             component: <Settings />,
-		},
-		{
-			path: '/text',
-			component: <TextDetails />,
-		},
+        },
+        {
+            path: '/text',
+            component: <TextDetails />,
+        },
+        {
+            path: '/texts',
+            component: <Texts />,
+        },
         { path: '*', component: <NoMatch /> },
     ];
 

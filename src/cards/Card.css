@@ -32,12 +32,12 @@
 
 .card {
     transition: transform var(--medium-transition) ease;
+    max-height: 120px;
     border-radius: 0.5rem;
-    max-height: 100px;
-    max-width: 500px;
     flex-basis: content;
     cursor: pointer;
     position: relative;
+    box-sizing: border-box;
     background: linear-gradient(
         45deg,
         var(--color1),
@@ -56,15 +56,16 @@
         rgba(0, 0, 0, 0)
     );
     border-radius: 0.5rem;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
     background-size: 400% 400%;
     animation: shine 8s ease infinite;
-    border: 1px solid var(--border-color);
     height: 100%;
 }
 
 .card-layout,
 .card-actions {
-    padding: 0.2rem 0.4rem;
+    padding: 0 1rem;
     position: absolute;
     height: 100%;
     width: 100%;
@@ -76,14 +77,23 @@
 }
 
 .card-layout {
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
 }
 
 .card-actions {
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     align-items: center;
+}
+
+.card-actions > *:not(:first-child) {
+    margin-left: 1rem;
+}
+
+.card-actions > *:last-child {
+    margin-right: 1rem;
 }
 
 @keyframes shine {
@@ -100,4 +110,5 @@
 
 .card:hover {
     transform: translateX(-0.5rem);
+    box-shadow: inset 0 0 1px 1px var(--card-hover-color);
 }
