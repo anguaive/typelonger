@@ -1,0 +1,103 @@
+.gold {
+    --color1: var(--perf-gold1);
+    --color2: var(--perf-gold2);
+    --color3: var(--perf-gold3);
+    --shine-color: var(--white-shine-color);
+    --border-color: transparent;
+}
+
+.silver {
+    --color1: var(--perf-silver1);
+    --color2: var(--perf-silver2);
+    --color3: var(--perf-silver3);
+    --shine-color: var(--silver-shine-color);
+    --border-color: transparent;
+}
+
+.bronze {
+    --color1: var(--perf-bronze1);
+    --color2: var(--perf-bronze2);
+    --color3: var(--perf-bronze3);
+    --shine-color: var(--no-shine-color);
+    --border-color: transparent;
+}
+
+.normal {
+    --color1: var(--perf-normal);
+    --color2: var(--perf-normal);
+    --color3: var(--perf-normal);
+    --shine-color: var(--no-shine-color);
+    --border-color: var(--panel-border-color);
+}
+
+.card {
+    transition: transform var(--medium-transition) ease;
+    border-radius: 0.5rem;
+    max-height: 100px;
+    max-width: 500px;
+    flex-basis: content;
+    cursor: pointer;
+    position: relative;
+    background: linear-gradient(
+        45deg,
+        var(--color1),
+        var(--color2),
+        var(--color3)
+    );
+}
+
+.card-animation {
+    /* background-size has to come after background
+     * otherwise the animation does not work! */
+    background: linear-gradient(
+        30deg,
+        rgba(0, 0, 0, 0),
+        var(--shine-color),
+        rgba(0, 0, 0, 0)
+    );
+    border-radius: 0.5rem;
+    background-size: 400% 400%;
+    animation: shine 8s ease infinite;
+    border: 1px solid var(--border-color);
+    height: 100%;
+}
+
+.card-layout,
+.card-actions {
+    padding: 0.2rem 0.4rem;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    display: flex;
+    transition: filter var(--quick-transition) ease;
+}
+
+.card-layout {
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-actions {
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+@keyframes shine {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.card:hover {
+    transform: translateX(-0.5rem);
+}
