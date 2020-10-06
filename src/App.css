@@ -25,7 +25,9 @@ body,
     --menu-height: 5rem;
     --page-height: calc(100vh - 0.5rem - var(--menu-height));
     --background-color: #eee;
-    --text-area-background-color: #fff;
+    --text-active-color: #000;
+    --text-inactive-color: #888;
+    --textarea-background-color: #fff;
     --panel-color: #fff;
     --panel-border-color: #d8d8d8;
     --accent-color: #ffbb00;
