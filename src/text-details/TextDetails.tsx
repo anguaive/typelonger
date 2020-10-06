@@ -4,7 +4,7 @@ import PerformanceCard from '../cards/PerformanceCard';
 import Card from '../cards/Card';
 import './TextDetails.css';
 import { Text } from '../scheme';
-import { getPerfActions, getSectionActions } from '../utils';
+import { getPerfActions } from '../utils';
 
 const TextDetails = () => {
     const [text, setText] = useState<Text>();

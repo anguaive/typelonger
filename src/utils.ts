@@ -23,25 +23,6 @@ export const getTextActions = (text: Text, location: any, history: any) => [
     },
 ];
 
-export const getSectionActions = (
-    section: Section,
-    location: any,
-    history: any
-) => [
-    {
-        text: 'View details',
-        handler: () => {},
-    },
-    {
-        text: 'To lobby',
-        handler: () => {},
-    },
-    {
-        text: 'Play',
-        handler: () => {},
-    },
-];
-
 export const getPerfActions = (
     perf: Performance,
     location: any,
