@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import './Texts.css';
 import { Text } from '../scheme';
 import { getTextActions } from '../utils';
@@ -16,6 +17,8 @@ const Texts = () => {
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState(0);
     const itemsPerPage = 10;
+    const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
         fetch('http://localhost:3001/texts')
@@ -39,7 +42,10 @@ const Texts = () => {
                         Math.min((page + 1) * itemsPerPage, items.length)
                     )
                     .map((item, i) => (
-                        <Card key={i} actions={getTextActions(item)}>
+                        <Card
+                            key={i}
+                            actions={getTextActions(item, location, history)}
+                        >
                             <TextCard text={item} />
                         </Card>
                     ))}

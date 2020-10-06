@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import './Profile.css';
 import { ReactComponent as ExpandIcon } from '../res/chevron-circle-down.svg';
 import { formatHours } from '../utils';
@@ -12,6 +13,8 @@ import Card from '../cards/Card';
 const Profile = () => {
     const [profile, setProfile] = useState<User>();
     const [selectedAlias, setSelectedAlias] = useState(0);
+    const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
         fetch('http://localhost:3001/userProfile')
@@ -109,7 +112,11 @@ const Profile = () => {
                                     <Card
                                         key={i}
                                         cardStyle={perf.rank}
-                                        actions={getPerfActions(perf)}
+                                        actions={getPerfActions(
+                                            perf,
+                                            location,
+                                            history
+                                        )}
                                     >
                                         <PerformanceCard {...perf} />
                                     </Card>
@@ -136,7 +143,11 @@ const Profile = () => {
                                 <Card
                                     key={i}
                                     cardStyle={perf.rank}
-                                    actions={getPerfActions(perf)}
+                                    actions={getPerfActions(
+                                        perf,
+                                        location,
+                                        history
+                                    )}
                                 >
                                     <PerformanceCard {...perf} key={i} />
                                 </Card>

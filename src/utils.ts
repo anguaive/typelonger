@@ -5,25 +5,29 @@ export interface Action {
     handler: Function;
 }
 
-export const getUserActions = (alias: Alias) => [
+export const getUserActions = (alias: Alias, location: any, history: any) => [
     {
         text: 'View profile',
-        handler: () => {},
+        handler: () => history.push(`/profile/${alias.username}/${alias.name}`),
     },
 ];
 
-export const getTextActions = (text: Text) => [
+export const getTextActions = (text: Text, location: any, history: any) => [
     {
         text: 'Expand',
         handler: () => {},
     },
     {
         text: 'View details',
-        handler: () => {},
+        handler: () => history.push('text/TEXT_ID'),
     },
 ];
 
-export const getSectionActions = (section: Section) => [
+export const getSectionActions = (
+    section: Section,
+    location: any,
+    history: any
+) => [
     {
         text: 'View details',
         handler: () => {},
@@ -38,7 +42,11 @@ export const getSectionActions = (section: Section) => [
     },
 ];
 
-export const getPerfActions = (perf: Performance, location?: any) => {
+export const getPerfActions = (
+    perf: Performance,
+    location: any,
+    history: any
+) => {
     console.log(location);
     const actions = [
         {
@@ -51,11 +59,25 @@ export const getPerfActions = (perf: Performance, location?: any) => {
         },
     ];
 
-    if (location && (location.pathname.split('/')[1] = 'text')) {
-        actions.splice(0, 0, {
-            text: 'View profile',
-            handler: () => {},
-        });
+    if (location) {
+        const pathname = location.pathname.split('/')[1];
+        if (pathname == 'text') {
+            actions.splice(0, 0, {
+                text: 'View profile',
+                handler: () =>
+                    history.push(
+                        `/profile/${perf.userName || 'USER_NAME'}/${
+                            perf.aliasName || 'ALIAS_NAME'
+                        }`
+                    ),
+            });
+        }
+        if (pathname == 'profile') {
+            actions.splice(0, 0, {
+                text: 'View text',
+                handler: () => history.push('/text/TEXT_ID/section/SECTION_ID'),
+            });
+        }
     }
 
     return actions;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import './Rankings.css';
 import { Alias } from '../scheme';
 import { getUserActions } from '../utils';
@@ -18,6 +19,8 @@ const Rankings = () => {
     const [sort, setSort] = useState(0);
     const [position, setPosition] = useState(0);
     const itemsPerPage = 10;
+    const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
         fetch('http://localhost:3001/users')
@@ -41,7 +44,10 @@ const Rankings = () => {
                         Math.min((page + 1) * itemsPerPage, items.length)
                     )
                     .map((item, i) => (
-                        <Card key={i} actions={getUserActions(item)}>
+                        <Card
+                            key={i}
+                            actions={getUserActions(item, location, history)}
+                        >
                             <UserCard
                                 alias={item}
                                 placement={page * itemsPerPage + i + 1}

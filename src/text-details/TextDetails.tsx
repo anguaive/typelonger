@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import PerformanceCard from '../cards/PerformanceCard';
 import Card from '../cards/Card';
 import './TextDetails.css';
@@ -10,6 +10,7 @@ const TextDetails = () => {
     const [text, setText] = useState<Text>();
     const [selectedSection, setSelectedSection] = useState(0);
     const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
         fetch('http://localhost:3001/texts')
@@ -72,7 +73,14 @@ const TextDetails = () => {
                 <span className="container-title">Sections</span>
                 <div className="section-container">
                     {text.sections.map((section, i) => (
-                        <Card key={i} actions={getSectionActions(section)}>
+                        <Card
+                            key={i}
+                            actions={getSectionActions(
+                                section,
+                                location,
+                                history
+                            )}
+                        >
                             <div className="section__title">
                                 {section.title}
                             </div>
@@ -99,7 +107,11 @@ const TextDetails = () => {
                                 <Card
                                     key={i}
                                     cardStyle={perf.rank}
-                                    actions={getPerfActions(perf, location)}
+                                    actions={getPerfActions(
+                                        perf,
+                                        location,
+                                        history
+                                    )}
                                 >
                                     <PerformanceCard {...perf} />
                                 </Card>
@@ -118,7 +130,11 @@ const TextDetails = () => {
                     {ownTopPerf ? (
                         <Card
                             cardStyle={ownTopPerf.rank}
-                            actions={getPerfActions(ownTopPerf, location)}
+                            actions={getPerfActions(
+                                ownTopPerf,
+                                location,
+                                history
+                            )}
                         >
                             <PerformanceCard {...ownTopPerf} />
                         </Card>
