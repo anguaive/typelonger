@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './App.css';
+import './Colourschemes.css';
 import Menu from './Menu';
 import Game from './game/Game';
 import Matchmaking from './Matchmaking';
 import Profile from './profile/Profile';
 import Rankings from './rankings/Rankings';
-import Settings from './Settings';
+import Settings, { AppSettings } from './Settings';
 import NoMatch from './NoMatch';
 import Search from './search/Search';
 import TextDetails from './text-details/TextDetails';
@@ -19,6 +20,9 @@ interface AppRoute {
 }
 
 function App() {
+    const [settings, setSettings] = useState<AppSettings>({
+        colourscheme: 'dark',
+    });
     const [paused, setPaused] = useState(true);
     const [searchHidden, setSearchHidden] = useState(true);
     const location = useLocation();
@@ -33,6 +37,10 @@ function App() {
 
         []
     );
+
+    useEffect(() => {
+        document.body.className = settings.colourscheme;
+    });
 
     useEffect(() => {
         document.addEventListener('keyup', keyboardHandler, false);
@@ -60,7 +68,9 @@ function App() {
         },
         {
             path: '/settings',
-            component: <Settings />,
+            component: (
+                <Settings settings={settings} setSettings={setSettings} />
+            ),
         },
         {
             path: '/text',
