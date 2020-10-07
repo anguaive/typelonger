@@ -4,16 +4,18 @@
     display: block;
     cursor: pointer;
     background-color: transparent;
+    color: var(--text-active-color);
     font-family: Fixedsys;
     padding-left: 1em;
     font-size: 1em;
     filter: opacity(0.5);
     transition: transform var(--medium-transition),
-        color var(--medium-transition);
+        color var(--medium-transition), filter var(--medium-transition);
 }
 
 .radio:hover {
     transform: translateX(0.1rem);
+    filter: none;
     color: var(--accent-color);
 }
 

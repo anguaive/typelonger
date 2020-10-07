@@ -1,43 +1,43 @@
 .gold {
-    --color1: var(--perf-gold1);
-    --color2: var(--perf-gold2);
-    --color3: var(--perf-gold3);
-    --text-color: var(--text-active-color);
+    --color1: var(--gold-bg1-color);
+    --color2: var(--gold-bg2-color);
+    --color3: var(--gold-bg3-color);
+    --text-color: var(--gold-text-color);
     --shine-color: var(--white-shine-color);
     --border-color: transparent;
 }
 
 .silver {
-    --color1: var(--perf-silver1);
-    --color2: var(--perf-silver2);
-    --color3: var(--perf-silver3);
-    --text-color: var(--text-active-color);
+    --color1: var(--silver-bg1-color);
+    --color2: var(--silver-bg2-color);
+    --color3: var(--silver-bg3-color);
+    --text-color: var(--silver-text-color);
     --shine-color: var(--silver-shine-color);
     --border-color: transparent;
 }
 
 .bronze {
-    --color1: var(--perf-bronze1);
-    --color2: var(--perf-bronze2);
-    --color3: var(--perf-bronze3);
-    --text-color: var(--text-active-color);
+    --color1: var(--bronze-bg1-color);
+    --color2: var(--bronze-bg2-color);
+    --color3: var(--bronze-bg3-color);
+    --text-color: var(--bronze-text-color);
     --shine-color: var(--no-shine-color);
     --border-color: transparent;
 }
 
 .normal {
-    --color1: var(--perf-normal);
-    --color2: var(--perf-normal);
-    --color3: var(--perf-normal);
+    --color1: var(--panel-color);
+    --color2: var(--panel-color);
+    --color3: var(--panel-color);
     --text-color: var(--text-active-color);
     --shine-color: var(--no-shine-color);
     --border-color: var(--panel-border-color);
 }
 
 .inactive {
-    --color1: var(--perf-normal);
-    --color2: var(--perf-normal);
-    --color3: var(--perf-normal);
+    --color1: var(--panel-color);
+    --color2: var(--panel-color);
+    --color3: var(--panel-color);
     --text-color: var(--text-inactive-color);
     --shine-color: var(--no-shine-color);
     --border-color: var(--panel-border-color);
@@ -103,6 +103,10 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
+}
+
+.card-actions > * {
+    color: var(--text-color);
 }
 
 .card-actions > *:not(:first-child) {
