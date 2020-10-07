@@ -1,10 +1,17 @@
 import React from 'react';
+import { setSyntheticTrailingComments } from 'typescript';
 
 const colourschemes = ['light', 'dark'];
+
+export const SETTINGS_STORAGE = 'typelonger_settings';
 
 export interface AppSettings {
     colourscheme: string;
 }
+
+export const defaultSettings: AppSettings = {
+    colourscheme: 'light',
+};
 
 interface SettingsProps {
     settings: AppSettings;
@@ -12,6 +19,11 @@ interface SettingsProps {
 }
 
 const Settings = ({ settings, setSettings }: SettingsProps) => {
+    const saveSettings = (settings: AppSettings) => {
+        setSettings(settings);
+        window.localStorage.setItem(SETTINGS_STORAGE, JSON.stringify(settings));
+    };
+
     return (
         <main id="settings">
             <h1>Settings</h1>
@@ -19,7 +31,7 @@ const Settings = ({ settings, setSettings }: SettingsProps) => {
             {colourschemes.map((scheme, i) => (
                 <button
                     onClick={() =>
-                        setSettings({ ...settings, colourscheme: scheme })
+                        saveSettings({ ...settings, colourscheme: scheme })
                     }
                 >
                     {scheme}

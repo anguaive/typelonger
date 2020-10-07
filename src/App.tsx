@@ -8,7 +8,11 @@ import Game from './game/Game';
 import Matchmaking from './Matchmaking';
 import Profile from './profile/Profile';
 import Rankings from './rankings/Rankings';
-import Settings, { AppSettings } from './Settings';
+import Settings, {
+    AppSettings,
+    SETTINGS_STORAGE,
+    defaultSettings,
+} from './Settings';
 import NoMatch from './NoMatch';
 import Search from './search/Search';
 import TextDetails from './text-details/TextDetails';
@@ -20,9 +24,17 @@ interface AppRoute {
 }
 
 function App() {
-    const [settings, setSettings] = useState<AppSettings>({
-        colourscheme: 'dark',
-    });
+    const [settings, setSettings] = useState<AppSettings>(
+        (() => {
+            const storedSettings = window.localStorage.getItem(
+                SETTINGS_STORAGE
+            );
+            return storedSettings
+                ? JSON.parse(storedSettings)
+                : defaultSettings;
+        })()
+    );
+
     const [paused, setPaused] = useState(true);
     const [searchHidden, setSearchHidden] = useState(true);
     const location = useLocation();
