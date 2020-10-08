@@ -28,7 +28,6 @@ export const getPerfActions = (
     location: any,
     history: any
 ) => {
-    console.log(location);
     const actions = [
         {
             text: 'View replay',
@@ -42,7 +41,7 @@ export const getPerfActions = (
 
     if (location) {
         const pathname = location.pathname.split('/')[1];
-        if (pathname == 'text') {
+        if (pathname === 'text') {
             actions.splice(0, 0, {
                 text: 'View profile',
                 handler: () =>
@@ -53,7 +52,7 @@ export const getPerfActions = (
                     ),
             });
         }
-        if (pathname == 'profile') {
+        if (pathname === 'profile') {
             actions.splice(0, 0, {
                 text: 'View text',
                 handler: () => history.push('/text/TEXT_ID/section/SECTION_ID'),
