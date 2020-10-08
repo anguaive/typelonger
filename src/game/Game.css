@@ -9,12 +9,10 @@
 }
 
 #scorebar {
-    border: 1px solid grey;
     grid-area: scorebar;
 }
 
 #detailed-stats {
-    border: 1px solid green;
     grid-area: detailed-stats;
 }
 
@@ -38,6 +36,6 @@
 }
 
 #text-area {
-    border: 1px solid yellow;
     grid-area: text-area;
+    background-color: var(--textarea-background-color);
 }

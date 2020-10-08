@@ -1,6 +1,6 @@
 #profile {
     --profile-row-height: 244px;
-    --userinfo-expanded-height: calc(100vh - var(--menu-height) - 2rem);
+    --userinfo-expanded-height: calc(100vh - var(--menu-height) - 2.5rem);
     height: 100%;
     display: grid;
     height: 100%;

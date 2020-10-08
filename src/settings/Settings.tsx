@@ -1,4 +1,5 @@
 import React from 'react';
+import './Settings.css';
 
 const colourschemes = ['light', 'dark'];
 
@@ -25,17 +26,24 @@ const Settings = ({ settings, setSettings }: SettingsProps) => {
 
     return (
         <main id="settings">
-            <h1>Settings</h1>
-            <h2>Colour scheme</h2>
-            {colourschemes.map((scheme, i) => (
-                <button
-                    onClick={() =>
-                        saveSettings({ ...settings, colourscheme: scheme })
-                    }
-                >
-                    {scheme}
-                </button>
-            ))}
+            <section>
+                <span className="container-title">Colour scheme</span>
+                <div className="container colourscheme-settings">
+                    {colourschemes.map((scheme, i) => (
+                        <button
+                            className={scheme + ' colourscheme-button'}
+                            onClick={() =>
+                                saveSettings({
+                                    ...settings,
+                                    colourscheme: scheme,
+                                })
+                            }
+                        >
+                            {scheme}
+                        </button>
+                    ))}
+                </div>
+            </section>
         </main>
     );
 };

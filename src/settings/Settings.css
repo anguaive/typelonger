@@ -1,0 +1,39 @@
+#settings {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0 auto;
+}
+
+#settings > * {
+    padding: 1rem;
+}
+
+.colourscheme-settings {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    box-sizing: border-box;
+    width: fit-content;
+}
+
+.colourscheme-settings > *:not(:last-child) {
+    margin-right: 1rem;
+}
+
+.colourscheme-button {
+    padding: 0.5rem;
+    border-radius: 0.8rem;
+    font-family: Fixedsys;
+    font-size: 2rem;
+    border: 2px solid black;
+    color: var(--text-active-color);
+    background-color: var(--background-color);
+    transition: color var(--quick-transition) ease,
+        background-color var(--quick-transition) ease;
+}
+
+.colourscheme-button:hover {
+    color: var(--accent-color);
+    background-color: var(--panel-color);
+}

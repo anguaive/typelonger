@@ -12,7 +12,7 @@ import Settings, {
     AppSettings,
     SETTINGS_STORAGE,
     defaultSettings,
-} from './Settings';
+} from './settings/Settings';
 import NoMatch from './NoMatch';
 import Search from './search/Search';
 import TextDetails from './text-details/TextDetails';

@@ -44,7 +44,6 @@ const Menu = ({ paused, loggedIn }: MenuProps) => {
     useEffect(() => {
         // Deep copy of initialLinks
         const initialLinksCopy = initialLinks.slice();
-        console.log(`Initial links has ${initialLinks.length} items`);
         if (loggedIn) {
             initialLinksCopy.splice(3, 0, {
                 path: '/profile',

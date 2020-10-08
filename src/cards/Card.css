@@ -74,7 +74,7 @@
     );
     border-radius: 0.5rem;
     box-sizing: border-box;
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
     background-size: 400% 400%;
     animation: shine 8s ease infinite;
     height: 100%;

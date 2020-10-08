@@ -15,9 +15,10 @@ const Game = ({ paused, setPaused }: GameProps) => {
     return (
         <main id="game">
             <QuickStats time={time} wpm={wpm} acc={acc} paused={paused} />
-            <section id="text-area" onClick={() => setPaused(!paused)}>
-                text area
-            </section>
+            <section
+                id="text-area"
+                onClick={() => setPaused(!paused)}
+            ></section>
             <section id="scorebar" className={paused ? '' : 'hidden'}>
                 scorebar
             </section>

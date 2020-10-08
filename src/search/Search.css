@@ -7,7 +7,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    backdrop-filter: brightness(20%) blur(8px);
+    backdrop-filter: brightness(60%) blur(8px);
     z-index: 1;
 }
 
