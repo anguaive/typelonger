@@ -17,13 +17,17 @@ import NoMatch from './NoMatch';
 import Search from './search/Search';
 import TextDetails from './text-details/TextDetails';
 import Texts from './texts/Texts';
+import { AuthStatus } from './auth';
 
 interface AppRoute {
     path: string;
     component: JSX.Element;
 }
 
-function App() {
+const App = () => {
+    const [authStatus, setAuthStatus] = useState<AuthStatus>({
+        userName: 'Username',
+    });
     const [settings, setSettings] = useState<AppSettings>(
         (() => {
             const storedSettings = window.localStorage.getItem(
@@ -50,6 +54,11 @@ function App() {
         []
     );
 
+    const logOut = () => {
+        console.log('logging out');
+        setAuthStatus({ ...authStatus, userName: '' });
+    };
+
     useEffect(() => {
         document.body.className = settings.colourscheme;
     });
@@ -72,7 +81,7 @@ function App() {
         },
         {
             path: '/profile',
-            component: <Profile />,
+            component: <Profile authStatus={authStatus} logOut={logOut} />,
         },
         {
             path: '/rankings',
@@ -97,7 +106,7 @@ function App() {
 
     return (
         <>
-            <Menu paused={paused} />
+            <Menu paused={paused} loggedIn={!!authStatus.userName} />
             <Search hidden={searchHidden} setHidden={setSearchHidden} />
             <TransitionGroup component={null}>
                 <CSSTransition
@@ -118,6 +127,6 @@ function App() {
             </TransitionGroup>
         </>
     );
-}
+};
 
 export default App;

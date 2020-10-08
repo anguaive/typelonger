@@ -1,5 +1,4 @@
 import React from 'react';
-import { setSyntheticTrailingComments } from 'typescript';
 
 const colourschemes = ['light', 'dark'];
 
@@ -58,4 +57,4 @@ export default Settings;
 // - regular dark
 // - solarized light
 // - solarized dark
-// - seoul
+// - etc.

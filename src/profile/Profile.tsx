@@ -8,8 +8,14 @@ import Radio from '../radio/Radio';
 import { User } from '../scheme';
 import { getPerfActions } from '../utils';
 import Card from '../cards/Card';
+import { AuthStatus } from '../auth';
 
-const Profile = () => {
+interface ProfileProps {
+    authStatus: AuthStatus;
+    logOut: Function;
+}
+
+const Profile = ({ authStatus, logOut }: ProfileProps) => {
     const [profile, setProfile] = useState<User>();
     const [selectedAlias, setSelectedAlias] = useState(0);
     const location = useLocation();
@@ -41,7 +47,14 @@ const Profile = () => {
                         className="user-info__picture"
                         alt="User"
                     />
-                    <div className="user-info__username">{profile.name}</div>
+                    <div className="user-info__username">
+                        {profile.name}
+                        {profile.name === authStatus.userName && (
+                            <button className="button" onClick={() => logOut()}>
+                                Log out
+                            </button>
+                        )}
+                    </div>
                     <div className="user-info__aliases">
                         <Radio
                             values={profile.aliases.map((alias) => alias.name)}

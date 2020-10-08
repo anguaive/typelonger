@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Transition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 
@@ -8,19 +8,22 @@ import { Link } from 'react-router-dom';
 interface NavLink {
     path: string;
     name: string;
+    icon: string;
+    style?: string;
 }
-
-const links: NavLink[] = [
-    { path: '/game', name: 'Play' },
-    { path: '/matchmaking', name: 'Matchmaking' },
-    { path: '/profile', name: 'Profile' },
-    { path: '/rankings', name: 'Rankings' },
-    { path: '/settings', name: 'Settings' },
-];
 
 interface MenuProps {
     paused: boolean;
+    loggedIn: boolean;
 }
+
+const initialLinks: NavLink[] = [
+    { path: '/game', name: 'Play', icon: 'keyboard' },
+    { path: '/texts', name: 'Browse', icon: 'menu_book' },
+    { path: '/matchmaking', name: 'Matchmaking', icon: 'sports_esports' },
+    { path: '/rankings', name: 'Rankings', icon: 'emoji_events' },
+    { path: '/settings', name: 'Settings', icon: 'settings' },
+];
 
 const defaultStyle = {
     transition: 'opacity 300ms ease-in-out',
@@ -35,7 +38,30 @@ const transitionStyles = {
     unmounted: { opacity: 0 },
 };
 
-const Menu = ({ paused }: MenuProps) => {
+const Menu = ({ paused, loggedIn }: MenuProps) => {
+    const [links, setLinks] = useState<NavLink[]>(initialLinks);
+
+    useEffect(() => {
+        // Deep copy of initialLinks
+        const initialLinksCopy = initialLinks.slice();
+        console.log(`Initial links has ${initialLinks.length} items`);
+        if (loggedIn) {
+            initialLinksCopy.splice(3, 0, {
+                path: '/profile',
+                name: 'Profile',
+                icon: 'face',
+            });
+        } else {
+            initialLinksCopy.splice(3, 0, {
+                path: '/auth',
+                name: 'Log in',
+                icon: 'face',
+                style: 'menu-glowing',
+            });
+        }
+        setLinks(initialLinksCopy);
+    }, [loggedIn]);
+
     return (
         <div id="menu-bar">
             <Transition in={paused} timeout={300}>
@@ -45,9 +71,14 @@ const Menu = ({ paused }: MenuProps) => {
                         style={{ ...defaultStyle, ...transitionStyles[state] }}
                     >
                         <ul>
-                            {links.map((route, i) => (
-                                <li key={i}>
-                                    <Link to={route.path}>{route.name}</Link>
+                            {links.map((link, i) => (
+                                <li className={link.style || undefined} key={i}>
+                                    <Link to={link.path}>
+                                        <i className="material-icons md-48">
+                                            {link.icon}
+                                        </i>
+                                        {link.name}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
