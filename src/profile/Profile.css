@@ -78,12 +78,11 @@
     position: absolute;
     bottom: 1rem;
     right: 1rem;
-    width: 2rem;
-    height: 2rem;
+    width: 36px;
+    height: 36px;
     display: flex;
     transform: rotate(0deg);
     transition: transform var(--long-transition);
-    opacity: 0.3;
 }
 
 #user-info:hover .user-info__expand {

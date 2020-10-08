@@ -1,7 +1,6 @@
 import React from 'react';
 import './PerformanceCard.css';
 import { Performance } from '../scheme';
-import { ReactComponent as ClockIcon } from '../res/clock-o.svg';
 import { formatTime } from '../utils';
 
 const PerformanceCard = (perf: Performance) => {
@@ -23,11 +22,7 @@ const PerformanceCard = (perf: Performance) => {
             {playedBy}
             <div className="performance__stats">
                 <div>
-                    <div className="icon-container">
-                        <div className="icon">
-                            <ClockIcon />
-                        </div>
-                    </div>
+                    <i className="material-icons md-18">schedule</i>
                     <span>{formatTime(perf.time)}</span>
                 </div>
                 <div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import './Profile.css';
-import { ReactComponent as ExpandIcon } from '../res/chevron-circle-down.svg';
 import { formatHours } from '../utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PerformanceCard from '../cards/PerformanceCard';
@@ -92,7 +91,7 @@ const Profile = () => {
                     </TransitionGroup>
                     <div className="user-info__bio">{profile.bio}</div>
                     <div className="user-info__expand">
-                        <ExpandIcon />
+                        <i className="material-icons md-36">expand_more</i>
                     </div>
                 </div>
             </section>

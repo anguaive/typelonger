@@ -6,10 +6,6 @@ import { getTextActions } from '../utils';
 import TextCard from '../cards/TextCard';
 import Card from '../cards/Card';
 import Radio from '../radio/Radio';
-import { ReactComponent as DoubleUpArrow } from '../res/angle-double-up.svg';
-import { ReactComponent as UpArrow } from '../res/angle-up.svg';
-import { ReactComponent as DownArrow } from '../res/angle-down.svg';
-import { ReactComponent as DoubleDownArrow } from '../res/angle-double-down.svg';
 
 const Texts = () => {
     const sortOptions = ['title', 'author', 'length', 'popularity'];
@@ -63,13 +59,13 @@ const Texts = () => {
                         className="button svg-button"
                         onClick={() => setPage(0)}
                     >
-                        <DoubleUpArrow />
+                        <i className="material-icons md-36">first_page</i>
                     </button>
                     <button
                         className="button svg-button"
                         onClick={() => page > 0 && setPage(page - 1)}
                     >
-                        <UpArrow />
+                        <i className="material-icons md-36">chevron_left</i>
                     </button>
                     <button
                         className="button svg-button"
@@ -78,7 +74,7 @@ const Texts = () => {
                             setPage(page + 1)
                         }
                     >
-                        <DownArrow />
+                        <i className="material-icons md-36">chevron_right</i>
                     </button>
                     <button
                         className="button svg-button"
@@ -86,7 +82,7 @@ const Texts = () => {
                             setPage(Math.floor(items.length / itemsPerPage))
                         }
                     >
-                        <DoubleDownArrow />
+                        <i className="material-icons md-36">last_page</i>
                     </button>
                 </div>
                 <div className="list-results-indicator">
