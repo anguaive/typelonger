@@ -62,6 +62,7 @@ body,
 }
 
 #menu {
+    transition: opacity var(--medium-transition) ease-in-out;
     display: flex;
     align-items: flex-end;
 }
@@ -174,6 +175,15 @@ ul {
     transform: scale(0.9);
     transition: opacity var(--medium-transition),
         transform var(--medium-transition) ease-out;
+}
+
+.menu-exit-done,
+.menu-exit-active {
+    opacity: 0;
+}
+
+.menu-enter-done {
+    opacity: 1;
 }
 
 .button {

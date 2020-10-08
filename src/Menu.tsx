@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Transition } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 
 // TODO: :focus on keyboard events only
@@ -24,19 +24,6 @@ const initialLinks: NavLink[] = [
     { path: '/rankings', name: 'Rankings', icon: 'emoji_events' },
     { path: '/settings', name: 'Settings', icon: 'settings' },
 ];
-
-const defaultStyle = {
-    transition: 'opacity 300ms ease-in-out',
-    opacity: 0,
-};
-
-const transitionStyles = {
-    entering: { opacity: 1 },
-    entered: { opacity: 1 },
-    exiting: { opacity: 0 },
-    exited: { opacity: 0 },
-    unmounted: { opacity: 0 },
-};
 
 const Menu = ({ paused, loggedIn }: MenuProps) => {
     const [links, setLinks] = useState<NavLink[]>(initialLinks);
@@ -63,12 +50,9 @@ const Menu = ({ paused, loggedIn }: MenuProps) => {
 
     return (
         <div id="menu-bar">
-            <Transition in={paused} timeout={300}>
+            <CSSTransition classNames="menu" in={paused} timeout={300}>
                 {(state) => (
-                    <nav
-                        id="menu"
-                        style={{ ...defaultStyle, ...transitionStyles[state] }}
-                    >
+                    <nav id="menu">
                         <ul>
                             {links.map((link, i) => (
                                 <li className={link.style || undefined} key={i}>
@@ -83,7 +67,7 @@ const Menu = ({ paused, loggedIn }: MenuProps) => {
                         </ul>
                     </nav>
                 )}
-            </Transition>
+            </CSSTransition>
         </div>
     );
 };
