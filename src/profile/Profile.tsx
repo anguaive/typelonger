@@ -9,17 +9,29 @@ import { User } from '../scheme';
 import { getPerfActions } from '../utils';
 import Card from '../cards/Card';
 import { AuthStatus } from '../auth';
+import InputPopup from '../input-popup/InputPopup';
 
 interface ProfileProps {
     authStatus: AuthStatus;
     logOut: Function;
+    searchHidden: boolean;
+    setSearchHidden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Profile = ({ authStatus, logOut }: ProfileProps) => {
+const Profile = ({
+    authStatus,
+    logOut,
+    searchHidden,
+    setSearchHidden,
+}: ProfileProps) => {
     const [profile, setProfile] = useState<User>();
     const [selectedAlias, setSelectedAlias] = useState(0);
     const location = useLocation();
     const history = useHistory();
+
+    const searchSubmit = (value: string) => {
+        console.log(value);
+    };
 
     useEffect(() => {
         fetch('http://localhost:3001/userProfile')
@@ -39,6 +51,13 @@ const Profile = ({ authStatus, logOut }: ProfileProps) => {
 
     return (
         <main id="profile">
+            <InputPopup
+                hidden={searchHidden}
+                setHidden={setSearchHidden}
+                title="Player search"
+                hint="Search for a user or an alias"
+                submit={searchSubmit}
+            />
             <section id="user-info">
                 <span className="container-title">User information</span>
                 <div id="user-info-grid" className="container">

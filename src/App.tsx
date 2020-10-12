@@ -14,7 +14,6 @@ import Settings, {
     defaultSettings,
 } from './settings/Settings';
 import NoMatch from './NoMatch';
-import Search from './search/Search';
 import TextDetails from './text-details/TextDetails';
 import Texts from './texts/Texts';
 import { AuthStatus } from './auth';
@@ -39,8 +38,8 @@ const App = () => {
         })()
     );
 
-    const [paused, setPaused] = useState(true);
     const [searchHidden, setSearchHidden] = useState(true);
+    const [paused, setPaused] = useState(true);
     const location = useLocation();
 
     const keyboardHandler = useCallback(
@@ -81,7 +80,14 @@ const App = () => {
         },
         {
             path: '/profile',
-            component: <Profile authStatus={authStatus} logOut={logOut} />,
+            component: (
+                <Profile
+                    authStatus={authStatus}
+                    logOut={logOut}
+                    searchHidden={searchHidden}
+                    setSearchHidden={setSearchHidden}
+                />
+            ),
         },
         {
             path: '/rankings',
@@ -107,7 +113,6 @@ const App = () => {
     return (
         <>
             <Menu paused={paused} loggedIn={!!authStatus.userName} />
-            <Search hidden={searchHidden} setHidden={setSearchHidden} />
             <TransitionGroup component={null}>
                 <CSSTransition
                     key={location.key}
