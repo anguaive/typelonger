@@ -21,11 +21,12 @@
     gap: 1rem 1rem;
     overflow: hidden;
     grid-template-columns: calc(var(--profile-row-height) - 2rem) 1fr 1fr;
-    grid-template-rows: 4rem 132px auto;
+    grid-template-rows: 4rem 132px 1fr 4rem;
     grid-template-areas:
         'picture name name'
         'picture aliases stats'
-        'bio bio bio';
+        'bio bio bio'
+        'actions actions actions';
 }
 
 #user-info {
@@ -34,8 +35,14 @@
     transition: height var(--long-transition);
 }
 
-#user-search {
-    grid-area: search;
+.user-actions {
+    display: flex;
+    align-items: center;
+    grid-area: actions;
+}
+
+.user-actions > * {
+    margin-left: 1rem;
 }
 
 #top-performances {
@@ -63,11 +70,8 @@
 }
 
 .user-info__username {
-    display: flex;
-    justify-content: space-between;
     padding-top: 1rem;
     padding-right: 1rem;
-    align-items: center;
     overflow: hidden;
     grid-area: name;
     font-size: 3rem;

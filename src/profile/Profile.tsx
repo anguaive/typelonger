@@ -47,14 +47,7 @@ const Profile = ({ authStatus, logOut }: ProfileProps) => {
                         className="user-info__picture"
                         alt="User"
                     />
-                    <div className="user-info__username">
-                        {profile.name}
-                        {profile.name === authStatus.userName && (
-                            <button className="button" onClick={() => logOut()}>
-                                Log out
-                            </button>
-                        )}
-                    </div>
+                    <div className="user-info__username">{profile.name}</div>
                     <div className="user-info__aliases">
                         <Radio
                             values={profile.aliases.map((alias) => alias.name)}
@@ -103,6 +96,20 @@ const Profile = ({ authStatus, logOut }: ProfileProps) => {
                         </CSSTransition>
                     </TransitionGroup>
                     <div className="user-info__bio">{profile.bio}</div>
+                    <div className="user-actions">
+                        {authStatus.userName === profile.name && (
+                            <>
+                                <button className="button">New alias</button>
+                                <button className="button">Edit bio</button>
+                                <button
+                                    className="button"
+                                    onClick={() => logOut()}
+                                >
+                                    Log out
+                                </button>
+                            </>
+                        )}
+                    </div>
                     <div className="user-info__expand">
                         <i className="material-icons md-36">expand_more</i>
                     </div>
