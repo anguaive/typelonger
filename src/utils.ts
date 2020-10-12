@@ -14,10 +14,6 @@ export const getUserActions = (alias: Alias, location: any, history: any) => [
 
 export const getTextActions = (text: Text, location: any, history: any) => [
     {
-        text: 'Expand',
-        handler: () => {},
-    },
-    {
         text: 'View details',
         handler: () => history.push('text/TEXT_ID'),
     },

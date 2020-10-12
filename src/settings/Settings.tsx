@@ -31,6 +31,7 @@ const Settings = ({ settings, setSettings }: SettingsProps) => {
                 <div className="container colourscheme-settings">
                     {colourschemes.map((scheme, i) => (
                         <button
+                            key={i}
                             className={scheme + ' colourscheme-button'}
                             onClick={() =>
                                 saveSettings({
