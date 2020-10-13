@@ -16,7 +16,14 @@ interface LoginForm {
 
 const Auth = () => {
     const [registerData, setRegisterData] = useState<RegisterForm>({});
+    const [registerValidationErrors, setRegisterValidatonErrors] = useState<
+        string[]
+    >([]);
+
     const [loginData, setLoginData] = useState<LoginForm>({});
+    const [loginValidationErrors, setLoginValidatonErrors] = useState<string[]>(
+        []
+    );
 
     const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -101,6 +108,11 @@ const Auth = () => {
                             placeholder="repeat password"
                         />
                     </label>
+                    <div className="auth-form__validation_errors">
+                        {registerValidationErrors.map((error) => (
+                            <div className="validation-error">{error}</div>
+                        ))}
+                    </div>
                     <div className="auth-form__button-group">
                         <button className="button button-primary" type="submit">
                             Register
@@ -119,6 +131,11 @@ const Auth = () => {
                         Password
                         <input placeholder="password" />
                     </label>
+                    <div className="auth-form__validation_errors">
+                        {loginValidationErrors.map((error) => (
+                            <div className="validation-error">{error}</div>
+                        ))}
+                    </div>
                     <div className="auth-form__button-group">
                         <button className="button" type="button">
                             Forgot password
