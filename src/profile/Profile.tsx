@@ -25,19 +25,22 @@ const Profile = ({
     setSearchHidden,
 }: ProfileProps) => {
     const [profile, setProfile] = useState<User>();
+    const [bioEditorHidden, setBioEditorHidden] = useState(true);
+    const [newAliasHidden, setNewAliasHidden] = useState(true);
+    const [bioValue, setBioValue] = useState('');
     const [selectedAlias, setSelectedAlias] = useState(0);
     const location = useLocation();
     const history = useHistory();
-
-    const searchSubmit = (value: string) => {
-        console.log(value);
-    };
 
     useEffect(() => {
         fetch('http://localhost:3001/userProfile')
             .then((response) => response.json())
             .then((data) => {
-                setProfile(data);
+                // I have not realized how fucky it is to parse date from JSON
+                // before deciding on it, so I'm ignoring it. It's just
+                // placeholder data anyway
+                setProfile({ ...data, since: new Date() });
+                setBioValue(data.bio);
             });
         // For some reason eslint complains about the empty deps array,
         // even though it's the RECOMMENDED way of running the hook
@@ -49,6 +52,52 @@ const Profile = ({
         return null;
     }
 
+    const createNewAlias = (newName: string) => {
+        profile.aliases.push({
+            name: newName,
+            username: profile.name,
+            points: 0,
+            time: 0,
+            acc: 0,
+            wpm: 0,
+            topPerformances: [],
+            recentPerformances: [],
+        });
+    };
+
+    const submitSearch = (value: string) => {
+        console.log(value);
+    };
+
+    const resetBioEditor = () => {
+        setBioValue(profile.bio);
+        setBioEditorHidden(true);
+    };
+
+    const saveBio = () => {
+        setProfile({ ...profile, bio: bioValue });
+        setBioEditorHidden(true);
+    };
+
+    const validateNewAlias = (newName: string): string[] => {
+        const validationErrors = [];
+        const aliasNames = profile.aliases.map((alias) => alias.name);
+        if (newName.length > 32) {
+            validationErrors.push(
+                'The name exceeds the maximum length of 32 characters!'
+            );
+        }
+        if (newName.match(/^[a-zA-Z_]+$/g) === null) {
+            validationErrors.push('The name contains illegal characters!');
+        }
+        if (aliasNames.includes(newName)) {
+            validationErrors.push(
+                'An alias with the same name already exists!'
+            );
+        }
+        return validationErrors;
+    };
+
     return (
         <main id="profile">
             <InputPopup
@@ -56,7 +105,16 @@ const Profile = ({
                 setHidden={setSearchHidden}
                 title="Player search"
                 hint="Search for a user or an alias"
-                submit={searchSubmit}
+                submit={submitSearch}
+            />
+            <InputPopup
+                hidden={newAliasHidden}
+                setHidden={setNewAliasHidden}
+                title="New alias"
+                hint={`Your aliases need to have different names. You can't change an existing alias name, so choose wisely!\nThe name may contain alphanumeric characters or the underscore _ character, and mustn't be longer than 32 characters.`}
+                placeholder="enter name here"
+                submit={(value) => createNewAlias(value)}
+                validate={(value) => validateNewAlias(value)}
             />
             <section id="user-info">
                 <span className="container-title">User information</span>
@@ -83,7 +141,7 @@ const Profile = ({
                             <>
                                 <div className="user-info__stats">
                                     <div className="user-info__stat">
-                                        {profile.since}{' '}
+                                        {profile.since.toDateString()}{' '}
                                         <span className="unit">since</span>
                                     </div>
                                     <div className="user-info__stat">
@@ -116,12 +174,53 @@ const Profile = ({
                             </>
                         </CSSTransition>
                     </TransitionGroup>
-                    <div className="user-info__bio">{profile.bio}</div>
+                    <div className="user-info__bio">
+                        {bioEditorHidden ? (
+                            profile.bio
+                        ) : (
+                            <form
+                                onSubmit={() => saveBio()}
+                                className="user-info__bio-editor"
+                            >
+                                <textarea
+                                    rows={16}
+                                    value={bioValue}
+                                    onChange={(event) =>
+                                        setBioValue(event.target.value)
+                                    }
+                                />
+                                <div className="user-info__bio-editor-actions">
+                                    <button
+                                        className="button"
+                                        type="button"
+                                        onClick={() => {
+                                            resetBioEditor();
+                                        }}
+                                    >
+                                        Close
+                                    </button>
+                                    <button className="button" type="submit">
+                                        OK
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+                    </div>
                     <div className="user-actions">
                         {authStatus.userName === profile.name && (
                             <>
-                                <button className="button">New alias</button>
-                                <button className="button">Edit bio</button>
+                                <button
+                                    className="button"
+                                    onClick={() => setNewAliasHidden(false)}
+                                >
+                                    New alias
+                                </button>
+                                <button
+                                    className="button"
+                                    onClick={() => setBioEditorHidden(false)}
+                                >
+                                    Edit bio
+                                </button>
                                 <button
                                     className="button"
                                     onClick={() => logOut()}
