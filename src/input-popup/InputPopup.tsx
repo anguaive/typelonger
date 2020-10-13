@@ -58,9 +58,9 @@ const InputPopup = ({
         >
             <div onClick={(event) => event.stopPropagation()} id="input-popup">
                 <span className="input-popup__title">{title}</span>
-                <span className="input-popup__hint">{hint}</span>
+                <span className="hint">{hint}</span>
                 {errors.map((error) => (
-                    <span className="input-popup__error">{error}</span>
+                    <span className="validation-error">{error}</span>
                 ))}
                 <form
                     className="input-popup__form"

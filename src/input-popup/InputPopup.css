@@ -58,12 +58,3 @@
     padding: 0.5rem 0;
     margin-right: 3rem;
 }
-
-.input-popup__hint {
-    filter: opacity(0.5);
-    white-space: pre-wrap;
-}
-
-.input-popup__error {
-    color: var(--warning-color);
-}

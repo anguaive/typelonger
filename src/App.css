@@ -127,6 +127,11 @@ ul {
     filter: opacity(0);
 }
 
+#root .hint {
+    filter: opacity(0.5);
+    white-space: pre-wrap;
+}
+
 #root .page {
     position: absolute;
     left: 0;
@@ -273,6 +278,10 @@ a {
 .no-performances {
     font-size: 1.5rem;
     filter: opacity(0.5);
+}
+
+.validation-error {
+    color: var(--warning-color);
 }
 
 textarea {

@@ -8,6 +8,7 @@ import Game from './game/Game';
 import Matchmaking from './Matchmaking';
 import Profile from './profile/Profile';
 import Rankings from './rankings/Rankings';
+import Auth from './auth/Auth';
 import Settings, {
     AppSettings,
     SETTINGS_STORAGE,
@@ -108,6 +109,10 @@ const App = () => {
         {
             path: '/texts',
             component: <Texts />,
+        },
+        {
+            path: '/auth',
+            component: <Auth />,
         },
         { path: '*', component: <NoMatch /> },
     ];
