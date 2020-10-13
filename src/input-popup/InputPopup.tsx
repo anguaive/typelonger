@@ -26,6 +26,7 @@ const InputPopup = ({
 
     useEffect(() => {
         input.current && input.current.focus();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hidden]);
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {

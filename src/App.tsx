@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './App.css';
@@ -45,13 +45,28 @@ const App = () => {
 
     const keyboardHandler = (event: KeyboardEvent) => {
         const skippedElementTypes = ['INPUT', 'TEXTAREA'];
+        const locationHead = location.pathname.split('/')[1];
+        event.preventDefault();
         if (
             !skippedElementTypes.includes(
                 (event.target as HTMLElement).nodeName
             )
         ) {
-            if (event.key === 's') {
-                setSearchHidden(false);
+            switch (event.key) {
+                case 's':
+                    if (locationHead === 'profile') {
+                        setSearchHidden(false);
+                    }
+                    break;
+                case 'Enter':
+                    if (locationHead === 'game') {
+                        setPaused(false);
+                    }
+                    break;
+                case 'Escape':
+                    if (locationHead === 'game') {
+                        setPaused(true);
+                    }
             }
         }
     };

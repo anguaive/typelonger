@@ -1,4 +1,4 @@
-import { Alias, Text, Performance, Section } from './scheme';
+import { Alias, Text, Performance } from './scheme';
 
 export interface Action {
     text: string;

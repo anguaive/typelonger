@@ -39,25 +39,26 @@
     grid-area: text-area;
     background-color: var(--textarea-background-color);
     box-sizing: border-box;
-    font-size: 1.2rem;
-    line-height: 1.2;
     padding: 2rem 4rem 0 4rem;
 }
 
 .text-container {
     margin-bottom: 2rem;
+    font-size: 20px;
+    line-height: 24px;
     overflow: hidden;
     position: relative;
+    font-family: sans-serif;
     height: calc(100% - 2rem);
 }
 
 .caret {
     position: absolute;
-    top: 24rem;
+    top: 0rem;
     left: 0;
     width: 3px;
-    height: 1em;
-    background-color: black;
+    height: 24px;
+    background-color: var(--caret-color);
 }
 
 .text-container::after {
