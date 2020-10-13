@@ -134,12 +134,3 @@
 .section__stats-container > *:not(:last-child) {
     padding-right: 1rem;
 }
-
-.no-performances {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    filter: opacity(0.5);
-    font-size: 2rem;
-}

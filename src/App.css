@@ -143,6 +143,7 @@ ul {
 .container {
     border-radius: 0.5rem;
     background-color: var(--panel-color);
+    box-sizing: border-box;
     border: 2px solid var(--panel-border-color);
     height: 100%;
     width: 100%;
@@ -204,6 +205,11 @@ ul {
     font-size: 1.2rem;
 }
 
+.button-primary {
+    background-color: var(--accent-color);
+    color: var(--accent-foreground-color);
+}
+
 .button:hover {
     transform: scale(1.1);
 }
@@ -262,4 +268,13 @@ a {
 .list-controls {
     display: flex;
     flex-direction: row;
+}
+
+.no-performances {
+    font-size: 1.5rem;
+    filter: opacity(0.5);
+}
+
+textarea {
+    resize: none;
 }

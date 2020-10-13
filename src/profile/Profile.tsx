@@ -95,8 +95,10 @@ const Profile = ({
                                     </div>
                                     <div className="user-info__stat">
                                         {profile.aliases[selectedAlias].points}{' '}
-                                        <span className="unit">points</span> (
-                                        #xyz )
+                                        <span className="unit">points</span>{' '}
+                                        <span className="user-info__rank">
+                                            ( #123 )
+                                        </span>
                                     </div>
                                     <div className="user-info__stat">
                                         {profile.aliases[
@@ -145,8 +147,11 @@ const Profile = ({
                             Top performances
                         </span>
                         <div className="performance-container">
-                            {profile.aliases[selectedAlias].topPerformances.map(
-                                (perf, i) => (
+                            {profile.aliases[selectedAlias].topPerformances
+                                .length ? (
+                                profile.aliases[
+                                    selectedAlias
+                                ].topPerformances.map((perf, i) => (
                                     <Card
                                         key={i}
                                         cardStyle={perf.rank}
@@ -158,7 +163,11 @@ const Profile = ({
                                     >
                                         <PerformanceCard {...perf} />
                                     </Card>
-                                )
+                                ))
+                            ) : (
+                                <div className="no-performances">
+                                    You haven't completed any sections yet
+                                </div>
                             )}
                         </div>
                     </section>
@@ -175,21 +184,28 @@ const Profile = ({
                             Recent performances
                         </span>
                         <div className="performance-container">
-                            {profile.aliases[
-                                selectedAlias
-                            ].recentPerformances.map((perf, i) => (
-                                <Card
-                                    key={i}
-                                    cardStyle={perf.rank}
-                                    actions={getPerfActions(
-                                        perf,
-                                        location,
-                                        history
-                                    )}
-                                >
-                                    <PerformanceCard {...perf} key={i} />
-                                </Card>
-                            ))}
+                            {profile.aliases[selectedAlias].recentPerformances
+                                .length ? (
+                                profile.aliases[
+                                    selectedAlias
+                                ].recentPerformances.map((perf, i) => (
+                                    <Card
+                                        key={i}
+                                        cardStyle={perf.rank}
+                                        actions={getPerfActions(
+                                            perf,
+                                            location,
+                                            history
+                                        )}
+                                    >
+                                        <PerformanceCard {...perf} key={i} />
+                                    </Card>
+                                ))
+                            ) : (
+                                <div className="no-performances">
+                                    You haven't completed any sections yet
+                                </div>
+                            )}
                         </div>
                     </section>
                 </CSSTransition>

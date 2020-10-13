@@ -42,16 +42,18 @@ const App = () => {
     const [paused, setPaused] = useState(true);
     const location = useLocation();
 
-    const keyboardHandler = useCallback(
-        (event: KeyboardEvent) => {
-            event.preventDefault();
+    const keyboardHandler = (event: KeyboardEvent) => {
+        const skippedElementTypes = ['INPUT', 'TEXTAREA'];
+        if (
+            !skippedElementTypes.includes(
+                (event.target as HTMLElement).nodeName
+            )
+        ) {
             if (event.key === 's') {
                 setSearchHidden(false);
             }
-        },
-
-        []
-    );
+        }
+    };
 
     const logOut = () => {
         console.log('logging out');

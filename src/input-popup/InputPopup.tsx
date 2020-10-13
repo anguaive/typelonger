@@ -6,7 +6,9 @@ interface InputPopupProps {
     setHidden: React.Dispatch<React.SetStateAction<boolean>>;
     title?: string;
     hint?: string;
+    placeholder?: string;
     submit: (value: string) => void;
+    validate?: (value: string) => string[];
 }
 
 const InputPopup = ({
@@ -14,9 +16,12 @@ const InputPopup = ({
     setHidden,
     title,
     hint,
+    placeholder,
     submit,
+    validate,
 }: InputPopupProps) => {
     const [value, setValue] = useState('');
+    const [errors, setErrors] = useState<string[]>([]);
     const input = React.createRef<HTMLInputElement>();
 
     useEffect(() => {
@@ -25,12 +30,20 @@ const InputPopup = ({
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (validate) {
+            const validationErrors = validate(value);
+            if (validationErrors.length) {
+                setErrors(validationErrors);
+                return;
+            }
+        }
         submit(value);
         hide();
     };
 
     const hide = () => {
         setHidden(true);
+        setErrors([]);
         setValue('');
     };
 
@@ -46,16 +59,21 @@ const InputPopup = ({
             <div onClick={(event) => event.stopPropagation()} id="input-popup">
                 <span className="input-popup__title">{title}</span>
                 <span className="input-popup__hint">{hint}</span>
+                {errors.map((error) => (
+                    <span className="input-popup__error">{error}</span>
+                ))}
                 <form
                     className="input-popup__form"
                     onSubmit={(event) => onSubmit(event)}
                 >
                     <input
-                        onKeyDown={(event) => event.key === 'Escape' && hide()}
+                        onKeyDown={(event) => {
+                            event.key === 'Escape' && hide();
+                        }}
                         ref={input}
                         className="input-popup__input"
                         type="search"
-                        placeholder="search"
+                        placeholder={placeholder || 'search'}
                         value={value}
                         onChange={(event) => setValue(event.target.value)}
                     ></input>
@@ -67,7 +85,11 @@ const InputPopup = ({
                         >
                             close
                         </button>
-                        <input type="submit" className="button" value="OK" />
+                        <input
+                            type="submit"
+                            className="button button-primary"
+                            value="OK"
+                        />
                     </div>
                 </form>
             </div>

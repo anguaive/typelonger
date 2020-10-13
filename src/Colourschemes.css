@@ -6,7 +6,8 @@
     --panel-color: #fff;
     --panel-border-color: #d8d8d8;
     --accent-color: #dd9900;
-    --attention-color: #f786aa;
+    --accent-foreground-color: var(--text-active-color);
+    --warning-color: #f0230c;
     --card-hover-color: #000;
     --gold-bg1-color: #f0b52b;
     --gold-bg2-color: #d4af37;
@@ -33,7 +34,8 @@
     --panel-color: #555;
     --panel-border-color: #777;
     --accent-color: #ffcc22;
-    --attention-color: #f786aa;
+    --accent-foreground-color: #222;
+    --warning-color: #ff8a7d;
     --card-hover-color: #fff;
     --gold-bg1-color: #f0b52b;
     --gold-bg2-color: #d4af37;

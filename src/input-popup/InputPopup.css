@@ -2,8 +2,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 0;
-    right: 0;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,7 +14,7 @@
 #input-popup {
     display: flex;
     flex-direction: column;
-    width: 72%;
+    width: 56%;
     padding: 1rem;
     background-color: var(--panel-color);
     border-radius: 0.5rem;
@@ -22,7 +22,7 @@
 }
 
 .input-popup__title {
-    font-size: 2rem;
+    font-size: 3rem;
     margin-bottom: 0.5rem;
 }
 
@@ -33,17 +33,18 @@
 }
 
 .input-popup__actions * {
-    font-size: 1.5rem;
+    font-size: 2rem;
     height: 3rem;
 }
 
 .input-popup__buttons {
     display: flex;
-    width: 120px;
+    align-items: center;
 }
 
 .input-popup__buttons > * {
     flex-grow: 1;
+    font-size: 2rem;
 }
 
 .input-popup__buttons > *:not(:last-child) {
@@ -53,9 +54,16 @@
 .input-popup__input {
     font-family: Fixedsys;
     width: 100%;
+    font-size: 2rem;
+    padding: 0.5rem 0;
     margin-right: 3rem;
 }
 
 .input-popup__hint {
     filter: opacity(0.5);
+    white-space: pre-wrap;
+}
+
+.input-popup__error {
+    color: var(--warning-color);
 }
