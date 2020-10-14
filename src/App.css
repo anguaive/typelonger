@@ -183,12 +183,17 @@ ul {
         transform var(--medium-transition) ease-out;
 }
 
+#menu.menu-exit-done {
+    display: none;
+}
+
+.menu-enter,
 .menu-exit-done,
 .menu-exit-active {
     opacity: 0;
 }
 
-.menu-enter-done {
+.menu-enter-active {
     opacity: 1;
 }
 
