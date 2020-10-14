@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import './Game.css';
 import QuickStats from './QuickStats';
 
@@ -8,14 +8,19 @@ interface GameProps {
 }
 
 interface QuickStats {
+    // Current time elapsed (ms), words per minute, and accuracy (%)
     time?: number;
     wpm?: number;
     acc?: number;
 }
 
 interface Position {
-    paragraphIndex: number;
-    characterIndex: number;
+    // Index of paragraph the caret is on  - [0, size)
+    pg: number;
+
+    // Index of the character the caret is on / front of, inside the current
+    // paragraph - [0, size)
+    char: number;
 }
 
 interface Dimensions {
@@ -25,15 +30,19 @@ interface Dimensions {
 
 const Game = ({ paused, setPaused }: GameProps) => {
     const textContainer = useRef<HTMLDivElement>(null);
+    const caret = useRef<HTMLDivElement>(null);
     const dimensions: Dimensions = {
         fontSizePx: 20,
         lineHeightPx: 22,
     };
     const [textParagraphs, setTextParagraphs] = useState<string[]>([]);
+
+    // "Logical" position of the caret
     const [position, setPosition] = useState<Position>({
-        paragraphIndex: 0,
-        characterIndex: 0,
+        pg: 0,
+        char: 0,
     });
+
     const [quickStats, setQuickStats] = useState<QuickStats>({
         time: 254123,
         wpm: 90,
@@ -47,9 +56,16 @@ const Game = ({ paused, setPaused }: GameProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useLayoutEffect(() => {
+        const firstCharElement = getCharElement(position);
+        if (firstCharElement) {
+            moveCaretTo(firstCharElement);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [textParagraphs]);
+
     useEffect(() => {
-        console.log('Paused has changed for sure');
-        console.log(textContainer);
         if (paused) {
             textContainer.current?.blur();
         } else {
@@ -57,8 +73,56 @@ const Game = ({ paused, setPaused }: GameProps) => {
         }
     }, [paused]);
 
+    const moveCaretTo = (char_: Element) => {
+        const char = char_ as HTMLElement;
+        caret.current?.setAttribute(
+            'style',
+            `margin-top: ${char.offsetTop}px; margin-left: ${
+                char.offsetLeft - 2
+            }px`
+        );
+    };
+
+    const getCharElement = (pos: Position): Element | null => {
+        const paragraphs = textContainer.current?.getElementsByClassName('pg');
+        if (paragraphs && paragraphs.length) {
+            const char = paragraphs[pos.pg].children[pos.char];
+            console.log(char);
+            return char;
+        }
+        return null;
+    };
+
     const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
-        console.log(event.key);
+        let newPg = position.pg;
+        let newChar = position.char;
+        const currentPg = textParagraphs[position.pg];
+
+        // Check exit condition
+        if (
+            position.char + 1 === currentPg.length &&
+            position.pg + 1 === textParagraphs.length
+        ) {
+            // Redirect to Results page
+            console.log('exit condition reached');
+            return;
+        }
+
+        // Calculate new caret position
+        if (position.char + 1 === currentPg.length) {
+            // Move one paragraph down
+            newPg = position.pg + 1;
+            newChar = 0;
+        } else {
+            newChar = position.char + 1;
+        }
+
+        const newCharElement = getCharElement({ pg: newPg, char: newChar });
+        if (newCharElement) {
+            moveCaretTo(newCharElement);
+        }
+
+        setPosition({ pg: newPg, char: newChar });
     };
 
     return (
@@ -78,10 +142,12 @@ const Game = ({ paused, setPaused }: GameProps) => {
                 >
                     {textParagraphs.map((pg, i) => (
                         <div key={i} className="pg">
-                            {pg}
+                            {pg.split('').map((letter, i) => (
+                                <span key={i}>{letter}</span>
+                            ))}
                         </div>
                     ))}
-                    <div className="caret" />
+                    <div className="caret" ref={caret} />
                 </div>
             </section>
             <section id="scorebar" className={paused ? '' : 'hidden'}>

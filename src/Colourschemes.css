@@ -7,6 +7,7 @@
     --panel-border-color: #d8d8d8;
     --accent-color: #dd9900;
     --accent-foreground-color: var(--text-active-color);
+    --caret-color: #000;
     --warning-color: #f0230c;
     --card-hover-color: #000;
     --gold-bg1-color: #f0b52b;
@@ -35,6 +36,7 @@
     --panel-border-color: #777;
     --accent-color: #ffcc22;
     --accent-foreground-color: #222;
+    --caret-color: #fff;
     --warning-color: #ff8a7d;
     --card-hover-color: #fff;
     --gold-bg1-color: #f0b52b;

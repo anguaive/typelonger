@@ -56,7 +56,7 @@
     position: absolute;
     top: 0rem;
     left: 0;
-    width: 3px;
+    width: 2px;
     height: 24px;
     background-color: var(--caret-color);
 }
