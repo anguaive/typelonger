@@ -62,7 +62,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
     // Move caret when position changes
     useEffect(() => {
         const newCharElement = getCharElement(position);
-        console.log(newCharElement);
         if (newCharElement) {
             charElement.current = newCharElement;
             moveCaret(newCharElement);
@@ -86,7 +85,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [textParagraphs]);
+    }, [textParagraphs.length]);
 
     // Handle pause/unpause
     useEffect(() => {
@@ -144,7 +143,23 @@ const Game = ({ paused, setPaused }: GameProps) => {
         return newPos;
     };
 
-    const addCharElement = (pos: Position, newChar: string) => {};
+    const insertCharElement = (pos: Position, newChar: string) => {
+        const currentPg = textParagraphs[pos.pg];
+        const newPg =
+            currentPg.slice(0, pos.char - 1) +
+            newChar +
+            currentPg.slice(pos.char - 1);
+        textParagraphs.splice(pos.pg, 1, newPg);
+        setTextParagraphs(textParagraphs);
+    };
+
+    const removeCharElement = (pos: Position) => {
+        const currentPg = textParagraphs[pos.pg];
+        const newPg =
+            currentPg.slice(0, pos.char) + currentPg.slice(pos.char + 1);
+        textParagraphs.splice(pos.pg, 1, newPg);
+        setTextParagraphs(textParagraphs);
+    };
 
     const getCharElement = (pos: Position): HTMLElement | null => {
         const paragraphs = textContainer.current?.getElementsByClassName('pg');
@@ -155,14 +170,29 @@ const Game = ({ paused, setPaused }: GameProps) => {
     };
 
     const tryInputBackspace = (pos: Position) => {
-        getCharElement(pos)?.classList.remove('text-correct', 'text-incorrect');
+        const currentElement = getCharElement(pos);
+        if (currentElement) {
+            if (currentElement.classList.contains('text-surplus')) {
+                removeCharElement(pos);
+            }
+            currentElement.classList.remove(
+                'text-correct',
+                'text-incorrect',
+                'text-surplus'
+            );
+        }
     };
 
     const tryInputLetter = (pos: Position, letter: string) => {
         if (letter === charElement.current?.textContent) {
             charElement.current?.classList.add('text-correct');
         } else {
-            charElement.current?.classList.add('text-incorrect');
+            if (charElement.current?.textContent === ' ') {
+                insertCharElement(pos, letter);
+                charElement.current?.classList.add('text-surplus');
+            } else {
+                charElement.current?.classList.add('text-incorrect');
+            }
         }
     };
 

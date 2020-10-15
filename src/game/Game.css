@@ -74,6 +74,10 @@
     color: var(--gametext-incorrect-color);
 }
 
+.text-surplus {
+    color: var(--gametext-incorrect-color);
+}
+
 .text-container::after {
     position: absolute;
     top: 0;
