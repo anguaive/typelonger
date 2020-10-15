@@ -46,6 +46,7 @@
     margin-bottom: 2rem;
     font-size: 28px;
     line-height: 32px;
+    word-break: break-word;
     overflow: hidden;
     position: relative;
     font-family: sans-serif;
@@ -74,8 +75,12 @@
     color: var(--gametext-incorrect-color);
 }
 
+.text-ignored {
+    color: var(--gametext-ignored-color);
+}
+
 .text-surplus {
-    color: var(--gametext-incorrect-color);
+    color: var(--gametext-surplus-color);
 }
 
 .text-container::after {

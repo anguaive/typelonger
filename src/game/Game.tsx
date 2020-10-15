@@ -71,10 +71,18 @@ const Game = ({ paused, setPaused }: GameProps) => {
     // Move caret to first character
     // useLayoutEffect, because we need to wait for the DOM mutations to finish
     useLayoutEffect(() => {
-        const firstCharElement = getCharElement(position);
+        let firstCharElement = getCharElement(position);
         if (firstCharElement) {
+            // Skip over any ignored characters
+            let newPos = { ...position };
+            while (firstCharElement!.classList.contains('text-ignored')) {
+                newPos = calculateOffsetPosition(newPos, 1);
+                firstCharElement = getCharElement(newPos);
+            }
+
             charElement.current = firstCharElement;
-            moveCaret(firstCharElement);
+            moveCaret(firstCharElement!);
+            setPosition(newPos);
         }
 
         if (textParagraphs.length) {
@@ -113,8 +121,14 @@ const Game = ({ paused, setPaused }: GameProps) => {
         pos: Position,
         offset: number
     ): Position => {
+        if (offset === 0) {
+            return pos;
+        }
+
         const currentPg = textParagraphs[pos.pg];
-        let newPos = pos;
+        const isForwardOffset = offset > 0;
+        let newPos = { ...pos };
+
         if (pos.char + offset < 0) {
             if (pos.pg === 0) {
                 newPos = { ...newPos, char: 0 };
@@ -138,6 +152,11 @@ const Game = ({ paused, setPaused }: GameProps) => {
             }
         } else {
             newPos = { ...newPos, char: pos.char + offset };
+        }
+
+        // Skip over any ignored characters
+        while (getCharElement(newPos)?.classList.contains('text-ignored')) {
+            newPos = calculateOffsetPosition(newPos, isForwardOffset ? 1 : -1);
         }
 
         return newPos;
@@ -217,14 +236,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
         setPosition(newPos);
     };
 
-    const jsxParagraphs = (
-        <>
-            {textParagraphs.map((pg, i) => (
-                <div key={i} className="pg"></div>
-            ))}
-        </>
-    );
-
     return (
         <main id="game">
             <QuickStats
@@ -242,9 +253,21 @@ const Game = ({ paused, setPaused }: GameProps) => {
                 >
                     {textParagraphs.map((pg, i) => (
                         <div key={i} className="pg">
-                            {pg.split('').map((letter, i) => (
-                                <span key={i}>{letter}</span>
-                            ))}
+                            {pg.split('').map((letter, i) => {
+                                let ignore;
+                                if (letter === '^') {
+                                    letter = "'";
+                                    ignore = true;
+                                }
+                                return (
+                                    <span
+                                        className={ignore ? 'text-ignored' : ''}
+                                        key={i}
+                                    >
+                                        {letter}
+                                    </span>
+                                );
+                            })}
                         </div>
                     ))}
                     <div className="caret" ref={caret} />
