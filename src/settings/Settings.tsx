@@ -5,6 +5,9 @@ const colourschemes = ['light', 'dark'];
 
 export const SETTINGS_STORAGE = 'typelonger_settings';
 
+// TODO:
+// - game font size
+// - game line height
 export interface AppSettings {
     colourscheme: string;
 }

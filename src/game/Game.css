@@ -2,10 +2,24 @@
     height: 100%;
     display: grid;
     grid-template-columns: 360px auto 360px;
-    grid-template-rows: 75% auto;
+    grid-template-rows: 20% 55% auto;
     grid-template-areas:
+        'title text-area scorebar'
         'quick-stats text-area scorebar'
         'detailed-stats detailed-stats detailed-stats';
+}
+
+#game-title {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: filter var(--medium-transition);
+}
+
+.game-title__title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
 }
 
 #scorebar {
@@ -20,10 +34,10 @@
     grid-area: quick-stats;
 }
 
-#quick-stats > .stats-container {
+#quick-stats {
     margin: 2rem auto 0 auto;
     width: fit-content;
-    transition: filter 300ms ease-out;
+    transition: filter var(--medium-transition);
 }
 
 .stats-container > .time {

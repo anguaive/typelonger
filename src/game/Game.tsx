@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import useInterval from '@use-it/interval';
 import './Game.css';
 import QuickStats from './QuickStats';
 
@@ -23,34 +24,32 @@ interface Position {
     char: number;
 }
 
-interface Dimensions {
-    fontSizePx: number;
-    lineHeightPx: number;
-}
+const defaultTimerInterval = 100;
 
 const Game = ({ paused, setPaused }: GameProps) => {
     const textContainer = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
     let charElement = useRef<HTMLElement | null>(null);
     let finalPosition = useRef<Position | null>(null);
+    let correctKeypresses = useRef<number>(0);
+    let incorrectKeypresses = useRef<number>(0);
     let windowResizeTimeout = useRef<number>(-1);
-    const dimensions: Dimensions = {
-        // TODO: move these to settings
-        fontSizePx: 20,
-        lineHeightPx: 22,
-    };
-    const [textParagraphs, setTextParagraphs] = useState<string[]>([]);
+    let timerInterval = useRef<number | null>(null);
 
+    const [textParagraphs, setTextParagraphs] = useState<string[]>([]);
     const [position, setPosition] = useState<Position>({
         pg: 0,
         char: 0,
     });
 
-    const [quickStats, setQuickStats] = useState<QuickStats>({
-        time: 254123,
-        wpm: 90,
-        acc: 98.56,
-    });
+    const [time, setTime] = useState<number>(0);
+    const [timerRunning, setTimerRunning] = useState(false);
+
+    const [count, setCount] = useState(0);
+
+    useInterval(() => {
+        setTime(time + (timerInterval.current || 0));
+    }, timerInterval.current);
 
     // Window resize events
     useEffect(() => {
@@ -124,6 +123,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
     // Handle pause/unpause
     useEffect(() => {
         if (paused) {
+            timerInterval.current = null;
             textContainer.current?.blur();
             textContainer.current?.classList.remove('cursor-hidden');
         } else {
@@ -195,9 +195,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
     const insertCharElement = (pos: Position, newChar: string) => {
         const currentPg = textParagraphs[pos.pg];
         const newPg =
-            currentPg.slice(0, pos.char - 1) +
-            newChar +
-            currentPg.slice(pos.char - 1);
+            currentPg.slice(0, pos.char) + newChar + currentPg.slice(pos.char);
         textParagraphs.splice(pos.pg, 1, newPg);
         setTextParagraphs(textParagraphs);
     };
@@ -237,7 +235,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
             charElement.current?.classList.add('text-correct');
         } else {
             if (charElement.current?.textContent === ' ') {
-                insertCharElement(pos, letter);
+                insertCharElement(position, letter);
                 charElement.current?.classList.add('text-surplus');
             } else {
                 charElement.current?.classList.add('text-incorrect');
@@ -255,8 +253,11 @@ const Game = ({ paused, setPaused }: GameProps) => {
             newPos = calculateOffsetPosition(position, -1);
             tryInputBackspace(newPos);
         } else if (event.key.length === 1) {
-            newPos = calculateOffsetPosition(position, 1);
+            if (!timerInterval.current) {
+                timerInterval.current = defaultTimerInterval;
+            }
             tryInputLetter(newPos, event.key);
+            newPos = calculateOffsetPosition(position, 1);
             // Check exit condition
             if (newPos === finalPosition.current) {
                 // TODO: redirect to results page
@@ -268,12 +269,15 @@ const Game = ({ paused, setPaused }: GameProps) => {
 
     return (
         <main id="game">
-            <QuickStats
-                time={quickStats.time || 0}
-                wpm={quickStats.wpm || 0}
-                acc={quickStats.acc || 0}
-                paused={paused}
-            />
+            <aside id="game-title" className={paused ? '' : 'pale'}>
+                <div className="game-title__title">
+                    The Witcher - Blood of Elves
+                </div>
+                <div className="game-title__section">Chapter one</div>
+            </aside>
+            <aside id="quick-stats" className={paused ? '' : 'pale'}>
+                <QuickStats time={time} wpm={0} acc={0} />
+            </aside>
             <section id="text-area" onClick={() => setPaused(!paused)}>
                 <div
                     className="text-container"
@@ -303,12 +307,11 @@ const Game = ({ paused, setPaused }: GameProps) => {
                     <div className="caret" ref={caret} />
                 </div>
             </section>
-            <section id="scorebar" className={paused ? '' : 'hidden'}>
-                scorebar
-            </section>
-            <section id="detailed-stats" className={paused ? '' : 'hidden'}>
-                detailed stats
-            </section>
+            <section id="scorebar" className={paused ? '' : 'hidden'}></section>
+            <section
+                id="detailed-stats"
+                className={paused ? '' : 'hidden'}
+            ></section>
         </main>
     );
 };
