@@ -33,6 +33,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
     const caret = useRef<HTMLDivElement>(null);
     let charElement = useRef<HTMLElement | null>(null);
     let finalPosition = useRef<Position | null>(null);
+    let windowResizeTimeout = useRef<number>(-1);
     const dimensions: Dimensions = {
         // TODO: move these to settings
         fontSizePx: 20,
@@ -51,6 +52,30 @@ const Game = ({ paused, setPaused }: GameProps) => {
         acc: 98.56,
     });
 
+    // Window resize events
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowResize);
+        return () => window.removeEventListener('resize', handleWindowResize);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [position]);
+
+    const handleWindowResize = () => {
+        // The new size isn't actually relevant, and the text reflows itself,
+        // but the caret needs to be realigned manually
+
+        window.clearTimeout(windowResizeTimeout.current);
+        windowResizeTimeout.current = window.setTimeout(
+            handleWindowResizeEnd,
+            200
+        );
+    };
+
+    const handleWindowResizeEnd = () => {
+        console.log(position);
+        moveCaret(position);
+    };
+
     // Fetch text
     useEffect(() => {
         fetch('http://localhost:3001/gameText')
@@ -64,8 +89,9 @@ const Game = ({ paused, setPaused }: GameProps) => {
         const newCharElement = getCharElement(position);
         if (newCharElement) {
             charElement.current = newCharElement;
-            moveCaret(newCharElement);
+            moveCaret(position);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [position]);
 
     // Move caret to first character
@@ -81,7 +107,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
             }
 
             charElement.current = firstCharElement;
-            moveCaret(firstCharElement!);
+            moveCaret(position);
             setPosition(newPos);
         }
 
@@ -104,15 +130,19 @@ const Game = ({ paused, setPaused }: GameProps) => {
             textContainer.current?.focus();
             textContainer.current?.classList.add('cursor-hidden');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paused]);
 
-    const moveCaret = (char: HTMLElement) => {
-        caret.current?.setAttribute(
-            'style',
-            `margin-top: ${char.offsetTop}px; margin-left: ${
-                char.offsetLeft - 1
-            }px`
-        );
+    const moveCaret = (pos: Position) => {
+        const char = getCharElement(position);
+        if (char) {
+            caret.current?.setAttribute(
+                'style',
+                `margin-top: ${char.offsetTop}px; margin-left: ${
+                    char.offsetLeft - 1
+                }px`
+            );
+        }
     };
 
     // Need to pass the current position because useState doesn't provide a
