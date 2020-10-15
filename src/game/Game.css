@@ -37,19 +37,24 @@
 
 #text-area {
     grid-area: text-area;
-    background-color: var(--textarea-background-color);
+    background-color: var(--gamearea-background-color);
     box-sizing: border-box;
     padding: 2rem 4rem 0 4rem;
 }
 
 .text-container {
     margin-bottom: 2rem;
-    font-size: 20px;
-    line-height: 24px;
+    font-size: 28px;
+    line-height: 32px;
     overflow: hidden;
     position: relative;
     font-family: sans-serif;
     height: calc(100% - 2rem);
+    cursor: pointer;
+}
+
+.text-container:focus {
+    outline: none;
 }
 
 .caret {
@@ -57,8 +62,16 @@
     top: 0rem;
     left: 0;
     width: 2px;
-    height: 24px;
+    height: 32px;
     background-color: var(--caret-color);
+}
+
+.text-correct {
+    color: var(--gametext-correct-color);
+}
+
+.text-incorrect {
+    color: var(--gametext-incorrect-color);
 }
 
 .text-container::after {
@@ -70,15 +83,16 @@
     content: '';
     background: linear-gradient(
         to bottom,
-        var(--textarea-background-color),
-        transparent 8rem,
-        transparent calc(100% - 6rem),
-        var(--textarea-background-color)
+        var(--gamearea-background-color),
+        transparent 4rem,
+        transparent calc(100% - 2rem),
+        var(--gamearea-background-color)
     );
 }
 
 .pg {
     white-space: pre-wrap;
+    color: var(--gametext-inactive-color);
 }
 
 .pg::before {

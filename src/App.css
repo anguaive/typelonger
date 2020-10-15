@@ -132,6 +132,10 @@ ul {
     white-space: pre-wrap;
 }
 
+#root .cursor-hidden {
+    cursor: none;
+}
+
 #root .page {
     position: absolute;
     left: 0;

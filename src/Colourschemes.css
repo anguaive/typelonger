@@ -2,7 +2,10 @@
     --background-color: #eee;
     --text-active-color: #000;
     --text-inactive-color: #888;
-    --textarea-background-color: #fff;
+    --gamearea-background-color: #fff;
+    --gametext-correct-color: black;
+    --gametext-incorrect-color: red;
+    --gametext-inactive-color: #6b6b6b;
     --panel-color: #fff;
     --panel-border-color: #d8d8d8;
     --accent-color: #dd9900;
@@ -31,7 +34,10 @@
     --background-color: #333;
     --text-active-color: #fff;
     --text-inactive-color: #888;
-    --textarea-background-color: #fff;
+    --gamearea-background-color: #fff;
+    --gametext-correct-color: white;
+    --gametext-incorrect-color: red;
+    --gametext-inactive-color: lightgrey;
     --panel-color: #555;
     --panel-border-color: #777;
     --accent-color: #ffcc22;
