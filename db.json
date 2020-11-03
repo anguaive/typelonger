@@ -1,6 +1,14 @@
 {
+	"gameTextDebug": {
+		"paragraphsText": [
+			"$$$$$ ",
+			"abc^abc ",
+			"abc$^abc ",
+			"^^abcabc ^^abc $abc $$^abc "
+		]
+	},
     "gameText": {
-        "paragraphs": [
+        "paragraphsText": [
             "^What for, if I may ask?^",
             "^Never mind,^ she said, toying with the empty tumbler. ^Let us get back to more important questions. Those you were asked in the pigsty while your arms were being twisted out of their sockets. What really happened, Dandilion? Have you really not seen Geralt since you fled the banks of the Yaruga? Did you really not know he returned south after the war? That he was seriously wounded - so seriously there were even rumours of his death? Didn't you know anything?^",
             "^No. I didn't. I stayed in Pont Vanis for a long time, in Esterad Thyssen's court. And then at Niedamir's in Hengfors—^",
@@ -9,7 +17,7 @@
             "^You don't know,^ she repeated. ^You, who usually know everything, and then sing about everything. Even such intimate matters as someone else's feelings. I listened to your ballads beneath Bleobheris, Dandilion. You dedicated a good few verses to me.^",
             "^Poetry,^ he muttered, staring at the chicken, ^has its rights. No one should be offended—^",
             "^\"I lair like a raven's wing, as a storm in the night...^\" quoted Yennefer with exaggerated emphasis, ^\"...and in the violet eyes sleep lightning bolts...\" Isn't that how it went?^",
-            "^That's how I remembered you.^ The poet smiled faintly. ^May the first who wishes to claim the description is gguntrue throw the first stone.^",
+            "^That's how I remembered you.^ The poet smiled faintly. ^May the first who wishes to claim the description throw the first stone.^",
             "^Only I don't know,^ the Enchantress pinched her lips together, ^who gave you permission to describe my internal organs. How did it go? \"Her heart, as though a jewel, adorned her neck. Hard as if of diamond made, and as a diamond so unfeeling, sharper than obsidian, cutting—\" Did you make that up yourself? Or perhaps...?^",
             "Her lips quivered, twisted.",
             "^...or perhaps you listened to someone's confidences and grievances?^ ^Hmm...^ Dandilion cleared his throat and veered away from the dangerous subject. ^Tell me, Yennefer, when did you last see Geralt?^",
