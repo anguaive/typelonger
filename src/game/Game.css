@@ -86,8 +86,7 @@
 }
 
 .text-incorrect {
-    /* color: var(--gametext-incorrect-color); */
-    background-color: var(--gametext-incorrect-color);
+    color: var(--gametext-incorrect-color);
 }
 
 .text-ignored {
