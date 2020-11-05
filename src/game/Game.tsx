@@ -1,10 +1,4 @@
-import React, {
-    useState,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useMemo,
-} from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import useInterval from '@use-it/interval';
 import './Game.css';
 import QuickStats from './QuickStats';
@@ -22,18 +16,29 @@ interface QuickStats {
 }
 
 interface Position {
-    // Index of paragraph the caret is on  - [0, size)
+    // Index of paragraph the caret is on  - [0, length)
     pg: number;
 
-    // Index of the character element the caret is on, inside the current
-    // paragraph - [0, size)
+    // Index of the character HTML element the caret is on, inside the current paragraph
+    // Only includes "visible" characters
     char: number;
+
+    // Index of the plaintext character the caret is on, inside the current paragraph
+    // Includes "invisible" characters, i.e. control characters
+    realChar: number;
+}
+
+interface KeyPress {
+    letter: string;
+    correct: boolean;
 }
 
 interface Paragraph {
     text: string;
     controlCharIndices: number[];
     ignoredCharIndices: number[];
+    displayedIgnoredCharIndices: number[];
+    surplusCharIndices: number[];
 }
 
 // How often the timer ticks
@@ -46,9 +51,13 @@ const Game = ({ paused, setPaused }: GameProps) => {
     const textContainer = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
     let charElement = useRef<HTMLElement | null>(null);
+    let initialPosition = useRef<Position | null>(null);
     let finalPosition = useRef<Position | null>(null);
     let correctKeypresses = useRef<number>(0);
     let incorrectKeypresses = useRef<number>(0);
+
+    // TODO: use keypresses to track keypresses :o
+    let keypresses = useRef<KeyPress[]>([]);
     let windowResizeTimeout = useRef<number>(-1);
     let timerInterval = useRef<number | null>(null);
 
@@ -56,6 +65,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
     const [position, setPosition] = useState<Position>({
         pg: 0,
         char: 0,
+        realChar: 0,
     });
 
     const [quickStats, setQuickStats] = useState<QuickStats>({
@@ -98,10 +108,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         // but the caret needs to be realigned manually
 
         window.clearTimeout(windowResizeTimeout.current);
-        windowResizeTimeout.current = window.setTimeout(
-            handleWindowResizeEnd,
-            200
-        );
+        windowResizeTimeout.current = window.setTimeout(handleWindowResizeEnd, 200);
     };
 
     const handleWindowResizeEnd = () => {
@@ -118,6 +125,8 @@ const Game = ({ paused, setPaused }: GameProps) => {
                         text: text,
                         controlCharIndices: [],
                         ignoredCharIndices: [],
+                        displayedIgnoredCharIndices: [],
+                        surplusCharIndices: [],
                     };
                 });
                 processParagraphs(pgs);
@@ -133,31 +142,41 @@ const Game = ({ paused, setPaused }: GameProps) => {
             moveCaret(position);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
+        console.log(position);
     }, [position]);
 
-    // Move caret to first character
+    // Compute initial and final positions
     // useLayoutEffect, because we need to wait for the DOM mutations to finish
     useLayoutEffect(() => {
-        let firstCharElement = getCharElement(position);
-        if (firstCharElement) {
-            // Skip over any ignored characters
-            let newPos = { ...position };
-            while (firstCharElement!.classList.contains('text-ignored')) {
-                newPos = calculateOffsetPosition(newPos, 1);
-                firstCharElement = getCharElement(newPos);
-            }
+        if (paragraphs && paragraphs.length) {
+            // Compute initial position and place caret there
+            initialPosition.current = offsetPositionWithinParagraph(
+                { pg: 0, char: -1, realChar: -1 },
+                paragraphs[0],
+                1
+            );
 
-            charElement.current = firstCharElement;
-            moveCaret(newPos);
-            setPosition(newPos);
-        }
+            charElement.current = getCharElement(initialPosition.current);
+            moveCaret(initialPosition.current);
+            setPosition(initialPosition.current);
 
-        if (paragraphs.length) {
+            // Compute final position
             const lastPgIdx = paragraphs.length - 1;
             finalPosition.current = {
                 pg: lastPgIdx,
-                char: paragraphs[lastPgIdx].text.length - 1,
+                char:
+                    paragraphs[lastPgIdx].text.length -
+                    paragraphs[lastPgIdx].controlCharIndices.length,
+                realChar: paragraphs[lastPgIdx].text.length,
             };
+            finalPosition.current = offsetPositionWithinParagraph(
+                finalPosition.current,
+                paragraphs[lastPgIdx],
+                -1
+            );
+
+            console.log(initialPosition.current);
+            console.log(finalPosition.current);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,9 +200,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         if (char) {
             caret.current?.setAttribute(
                 'style',
-                `margin-top: ${char.offsetTop}px; margin-left: ${
-                    char.offsetLeft - 1
-                }px`
+                `margin-top: ${char.offsetTop}px; margin-left: ${char.offsetLeft - 1}px`
             );
         }
     };
@@ -205,31 +222,43 @@ const Game = ({ paused, setPaused }: GameProps) => {
                     ignoreNext = false;
                 }
 
-                switch (letter) {
-                    case '$':
-                        if (!escapeNext) {
-                            escapeNext = true;
-                            pg.controlCharIndices.push(letterIndex);
-                        } else {
+                // Handle all surplus chars as regular, non-control chars
+                if (pg.surplusCharIndices.includes(letterIndex)) {
+                    ignoreNext = false;
+                    escapeNext = false;
+                } else {
+                    switch (letter) {
+                        case '$':
+                            if (!escapeNext) {
+                                escapeNext = true;
+                                pg.controlCharIndices.push(letterIndex);
+                            } else {
+                                escapeNext = false;
+                            }
+                            break;
+                        case '^':
+                            if (!escapeNext) {
+                                ignoreNext = true;
+                                escapeNext = true;
+                                pg.controlCharIndices.push(letterIndex);
+                            } else {
+                                escapeNext = false;
+                            }
+                            break;
+                        default:
                             escapeNext = false;
-                        }
-                        break;
-                    case '^':
-                        if (!escapeNext) {
-                            ignoreNext = true;
-                            escapeNext = true;
-                            pg.controlCharIndices.push(letterIndex);
-                        } else {
-                            escapeNext = false;
-                        }
-                        break;
-                    default:
-                        escapeNext = false;
-                        break;
+                            break;
+                    }
                 }
             }); // letters.forEach
+
+            pg.ignoredCharIndices.forEach((iCI, i) => {
+                pg.displayedIgnoredCharIndices[i] =
+                    iCI - pg.controlCharIndices.filter((cCI) => cCI < iCI).length;
+            });
         }); // pgs.forEach
 
+        console.log(pgs);
         setParagraphs(pgs);
     };
 
@@ -244,15 +273,11 @@ const Game = ({ paused, setPaused }: GameProps) => {
                             {letters.map((letter, letterIndex) => {
                                 let letterElement = null;
 
-                                if (
-                                    !pg.controlCharIndices.includes(letterIndex)
-                                ) {
+                                if (!pg.controlCharIndices.includes(letterIndex)) {
                                     letterElement = (
                                         <span
                                             className={
-                                                pg.ignoredCharIndices.includes(
-                                                    letterIndex
-                                                )
+                                                pg.ignoredCharIndices.includes(letterIndex)
                                                     ? 'text-ignored'
                                                     : ''
                                             }
@@ -272,79 +297,92 @@ const Game = ({ paused, setPaused }: GameProps) => {
         );
     }, [paragraphs]);
 
-    // Need to pass the current position because useState doesn't provide a
-    // callback
-    const calculateOffsetPosition = (
-        pos: Position,
-        offset: number
-    ): Position => {
+    const offsetPosition = (pos: Position, offset: number): Position => {
         if (offset === 0) {
             return pos;
         }
 
-        const currentPg = paragraphs[pos.pg];
-        const isForwardOffset = offset > 0;
         let newPos = { ...pos };
+        const currentPg = paragraphs[pos.pg];
+        // To next paragraph, if there is one
+        if (pos.char + offset > currentPg.text.length - currentPg.controlCharIndices.length - 1) {
+            if (pos.pg !== paragraphs.length - 1) {
+                newPos.pg++;
+                newPos.char = -1;
+                newPos.realChar = -1;
 
-        // Backspace to previous line (if there is one)
-        if (pos.char + offset < 0) {
-            if (pos.pg === 0) {
-                newPos = { ...newPos, char: 0 };
-            } else {
-                newPos = calculateOffsetPosition(
-                    {
-                        pg: pos.pg - 1,
-                        char:
-                            paragraphs[pos.pg - 1].text.length -
-                            paragraphs[pos.pg - 1].controlCharIndices.length -
-                            1,
-                    },
-                    offset + (pos.char + 1)
-                );
-            }
-            // To next line (if there's one)
-        } else if (
-            pos.char + offset >=
-            currentPg.text.length - currentPg.controlCharIndices.length
-        ) {
-            if (pos.pg + 1 === paragraphs.length) {
-                newPos = {
-                    ...newPos,
-                    char:
-                        currentPg.text.length -
-                        currentPg.controlCharIndices.length -
-                        1,
-                };
-            } else {
-                newPos = calculateOffsetPosition(
-                    { pg: pos.pg + 1, char: 0 },
+                newPos = offsetPosition(
+                    newPos,
                     offset -
                         (currentPg.text.length -
                             currentPg.controlCharIndices.length -
-                            pos.char)
+                            currentPg.ignoredCharIndices.filter((iCI) => iCI > pos.char).length -
+                            pos.char -
+                            1)
                 );
+            } else {
+                newPos = finalPosition.current!;
             }
-            // Stay within the line
-        } else {
-            newPos = { ...newPos, char: pos.char + offset };
-        }
+        } else if (
+            pos.char -
+                currentPg.displayedIgnoredCharIndices.filter((dICI) => dICI < pos.char).length +
+                offset <
+            0
+        ) {
+            // To prev paragraph, if there is one
+            if (pos.pg !== 0) {
+                const prevPg = paragraphs[pos.pg - 1];
 
-        // Skip over any ignored characters
-        while (getCharElement(newPos)?.classList.contains('text-ignored')) {
-            newPos = calculateOffsetPosition(newPos, isForwardOffset ? 1 : -1);
+                newPos.pg--;
+                newPos.char = prevPg.text.length - prevPg.controlCharIndices.length;
+                newPos.realChar = prevPg.text.length;
+
+                newPos = offsetPosition(
+                    newPos,
+                    offset +
+                        (pos.char -
+                            currentPg.displayedIgnoredCharIndices.filter((dICI) => dICI < pos.char)
+                                .length)
+                );
+            } else {
+                newPos = initialPosition.current!;
+            }
+        } else {
+            newPos = offsetPositionWithinParagraph(newPos, currentPg, offset);
         }
 
         return newPos;
+    };
+
+    const offsetPositionWithinParagraph = (
+        pos: Position,
+        pg: Paragraph,
+        offset: number
+    ): Position => {
+        const delta = offset > 0 ? 1 : -1;
+        while (offset) {
+            const dICI = pg.displayedIgnoredCharIndices;
+            const ciCI = pg.controlCharIndices.concat(pg.ignoredCharIndices);
+            do {
+                pos.char += delta;
+            } while (dICI.includes(pos.char));
+
+            do {
+                pos.realChar += delta;
+            } while (ciCI.includes(pos.realChar));
+
+            offset += offset > 0 ? -1 : 1;
+        }
+
+        return pos;
     };
 
     const insertCharElement = (pos: Position, newChar: string) => {
         // TODO: test if newPg and newPgs are necessary
         const currentPg = paragraphs[pos.pg];
         const newPg = { ...currentPg };
-        newPg.text =
-            currentPg.text.slice(0, pos.char) +
-            newChar +
-            currentPg.text.slice(pos.char);
+        newPg.text = currentPg.text.slice(0, pos.char) + newChar + currentPg.text.slice(pos.char);
+        newPg.surplusCharIndices.push(pos.char);
         const newPgs = [...paragraphs];
         newPgs.splice(pos.pg, 1, newPg);
         processParagraphs(newPgs);
@@ -353,18 +391,15 @@ const Game = ({ paused, setPaused }: GameProps) => {
     const removeCharElement = (pos: Position) => {
         const currentPg = paragraphs[pos.pg];
         const newPg = { ...currentPg };
-        newPg.text =
-            currentPg.text.slice(0, pos.char) +
-            currentPg.text.slice(pos.char + 1);
+        newPg.text = currentPg.text.slice(0, pos.char) + currentPg.text.slice(pos.char + 1);
+        newPg.surplusCharIndices.pop();
         const newPgs = [...paragraphs];
-        paragraphs.splice(pos.pg, 1, newPg);
+        newPgs.splice(pos.pg, 1, newPg);
         processParagraphs(newPgs);
     };
 
     const getCharElement = (pos: Position): HTMLElement | null => {
-        const paragraphElements = textContainer.current?.getElementsByClassName(
-            'pg'
-        );
+        const paragraphElements = textContainer.current?.getElementsByClassName('pg');
         if (paragraphElements && paragraphElements.length) {
             return paragraphElements[pos.pg].children[pos.char] as HTMLElement;
         }
@@ -377,11 +412,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
             if (currentElement.classList.contains('text-surplus')) {
                 removeCharElement(pos);
             }
-            currentElement.classList.remove(
-                'text-correct',
-                'text-incorrect',
-                'text-surplus'
-            );
+            currentElement.classList.remove('text-correct', 'text-incorrect', 'text-surplus');
         }
     };
 
@@ -391,9 +422,8 @@ const Game = ({ paused, setPaused }: GameProps) => {
             correctKeypresses.current++; //TODO
         } else {
             incorrectKeypresses.current++; //TODO
-
-            // TODO: handling of surplus characters is majorly messed up
             charElement.current?.classList.add('text-incorrect');
+            // charElement.current?.classList.add('text-incorrect');
             // if (charElement.current?.textContent === ' ') {
             //     insertCharElement(position, letter);
             //     charElement.current?.classList.add('text-surplus');
@@ -409,7 +439,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         let newPos = { ...position };
 
         if (event.key === 'Backspace') {
-            newPos = calculateOffsetPosition(position, -1);
+            newPos = offsetPosition(position, -1);
             tryInputBackspace(newPos);
             setPosition(newPos);
         } else if (event.key.length === 1) {
@@ -417,7 +447,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
                 timerInterval.current = defaultTimerInterval;
             }
             tryInputLetter(position, event.key);
-            newPos = calculateOffsetPosition(position, 1);
+            newPos = offsetPosition(position, 1);
             setPosition(newPos);
             // Check exit condition
             if (newPos === finalPosition.current) {
@@ -429,9 +459,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
     return (
         <main id="game">
             <aside id="game-title" className={paused ? '' : 'pale'}>
-                <div className="game-title__title">
-                    The Witcher - Blood of Elves
-                </div>
+                <div className="game-title__title">The Witcher - Blood of Elves</div>
                 <div className="game-title__section">Chapter one</div>
             </aside>
             <aside id="quick-stats" className={paused ? '' : 'pale'}>
@@ -449,10 +477,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
                 </div>
             </section>
             <section id="scorebar" className={paused ? '' : 'hidden'}></section>
-            <section
-                id="detailed-stats"
-                className={paused ? '' : 'hidden'}
-            ></section>
+            <section id="detailed-stats" className={paused ? '' : 'hidden'}></section>
         </main>
     );
 };
