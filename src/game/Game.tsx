@@ -10,9 +10,9 @@ interface GameProps {
 
 interface QuickStats {
     // Current time elapsed (ms), words per minute, and accuracy (%)
-    time?: number;
-    wpm?: number;
-    acc?: number;
+    time: number;
+    wpm: number;
+    acc: number;
 }
 
 interface Position {
@@ -28,7 +28,8 @@ interface Position {
     realChar: number;
 }
 
-interface KeyPress {
+interface Keypress {
+    position: Position;
     letter: string;
     correct: boolean;
 }
@@ -53,13 +54,12 @@ const Game = ({ paused, setPaused }: GameProps) => {
     let charElement = useRef<HTMLElement | null>(null);
     let initialPosition = useRef<Position | null>(null);
     let finalPosition = useRef<Position | null>(null);
-    let correctKeypresses = useRef<number>(0);
-    let incorrectKeypresses = useRef<number>(0);
 
     // TODO: use keypresses to track keypresses :o
-    let keypresses = useRef<KeyPress[]>([]);
+    let keypresses = useRef<Keypress[]>([]);
     let windowResizeTimeout = useRef<number>(-1);
     let timerInterval = useRef<number | null>(null);
+    let time = useRef<number>(0);
 
     const [paragraphs, setParagraphs] = useState<Paragraph[]>([]);
     const [position, setPosition] = useState<Position>({
@@ -74,23 +74,22 @@ const Game = ({ paused, setPaused }: GameProps) => {
         acc: 100,
     });
 
-    const [time, setTime] = useState<number>(0);
-
     // Timer
     useInterval(() => {
-        setTime(time + (timerInterval.current || 0));
+        time.current += timerInterval.current || 0;
     }, timerInterval.current);
 
     // Quick stats
     useInterval(() => {
-        const newAcc =
-            correctKeypresses.current + incorrectKeypresses.current
-                ? correctKeypresses.current / correctKeypresses.current +
-                  incorrectKeypresses.current
-                : 0;
+        const newWpm =
+            time.current === 0 ? 0 : keypresses.current.length / 5 / (time.current / 60 / 1000);
+        const newAcc = !keypresses.current.length
+            ? 100
+            : (keypresses.current.filter((kp) => kp.correct).length / keypresses.current.length) *
+              100;
         setQuickStats({
-            time: time,
-            wpm: 0,
+            time: time.current,
+            wpm: newWpm,
             acc: newAcc,
         });
     }, quickStatsInterval);
@@ -393,10 +392,10 @@ const Game = ({ paused, setPaused }: GameProps) => {
         let newPgs = [...paragraphs];
         if (letter === charElement.current?.textContent) {
             charElement.current?.classList.add('text-correct');
-            correctKeypresses.current++; //TODO
+            keypresses.current.push({ position: pos, letter: letter, correct: true });
         } else {
-            incorrectKeypresses.current++; //TODO
             charElement.current?.classList.add('text-incorrect');
+            keypresses.current.push({ position: pos, letter: letter, correct: false });
             if (charElement.current?.textContent === ' ') {
                 newPgs = insertCharElement(position, letter);
                 charElement.current?.classList.add('text-surplus');
@@ -408,7 +407,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         return newPgs;
     };
 
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const handleKeypress = (event: React.KeyboardEvent<HTMLDivElement>) => {
         event.preventDefault();
 
         let newPos = { ...position };
@@ -482,14 +481,14 @@ const Game = ({ paused, setPaused }: GameProps) => {
                 <div className="game-title__section">Chapter one</div>
             </aside>
             <aside id="quick-stats" className={paused ? '' : 'pale'}>
-                <QuickStats time={time} wpm={0} acc={0} />
+                <QuickStats time={quickStats.time} wpm={quickStats.wpm} acc={quickStats.acc} />
             </aside>
             <section id="text-area" onClick={() => setPaused(!paused)}>
                 <div
                     className="text-container"
                     tabIndex={1}
                     ref={textContainer}
-                    onKeyDown={(event) => handleKeyPress(event)}
+                    onKeyDown={(event) => handleKeypress(event)}
                 >
                     {displayedText}
                     <div className="caret" ref={caret} />

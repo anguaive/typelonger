@@ -12,11 +12,11 @@ const QuickStats = ({ time, wpm, acc }: QuickStatsProps) => {
         <section className="stats-container">
             <div className="time">{formatTime(time)}</div>
             <div className="wpm">
-                {wpm}
+                {wpm.toFixed(2)}
                 <span className="unit"> wpm</span>
             </div>
             <div className="acc">
-                {acc}
+                {acc.toFixed(2)}
                 <span className="unit"> acc</span>
             </div>
         </section>
