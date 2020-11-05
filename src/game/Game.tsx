@@ -51,11 +51,14 @@ const quickStatsInterval = 1000;
 const Game = ({ paused, setPaused }: GameProps) => {
     const textContainer = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
+    const firstParagraph = useRef<HTMLDivElement>(null);
+    let topMargin = useRef<number>(0);
+    let caretHeight = useRef<number>(0);
+
     let charElement = useRef<HTMLElement | null>(null);
     let initialPosition = useRef<Position | null>(null);
     let finalPosition = useRef<Position | null>(null);
 
-    // TODO: use keypresses to track keypresses :o
     let keypresses = useRef<Keypress[]>([]);
     let windowResizeTimeout = useRef<number>(-1);
     let timerInterval = useRef<number | null>(null);
@@ -74,12 +77,12 @@ const Game = ({ paused, setPaused }: GameProps) => {
         acc: 100,
     });
 
-    // Timer
+    // Update timer
     useInterval(() => {
         time.current += timerInterval.current || 0;
     }, timerInterval.current);
 
-    // Quick stats
+    // Update quick stats
     useInterval(() => {
         const newWpm =
             time.current === 0 ? 0 : keypresses.current.length / 5 / (time.current / 60 / 1000);
@@ -102,6 +105,17 @@ const Game = ({ paused, setPaused }: GameProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [position]);
 
+    // Set initial top margin at 1/3 height
+    useEffect(() => {
+        // Typescript whines about textContainer possibly being undefined,
+        // even if I'm making sure it's not :shrug:
+        // @ts-ignore
+        topMargin.current = Math.floor(textContainer.current?.clientHeight / 3 || 0);
+        caretHeight.current = topMargin.current;
+
+        firstParagraph.current?.setAttribute('style', `margin-top: ${topMargin.current}px`);
+    }, [firstParagraph.current, textContainer.current]);
+
     const handleWindowResize = () => {
         // The new size isn't actually relevant, and the text reflows itself,
         // but the caret needs to be realigned manually
@@ -111,12 +125,13 @@ const Game = ({ paused, setPaused }: GameProps) => {
     };
 
     const handleWindowResizeEnd = () => {
+        scrollText(position);
         moveCaret(position);
     };
 
     // Fetch text
     useEffect(() => {
-        fetch('http://localhost:3001/gameTextDebug')
+        fetch('http://localhost:3001/gameText')
             .then((response) => response.json())
             .then((data) => {
                 const pgs = data.paragraphsText.map((text: string) => {
@@ -133,11 +148,12 @@ const Game = ({ paused, setPaused }: GameProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Move caret when position changes
+    // Move caret when position changes, and scroll text if entering new line
     useEffect(() => {
         const newCharElement = getCharElement(position);
         if (newCharElement) {
             charElement.current = newCharElement;
+            scrollText(position);
             moveCaret(position);
         }
 
@@ -156,7 +172,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
             );
 
             charElement.current = getCharElement(initialPosition.current);
-            moveCaret(initialPosition.current);
             setPosition(initialPosition.current);
 
             // Compute final position
@@ -191,12 +206,25 @@ const Game = ({ paused, setPaused }: GameProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paused]);
 
+    const scrollText = (pos: Position) => {
+        const char = getCharElement(position);
+
+        if (char) {
+            if (char.offsetTop !== caretHeight.current) {
+                topMargin.current -= char.offsetTop - caretHeight.current;
+            }
+
+            firstParagraph.current?.setAttribute('style', `margin-top: ${topMargin.current}px`);
+        }
+    };
+
     const moveCaret = (pos: Position) => {
         const char = getCharElement(position);
+
         if (char) {
             caret.current?.setAttribute(
                 'style',
-                `margin-top: ${char.offsetTop}px; margin-left: ${char.offsetLeft - 1}px`
+                `margin-top: ${caretHeight.current}px; margin-left: ${char.offsetLeft - 1}px`
             );
         }
     };
@@ -446,7 +474,11 @@ const Game = ({ paused, setPaused }: GameProps) => {
                 {paragraphs.map((pg, pgIndex) => {
                     const letters = pg.text.split('');
                     return (
-                        <div className="pg" key={pgIndex}>
+                        <div
+                            ref={pgIndex === 0 ? firstParagraph : null}
+                            className="pg"
+                            key={pgIndex}
+                        >
                             {letters.map((letter, letterIndex) => {
                                 let letterElement = null;
 
