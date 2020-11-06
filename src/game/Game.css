@@ -1,7 +1,9 @@
 #game {
+    --aside-width: 360px;
+    --text-area-horizontal-padding: 4rem;
     height: 100%;
     display: grid;
-    grid-template-columns: 360px auto 360px;
+    grid-template-columns: var(--aside-width) auto var(--aside-width);
     grid-template-rows: 20% 55% auto;
     grid-template-areas:
         'title text-area scorebar'
@@ -52,12 +54,14 @@
 #text-area {
     grid-area: text-area;
     background-color: var(--gamearea-background-color);
+    position: relative;
     box-sizing: border-box;
-    padding: 2rem 4rem 0 4rem;
+    padding: 2rem var(--text-area-horizontal-padding) 0 var(--text-area-horizontal-padding);
 }
 
 .text-container {
     margin-bottom: 2rem;
+    width: 100%;
     font-size: 28px;
     line-height: 32px;
     word-break: break-word;
@@ -104,16 +108,22 @@
     width: 100%;
     height: 100%;
     content: '';
-    background: linear-gradient(
-        to bottom,
-        var(--gamearea-background-color),
-        transparent 4rem,
-        transparent calc(100% - 2rem),
-        var(--gamearea-background-color)
-    );
+    /* background: linear-gradient( */
+    /*     to bottom, */
+    /*     var(--gamearea-background-color), */
+    /*     transparent 4rem, */
+    /*     transparent calc(100% - 2rem), */
+    /*     var(--gamearea-background-color) */
+    /* ); */
+}
+
+.scroll-guide {
+    height: 1px;
 }
 
 .pg {
+    /* reserving space for the scrollbar gutter */
+    width: calc(100vw - 2 * var(--aside-width) - 2 * var(--text-area-horizontal-padding) - 1rem);
     white-space: pre-wrap;
     color: var(--gametext-inactive-color);
 }

@@ -50,6 +50,7 @@ const quickStatsInterval = 1000;
 
 const Game = ({ paused, setPaused }: GameProps) => {
     const textContainer = useRef<HTMLDivElement>(null);
+    const scrollGuide = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
     const firstParagraph = useRef<HTMLDivElement>(null);
     let topMargin = useRef<number>(0);
@@ -112,6 +113,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         // @ts-ignore
         topMargin.current = Math.floor(textContainer.current?.clientHeight / 3 || 0);
         caretHeight.current = topMargin.current;
+        console.log(topMargin.current);
 
         firstParagraph.current?.setAttribute('style', `margin-top: ${topMargin.current}px`);
     }, [firstParagraph.current, textContainer.current]);
@@ -131,7 +133,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
 
     // Fetch text
     useEffect(() => {
-        fetch('http://localhost:3001/gameText')
+        fetch('http://localhost:3001/gameTextScrollDebug')
             .then((response) => response.json())
             .then((data) => {
                 const pgs = data.paragraphsText.map((text: string) => {
@@ -199,9 +201,16 @@ const Game = ({ paused, setPaused }: GameProps) => {
             timerInterval.current = null;
             textContainer.current?.blur();
             textContainer.current?.classList.remove('cursor-hidden');
+            textContainer.current?.setAttribute('style', 'overflow-y: scroll');
         } else {
             textContainer.current?.focus();
             textContainer.current?.classList.add('cursor-hidden');
+            textContainer.current?.setAttribute('style', 'overflow-y: hidden');
+            scrollGuide.current?.scrollIntoView({
+                block: 'start',
+                inline: 'nearest',
+                behavior: 'smooth',
+            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paused]);
@@ -522,6 +531,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
                     ref={textContainer}
                     onKeyDown={(event) => handleKeypress(event)}
                 >
+                    <div className="scroll-guide" ref={scrollGuide} />
                     {displayedText}
                     <div className="caret" ref={caret} />
                 </div>
