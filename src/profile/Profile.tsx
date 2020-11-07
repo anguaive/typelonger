@@ -5,10 +5,9 @@ import { formatHours } from '../utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PerformanceCard from '../cards/PerformanceCard';
 import Radio from '../radio/Radio';
-import { User } from '../scheme';
+import { User, AuthStatus } from '../types';
 import { getPerfActions } from '../utils';
 import Card from '../cards/Card';
-import { AuthStatus } from '../auth';
 import InputPopup from '../input-popup/InputPopup';
 
 interface ProfileProps {
@@ -18,12 +17,7 @@ interface ProfileProps {
     setSearchHidden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Profile = ({
-    authStatus,
-    logOut,
-    searchHidden,
-    setSearchHidden,
-}: ProfileProps) => {
+const Profile = ({ authStatus, logOut, searchHidden, setSearchHidden }: ProfileProps) => {
     const [profile, setProfile] = useState<User>();
     const [bioEditorHidden, setBioEditorHidden] = useState(true);
     const [newAliasHidden, setNewAliasHidden] = useState(true);
@@ -83,17 +77,13 @@ const Profile = ({
         const validationErrors = [];
         const aliasNames = profile.aliases.map((alias) => alias.name);
         if (newName.length > 32) {
-            validationErrors.push(
-                'The name exceeds the maximum length of 32 characters!'
-            );
+            validationErrors.push('The name exceeds the maximum length of 32 characters!');
         }
         if (newName.match(/^[a-zA-Z_]+$/g) === null) {
             validationErrors.push('The name contains illegal characters!');
         }
         if (aliasNames.includes(newName)) {
-            validationErrors.push(
-                'An alias with the same name already exists!'
-            );
+            validationErrors.push('An alias with the same name already exists!');
         }
         return validationErrors;
     };
@@ -119,11 +109,7 @@ const Profile = ({
             <section id="user-info">
                 <span className="container-title">User information</span>
                 <div id="user-info-grid" className="container">
-                    <img
-                        src={profile.picture}
-                        className="user-info__picture"
-                        alt="User"
-                    />
+                    <img src={profile.picture} className="user-info__picture" alt="User" />
                     <div className="user-info__username">{profile.name}</div>
                     <div className="user-info__aliases">
                         <Radio
@@ -133,11 +119,7 @@ const Profile = ({
                         />
                     </div>
                     <TransitionGroup component={null}>
-                        <CSSTransition
-                            key={selectedAlias}
-                            timeout={300}
-                            classNames="new-alias"
-                        >
+                        <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
                             <>
                                 <div className="user-info__stats">
                                     <div className="user-info__stat">
@@ -145,29 +127,20 @@ const Profile = ({
                                         <span className="unit">since</span>
                                     </div>
                                     <div className="user-info__stat">
-                                        {formatHours(
-                                            profile.aliases[selectedAlias]
-                                                .time || 0
-                                        )}{' '}
+                                        {formatHours(profile.aliases[selectedAlias].time || 0)}{' '}
                                         <span className="unit">hours</span>
                                     </div>
                                     <div className="user-info__stat">
                                         {profile.aliases[selectedAlias].points}{' '}
                                         <span className="unit">points</span>{' '}
-                                        <span className="user-info__rank">
-                                            ( #123 )
-                                        </span>
+                                        <span className="user-info__rank">( #123 )</span>
                                     </div>
                                     <div className="user-info__stat">
-                                        {profile.aliases[
-                                            selectedAlias
-                                        ].wpm.toFixed(2)}{' '}
+                                        {profile.aliases[selectedAlias].wpm.toFixed(2)}{' '}
                                         <span className="unit">wpm</span>
                                     </div>
                                     <div className="user-info__stat">
-                                        {profile.aliases[
-                                            selectedAlias
-                                        ].acc.toFixed(2)}{' '}
+                                        {profile.aliases[selectedAlias].acc.toFixed(2)}{' '}
                                         <span className="unit">acc</span>
                                     </div>
                                 </div>
@@ -178,16 +151,11 @@ const Profile = ({
                         {bioEditorHidden ? (
                             profile.bio
                         ) : (
-                            <form
-                                onSubmit={() => saveBio()}
-                                className="user-info__bio-editor"
-                            >
+                            <form onSubmit={() => saveBio()} className="user-info__bio-editor">
                                 <textarea
                                     rows={16}
                                     value={bioValue}
-                                    onChange={(event) =>
-                                        setBioValue(event.target.value)
-                                    }
+                                    onChange={(event) => setBioValue(event.target.value)}
                                 />
                                 <div className="user-info__bio-editor-actions">
                                     <button
@@ -209,10 +177,7 @@ const Profile = ({
                     <div className="user-actions">
                         {authStatus.userName === profile.name && (
                             <>
-                                <button
-                                    className="button"
-                                    onClick={() => setNewAliasHidden(false)}
-                                >
+                                <button className="button" onClick={() => setNewAliasHidden(false)}>
                                     New alias
                                 </button>
                                 <button
@@ -221,10 +186,7 @@ const Profile = ({
                                 >
                                     Edit bio
                                 </button>
-                                <button
-                                    className="button"
-                                    onClick={() => logOut()}
-                                >
+                                <button className="button" onClick={() => logOut()}>
                                     Log out
                                 </button>
                             </>
@@ -236,29 +198,16 @@ const Profile = ({
                 </div>
             </section>
             <TransitionGroup component={null}>
-                <CSSTransition
-                    key={selectedAlias}
-                    timeout={300}
-                    classNames="new-alias"
-                >
+                <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
                     <section id="top-performances">
-                        <span className="container-title">
-                            Top performances
-                        </span>
+                        <span className="container-title">Top performances</span>
                         <div className="performance-container">
-                            {profile.aliases[selectedAlias].topPerformances
-                                .length ? (
-                                profile.aliases[
-                                    selectedAlias
-                                ].topPerformances.map((perf, i) => (
+                            {profile.aliases[selectedAlias].topPerformances.length ? (
+                                profile.aliases[selectedAlias].topPerformances.map((perf, i) => (
                                     <Card
                                         key={i}
                                         cardStyle={perf.rank}
-                                        actions={getPerfActions(
-                                            perf,
-                                            location,
-                                            history
-                                        )}
+                                        actions={getPerfActions(perf, location, history)}
                                     >
                                         <PerformanceCard {...perf} />
                                     </Card>
@@ -273,29 +222,16 @@ const Profile = ({
                 </CSSTransition>
             </TransitionGroup>
             <TransitionGroup component={null}>
-                <CSSTransition
-                    key={selectedAlias}
-                    timeout={300}
-                    classNames="new-alias"
-                >
+                <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
                     <section id="recent-performances">
-                        <span className="container-title">
-                            Recent performances
-                        </span>
+                        <span className="container-title">Recent performances</span>
                         <div className="performance-container">
-                            {profile.aliases[selectedAlias].recentPerformances
-                                .length ? (
-                                profile.aliases[
-                                    selectedAlias
-                                ].recentPerformances.map((perf, i) => (
+                            {profile.aliases[selectedAlias].recentPerformances.length ? (
+                                profile.aliases[selectedAlias].recentPerformances.map((perf, i) => (
                                     <Card
                                         key={i}
                                         cardStyle={perf.rank}
-                                        actions={getPerfActions(
-                                            perf,
-                                            location,
-                                            history
-                                        )}
+                                        actions={getPerfActions(perf, location, history)}
                                     >
                                         <PerformanceCard {...perf} key={i} />
                                     </Card>

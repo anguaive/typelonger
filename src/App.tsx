@@ -13,7 +13,7 @@ import Settings, { AppSettings, SETTINGS_STORAGE, defaultSettings } from './sett
 import NoMatch from './NoMatch';
 import TextDetails from './text-details/TextDetails';
 import Texts from './texts/Texts';
-import { AuthStatus } from './auth';
+import { AuthStatus } from './types';
 
 interface AppRoute {
     path: string;
@@ -33,6 +33,7 @@ const App = () => {
 
     const [searchHidden, setSearchHidden] = useState(true);
     const [paused, setPaused] = useState(true);
+    const [finished, setFinished] = useState(false);
     const location = useLocation();
 
     const keyboardHandler = (event: KeyboardEvent) => {
@@ -44,6 +45,16 @@ const App = () => {
                 case 's':
                     if (locationHead === 'profile') {
                         setSearchHidden(false);
+                    }
+                    break;
+                case 'Escape':
+                    if (locationHead === 'game') {
+                        setPaused(finished || true);
+                    }
+                    break;
+                case 'Enter':
+                    if (locationHead === 'game') {
+                        setPaused(finished || false);
                     }
                     break;
                 default:
@@ -71,7 +82,14 @@ const App = () => {
     const routes: AppRoute[] = [
         {
             path: '/game',
-            component: <Game paused={paused} setPaused={setPaused} />,
+            component: (
+                <Game
+                    paused={paused}
+                    setPaused={setPaused}
+                    finished={finished}
+                    setFinished={setFinished}
+                />
+            ),
         },
         {
             path: '/matchmaking',

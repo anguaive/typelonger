@@ -3,7 +3,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import PerformanceCard from '../cards/PerformanceCard';
 import Card from '../cards/Card';
 import './TextDetails.css';
-import { Text } from '../scheme';
+import { Text } from '../types';
 import { getPerfActions } from '../utils';
 
 const TextDetails = () => {
@@ -33,18 +33,13 @@ const TextDetails = () => {
                 <span className="container-title">Text information</span>
                 <div id="text-info-grid" className="container">
                     <div className="text-info__title">{text.title}</div>
-                    <img
-                        src={text.coverPicture}
-                        className="text-info__cover-picture"
-                        alt="Text"
-                    />
+                    <img src={text.coverPicture} className="text-info__cover-picture" alt="Text" />
                     <div className="text-info__author">by {text.author}</div>
                     <div className="text-info__genre">{text.genre}</div>
                     <div className="text-info__isbn">ISBN {text.isbn}</div>
                     <div className="text-info__stats">
                         <div className="text-info__popularity">
-                            {text.popularity}{' '}
-                            <span className="unit">popularity</span>
+                            {text.popularity} <span className="unit">popularity</span>
                         </div>
                         <div className="text-info__word-count">
                             {text.sections
@@ -53,8 +48,7 @@ const TextDetails = () => {
                             <span className="unit">words</span>
                         </div>
                         <div className="text-info__sections-count">
-                            {text.sections.length}{' '}
-                            <span className="unit">sections</span>
+                            {text.sections.length} <span className="unit">sections</span>
                         </div>
                     </div>
                     <div className="text-info__dates">
@@ -75,11 +69,7 @@ const TextDetails = () => {
                     {text.sections.map((section, i) => (
                         <Card
                             key={i}
-                            cardStyle={
-                                text.sections[i].ownTopPerformance
-                                    ? 'normal'
-                                    : 'inactive'
-                            }
+                            cardStyle={text.sections[i].ownTopPerformance ? 'normal' : 'inactive'}
                             selected={i === selectedSection}
                             actions={[
                                 {
@@ -90,9 +80,7 @@ const TextDetails = () => {
                                 { text: 'Play', handler: () => {} },
                             ]}
                         >
-                            <div className="section__title">
-                                {section.title}
-                            </div>
+                            <div className="section__title">{section.title}</div>
                             <div className="section__stats-container">
                                 <div>
                                     {section.length}
@@ -111,25 +99,17 @@ const TextDetails = () => {
                 <span className="container-title">Best Performances</span>
                 <div className="performance-container">
                     {text.sections[selectedSection].topPerformances ? (
-                        text.sections[selectedSection].topPerformances!.map(
-                            (perf, i) => (
-                                <Card
-                                    key={i}
-                                    cardStyle={perf.rank}
-                                    actions={getPerfActions(
-                                        perf,
-                                        location,
-                                        history
-                                    )}
-                                >
-                                    <PerformanceCard {...perf} />
-                                </Card>
-                            )
-                        )
+                        text.sections[selectedSection].topPerformances!.map((perf, i) => (
+                            <Card
+                                key={i}
+                                cardStyle={perf.rank}
+                                actions={getPerfActions(perf, location, history)}
+                            >
+                                <PerformanceCard {...perf} />
+                            </Card>
+                        ))
                     ) : (
-                        <div className="no-performances">
-                            This section has no performances
-                        </div>
+                        <div className="no-performances">This section has no performances</div>
                     )}
                 </div>
             </section>
@@ -139,11 +119,7 @@ const TextDetails = () => {
                     {ownTopPerf ? (
                         <Card
                             cardStyle={ownTopPerf.rank}
-                            actions={getPerfActions(
-                                ownTopPerf,
-                                location,
-                                history
-                            )}
+                            actions={getPerfActions(ownTopPerf, location, history)}
                         >
                             <PerformanceCard {...ownTopPerf} />
                         </Card>

@@ -1,6 +1,6 @@
 import React from 'react';
 import './PerformanceCard.css';
-import { Performance } from '../scheme';
+import { Performance } from '../types';
 import { formatTime } from '../utils';
 
 const PerformanceCard = (perf: Performance) => {
@@ -15,9 +15,7 @@ const PerformanceCard = (perf: Performance) => {
             <div className="performance__title">{perf.title}</div>
             <div className="performance__section--when">
                 <div className="performance__section">{perf.section}</div>
-                <div className="performance__when">
-                    {new Date(perf.when).toDateString()}
-                </div>
+                <div className="performance__when">{new Date(perf.when).toDateString()}</div>
             </div>
             {playedBy}
             <div className="performance__stats">

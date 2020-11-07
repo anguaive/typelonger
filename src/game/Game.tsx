@@ -1,47 +1,16 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import useInterval from '@use-it/interval';
 import { shallowCompare } from '../utils';
+import { Keypress, Position, Paragraph, ComputedStats } from '../types';
 import './Game.css';
+import SegmentStats from '../segment-stats/SegmentStats';
 import QuickStats from './QuickStats';
 
 interface GameProps {
     paused: boolean;
     setPaused: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-interface QuickStats {
-    // Current time elapsed (ms), words per minute, and accuracy (%)
-    time: number;
-    wpm: number;
-    acc: number;
-}
-
-interface Position {
-    // Index of paragraph the caret is on  - [0, length)
-    pg: number;
-
-    // Index of the character HTML element the caret is on, inside the current paragraph
-    // Only includes "visible" characters
-    char: number;
-
-    // Index of the plaintext character the caret is on, inside the current paragraph
-    // Includes "invisible" characters, i.e. control characters
-    realChar: number;
-}
-
-interface Keypress {
-    time: number;
-    position: Position;
-    letter: string;
-    correct?: boolean;
-}
-
-interface Paragraph {
-    text: string;
-    controlCharIndices: number[];
-    ignoredCharIndices: number[];
-    displayedIgnoredCharIndices: number[];
-    surplusCharIndices: number[];
+    finished: boolean;
+    setFinished: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // How often the timer ticks
@@ -50,7 +19,7 @@ const defaultTimerInterval = 100;
 // How often the quick stats visuals are updated
 const quickStatsInterval = 1000;
 
-const Game = ({ paused, setPaused }: GameProps) => {
+const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
     const textContainer = useRef<HTMLDivElement>(null);
     const scrollGuide = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
@@ -59,12 +28,11 @@ const Game = ({ paused, setPaused }: GameProps) => {
     let topMargin = useRef<number>(0);
     let caretHeight = useRef<number>(0);
 
-    let keypresses = useRef<Keypress[]>([]);
     let windowResizeTimeout = useRef<number>(-1);
     let timerInterval = useRef<number | null>(null);
     let time = useRef<number>(0);
 
-    const [finished, setFinished] = useState<boolean>(false);
+    const [keypresses, setKeypresses] = useState<Keypress[]>([]);
     const [paragraphs, setParagraphs] = useState<Paragraph[]>([]);
     const [position, setPosition] = useState<Position>({
         pg: 0,
@@ -72,7 +40,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         realChar: 0,
     });
 
-    const [quickStats, setQuickStats] = useState<QuickStats>({
+    const [quickStats, setQuickStats] = useState<ComputedStats>({
         time: 0,
         wpm: 0,
         acc: 100,
@@ -88,13 +56,13 @@ const Game = ({ paused, setPaused }: GameProps) => {
         const newWpm =
             time.current === 0
                 ? 0
-                : keypresses.current.filter((kp) => kp.letter !== 'Backspace').length /
+                : keypresses.filter((kp) => kp.letter !== 'Backspace').length /
                   5 /
                   (time.current / 60 / 1000);
-        const newAcc = !keypresses.current.length
+        const newAcc = !keypresses.length
             ? 100
-            : (keypresses.current.filter((kp) => kp.correct).length /
-                  keypresses.current.filter((kp) => kp.letter !== 'Backspace').length) *
+            : (keypresses.filter((kp) => kp.correct).length /
+                  keypresses.filter((kp) => kp.letter !== 'Backspace').length) *
               100;
         setQuickStats({
             time: time.current,
@@ -434,7 +402,10 @@ const Game = ({ paused, setPaused }: GameProps) => {
     const tryInputBackspace = (pos: Position) => {
         const currentElement = getCharElement(pos);
         if (currentElement) {
-            keypresses.current.push({ time: time.current, position: pos, letter: 'Backspace' });
+            setKeypresses([
+                ...keypresses,
+                { time: time.current, position: pos, letter: 'Backspace' },
+            ]);
             if (currentElement.classList.contains('text-surplus')) {
                 removeCharElement(pos);
             }
@@ -446,20 +417,26 @@ const Game = ({ paused, setPaused }: GameProps) => {
         let newPgs = [...paragraphs];
         if (letter === charElement.current?.textContent) {
             charElement.current?.classList.add('text-correct');
-            keypresses.current.push({
-                time: time.current,
-                position: pos,
-                letter: letter,
-                correct: true,
-            });
+            setKeypresses([
+                ...keypresses,
+                {
+                    time: time.current,
+                    position: pos,
+                    letter: letter,
+                    correct: true,
+                },
+            ]);
         } else {
             charElement.current?.classList.add('text-incorrect');
-            keypresses.current.push({
-                time: time.current,
-                position: pos,
-                letter: letter,
-                correct: false,
-            });
+            setKeypresses([
+                ...keypresses,
+                {
+                    time: time.current,
+                    position: pos,
+                    letter: letter,
+                    correct: false,
+                },
+            ]);
             if (charElement.current?.textContent === ' ') {
                 newPgs = insertCharElement(position, letter);
                 charElement.current?.classList.add('text-surplus');
@@ -475,11 +452,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         event.preventDefault();
 
         let newPos = { ...position };
-        if (event.key === 'Escape') {
-            setPaused(finished || true);
-        } else if (event.key === 'Enter') {
-            setPaused(finished || false);
-        } else if (event.key === 'Backspace') {
+        if (event.key === 'Backspace') {
             newPos = offsetPosition(position, paragraphs, -1);
             tryInputBackspace(newPos);
             setPosition(newPos);
@@ -566,10 +539,11 @@ const Game = ({ paused, setPaused }: GameProps) => {
                     <div className="caret" ref={caret} />
                 </div>
             </section>
-            <section id="scorebar" className={paused ? '' : 'hidden'}></section>
-            <section id="detailed-stats" className={paused ? '' : 'hidden'}></section>
+            <section id="scorebar"></section>
+            <section id="detailed-stats">
+                {paused && <SegmentStats keypresses={keypresses} />}
+            </section>
         </main>
     );
 };
-
 export default Game;

@@ -1,13 +1,8 @@
 import React from 'react';
 import { formatTime } from '../utils';
+import { ComputedStats } from '../types';
 
-interface QuickStatsProps {
-    time: number;
-    wpm: number;
-    acc: number;
-}
-
-const QuickStats = ({ time, wpm, acc }: QuickStatsProps) => {
+const QuickStats = ({ time, wpm, acc }: ComputedStats) => {
     return (
         <section className="stats-container">
             <div className="time">{formatTime(time)}</div>

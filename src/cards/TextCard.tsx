@@ -1,6 +1,6 @@
 import React from 'react';
 import './TextCard.css';
-import { Text } from '../scheme';
+import { Text } from '../types';
 
 const TextCard = ({ text }: { text: Text }) => {
     return (

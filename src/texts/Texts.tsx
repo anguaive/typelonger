@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import './Texts.css';
-import { Text } from '../scheme';
+import { Text } from '../types';
 import { getTextActions } from '../utils';
 import TextCard from '../cards/TextCard';
 import Card from '../cards/Card';
@@ -33,32 +33,19 @@ const Texts = () => {
         <main id="texts">
             <section id="texts-list">
                 {items
-                    .slice(
-                        page * itemsPerPage,
-                        Math.min((page + 1) * itemsPerPage, items.length)
-                    )
+                    .slice(page * itemsPerPage, Math.min((page + 1) * itemsPerPage, items.length))
                     .map((item, i) => (
-                        <Card
-                            key={i}
-                            actions={getTextActions(item, location, history)}
-                        >
+                        <Card key={i} actions={getTextActions(item, location, history)}>
                             <TextCard text={item} />
                         </Card>
                     ))}
             </section>
             <section id="texts-actions" className="list-actions">
-                <Radio
-                    values={sortOptions}
-                    selected={sort}
-                    setSelected={setSort}
-                />
+                <Radio values={sortOptions} selected={sort} setSelected={setSort} />
             </section>
             <section id="texts-controls" className="list-controls">
                 <div className="list-buttons">
-                    <button
-                        className="button svg-button"
-                        onClick={() => setPage(0)}
-                    >
+                    <button className="button svg-button" onClick={() => setPage(0)}>
                         <i className="material-icons md-36">first_page</i>
                     </button>
                     <button
@@ -70,17 +57,14 @@ const Texts = () => {
                     <button
                         className="button svg-button"
                         onClick={() =>
-                            page < Math.floor(items.length / itemsPerPage) &&
-                            setPage(page + 1)
+                            page < Math.floor(items.length / itemsPerPage) && setPage(page + 1)
                         }
                     >
                         <i className="material-icons md-36">chevron_right</i>
                     </button>
                     <button
                         className="button svg-button"
-                        onClick={() =>
-                            setPage(Math.floor(items.length / itemsPerPage))
-                        }
+                        onClick={() => setPage(Math.floor(items.length / itemsPerPage))}
                     >
                         <i className="material-icons md-36">last_page</i>
                     </button>
@@ -89,8 +73,7 @@ const Texts = () => {
                     <div>Displaying</div>
                     <div>
                         [{page * itemsPerPage + 1}-
-                        {Math.min((page + 1) * itemsPerPage, items.length)}] of{' '}
-                        {items.length}
+                        {Math.min((page + 1) * itemsPerPage, items.length)}] of {items.length}
                     </div>
                     <div>results</div>
                 </div>

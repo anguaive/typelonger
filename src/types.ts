@@ -50,3 +50,42 @@ export interface Text {
     popularity: number;
     sections: Section[];
 }
+
+export interface Position {
+    // Index of paragraph the caret is on  - [0, length)
+    pg: number;
+
+    // Index of the character HTML element the caret is on, inside the current paragraph
+    // Only includes "visible" characters
+    char: number;
+
+    // Index of the plaintext character the caret is on, inside the current paragraph
+    // Includes "invisible" characters, i.e. control characters
+    realChar: number;
+}
+
+export interface Paragraph {
+    text: string;
+    controlCharIndices: number[];
+    ignoredCharIndices: number[];
+    displayedIgnoredCharIndices: number[];
+    surplusCharIndices: number[];
+}
+
+export interface ComputedStats {
+    // Current time elapsed (ms), words per minute, and accuracy (%)
+    time: number;
+    wpm: number;
+    acc: number;
+}
+
+export interface Keypress {
+    position: Position;
+    time: number;
+    letter: string;
+    correct?: boolean;
+}
+
+export interface AuthStatus {
+    userName: string;
+}

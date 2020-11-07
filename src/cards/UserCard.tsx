@@ -1,15 +1,9 @@
 import React from 'react';
-import { Alias } from '../scheme';
+import { Alias } from '../types';
 import { formatHours } from '../utils';
 import './UserCard.css';
 
-const UserCard = ({
-    alias,
-    placement,
-}: {
-    alias: Alias;
-    placement: number;
-}) => {
+const UserCard = ({ alias, placement }: { alias: Alias; placement: number }) => {
     return (
         <>
             <div className="user-card__placement">#{placement} </div>

@@ -1,8 +1,15 @@
-import { Alias, Text, Performance } from './scheme';
+import { Alias, Text, Performance } from './types';
 
 export interface Action {
     text: string;
     handler: Function;
+}
+
+export interface Keypress {
+    time: number;
+    position: Position;
+    letter: string;
+    correct?: boolean;
 }
 
 export const getUserActions = (alias: Alias, location: any, history: any) => [
