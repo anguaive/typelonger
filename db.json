@@ -1,36 +1,12 @@
 {
-	"gameTextScrollDebug": {
-		"paragraphsText": [
-			"aaa ^'aaa^' ",
-			"bbb ",
-			"ccc ^i^g^n^o^r^e^d ",
-			"scroll ",
-			"very long paragraph aaa aaaa aaaa aaaa aaa aaaa aaa aaaa aaa aaaa aaa aaaa aaa aaaa aaa aaaa aaa aaaa aaa aaaa aaa aaaa aa aaaa aaa aaaa aaa aaaa aaa aaaa  ",
-			"bbb ",
-			"ccc ",
-			"scroll ",
-			"aaa ",
-			"bbb ",
-			"ccc ",
-			"scroll ",
-			"aaa ",
-			"bbb ",
-			"ccc ",
-			"scroll ",
-			"aaa ",
-			"bbb ",
-			"ccc ",
-			"scroll"
-		]
-	},
 	"gameTextIgnoreDebug": {
 		"paragraphsText": [
 			"$$$$$ ",
 			"abc abc ",
-			"abc ^''abc^'' ",
+			"abc ^'abc^' ",
 			"abc^'abc ",
 			"abc$^'abc ",
-			"^'^'abcabc ^'^'abc $abc $$^'abc "
+			"^'abcabc ^'abc $abc $$^'abc "
 		]
 	},
     "gameText": {

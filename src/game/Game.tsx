@@ -58,7 +58,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
 
     let charElement = useRef<HTMLElement | null>(null);
     let initialPosition = useRef<Position | null>(null);
-    let finalPosition = useRef<Position | null>(null);
 
     let keypresses = useRef<Keypress[]>([]);
     let windowResizeTimeout = useRef<number>(-1);
@@ -113,7 +112,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
         // @ts-ignore
         topMargin.current = Math.floor(textContainer.current?.clientHeight / 3 || 0);
         caretHeight.current = topMargin.current;
-        console.log(topMargin.current);
 
         firstParagraph.current?.setAttribute('style', `margin-top: ${topMargin.current}px`);
     }, [firstParagraph.current, textContainer.current]);
@@ -133,7 +131,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
 
     // Fetch text
     useEffect(() => {
-        fetch('http://localhost:3001/gameTextScrollDebug')
+        fetch('http://localhost:3001/gameTextIgnoreDebug')
             .then((response) => response.json())
             .then((data) => {
                 const pgs = data.paragraphsText.map((text: string) => {
@@ -175,21 +173,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
 
             charElement.current = getCharElement(initialPosition.current);
             setPosition(initialPosition.current);
-
-            // Compute final position
-            const lastPgIdx = paragraphs.length - 1;
-            finalPosition.current = {
-                pg: lastPgIdx,
-                char:
-                    paragraphs[lastPgIdx].text.length -
-                    paragraphs[lastPgIdx].controlCharIndices.length,
-                realChar: paragraphs[lastPgIdx].text.length,
-            };
-            finalPosition.current = offsetPositionWithinParagraph(
-                finalPosition.current,
-                paragraphs[lastPgIdx],
-                -1
-            );
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,7 +184,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
             timerInterval.current = null;
             textContainer.current?.blur();
             textContainer.current?.classList.remove('cursor-hidden');
-            textContainer.current?.setAttribute('style', 'overflow-y: scroll');
+            textContainer.current?.setAttribute('style', 'overflow-y: auto');
         } else {
             textContainer.current?.focus();
             textContainer.current?.classList.add('cursor-hidden');
@@ -325,7 +308,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
                             1)
                 );
             } else {
-                newPos = finalPosition.current!;
+                newPos = finalPosition;
             }
         } else if (
             pos.char -
@@ -381,6 +364,24 @@ const Game = ({ paused, setPaused }: GameProps) => {
 
         return pos;
     };
+
+    const finalPosition = useMemo(() => {
+        if (paragraphs && paragraphs.length) {
+            const lastPgIdx = paragraphs.length - 1;
+            let finalPos = {
+                pg: lastPgIdx,
+                char:
+                    paragraphs[lastPgIdx].text.length -
+                    paragraphs[lastPgIdx].controlCharIndices.length -
+                    1,
+                realChar: paragraphs[lastPgIdx].text.length - 1,
+            };
+            finalPos = offsetPositionWithinParagraph(finalPos, paragraphs[lastPgIdx], -1);
+            return finalPos;
+        } else {
+            return { pg: -1, char: -1, realChar: -1 };
+        }
+    }, [paragraphs]);
 
     const insertCharElement = (pos: Position, newChar: string): Paragraph[] => {
         // TODO: test if newPg and newPgs are necessary
@@ -470,7 +471,8 @@ const Game = ({ paused, setPaused }: GameProps) => {
             setPosition(newPos);
 
             // Check exit condition
-            if (newPos === finalPosition.current) {
+            if (newPos === finalPosition) {
+                console.log('finished');
                 // TODO: redirect to results page
             }
         }
