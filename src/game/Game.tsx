@@ -57,7 +57,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
     let caretHeight = useRef<number>(0);
 
     let charElement = useRef<HTMLElement | null>(null);
-    let initialPosition = useRef<Position | null>(null);
 
     let keypresses = useRef<Keypress[]>([]);
     let windowResizeTimeout = useRef<number>(-1);
@@ -163,17 +162,8 @@ const Game = ({ paused, setPaused }: GameProps) => {
     // Compute initial and final positions
     // useLayoutEffect, because we need to wait for the DOM mutations to finish
     useLayoutEffect(() => {
-        if (paragraphs && paragraphs.length) {
-            // Compute initial position and place caret there
-            initialPosition.current = offsetPositionWithinParagraph(
-                { pg: 0, char: -1, realChar: -1 },
-                paragraphs[0],
-                1
-            );
-
-            charElement.current = getCharElement(initialPosition.current);
-            setPosition(initialPosition.current);
-        }
+        charElement.current = getCharElement(initialPosition);
+        setPosition(initialPosition);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paragraphs.length]);
@@ -333,7 +323,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
                                 .length)
                 );
             } else {
-                newPos = initialPosition.current!;
+                newPos = initialPosition;
             }
         } else {
             newPos = offsetPositionWithinParagraph(newPos, currentPg, offset);
@@ -365,7 +355,22 @@ const Game = ({ paused, setPaused }: GameProps) => {
         return pos;
     };
 
+    const initialPosition = useMemo(() => {
+        console.log('initialPosition changed');
+        if (paragraphs && paragraphs.length) {
+            const initialPos = offsetPositionWithinParagraph(
+                { pg: 0, char: -1, realChar: -1 },
+                paragraphs[0],
+                1
+            );
+            return initialPos;
+        } else {
+            return { pg: -1, char: -1, realChar: -1 };
+        }
+    }, [paragraphs[0]]);
+
     const finalPosition = useMemo(() => {
+        console.log('finalPosition changed');
         if (paragraphs && paragraphs.length) {
             const lastPgIdx = paragraphs.length - 1;
             let finalPos = {
@@ -381,7 +386,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         } else {
             return { pg: -1, char: -1, realChar: -1 };
         }
-    }, [paragraphs]);
+    }, [paragraphs[paragraphs.length - 1]]);
 
     const insertCharElement = (pos: Position, newChar: string): Paragraph[] => {
         // TODO: test if newPg and newPgs are necessary
