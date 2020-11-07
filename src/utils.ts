@@ -19,11 +19,7 @@ export const getTextActions = (text: Text, location: any, history: any) => [
     },
 ];
 
-export const getPerfActions = (
-    perf: Performance,
-    location: any,
-    history: any
-) => {
+export const getPerfActions = (perf: Performance, location: any, history: any) => {
     const actions = [
         {
             text: 'View replay',
@@ -42,9 +38,7 @@ export const getPerfActions = (
                 text: 'View profile',
                 handler: () =>
                     history.push(
-                        `/profile/${perf.userName || 'USER_NAME'}/${
-                            perf.aliasName || 'ALIAS_NAME'
-                        }`
+                        `/profile/${perf.userName || 'USER_NAME'}/${perf.aliasName || 'ALIAS_NAME'}`
                     ),
             });
         }
@@ -75,11 +69,14 @@ export const formatTime = (ms: number): string => {
         useGrouping: false,
     };
 
-    const hoursString =
-        hours > 0 ? `${hours.toLocaleString(locale, options)}:` : '';
+    const hoursString = hours > 0 ? `${hours.toLocaleString(locale, options)}:` : '';
 
-    return `${hoursString}${min.toLocaleString(
+    return `${hoursString}${min.toLocaleString(locale, options)}:${sec.toLocaleString(
         locale,
         options
-    )}:${sec.toLocaleString(locale, options)}`;
+    )}`;
 };
+
+export const shallowCompare = (obj1: any, obj2: any) =>
+    Object.keys(obj1).length === Object.keys(obj2).length &&
+    Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj1[key] === obj2[key]);

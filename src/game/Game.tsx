@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import useInterval from '@use-it/interval';
+import { shallowCompare } from '../utils';
 import './Game.css';
 import QuickStats from './QuickStats';
 
@@ -29,9 +30,10 @@ interface Position {
 }
 
 interface Keypress {
+    time: number;
     position: Position;
     letter: string;
-    correct: boolean;
+    correct?: boolean;
 }
 
 interface Paragraph {
@@ -53,16 +55,16 @@ const Game = ({ paused, setPaused }: GameProps) => {
     const scrollGuide = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
     const firstParagraph = useRef<HTMLDivElement>(null);
+    let charElement = useRef<HTMLElement | null>(null);
     let topMargin = useRef<number>(0);
     let caretHeight = useRef<number>(0);
-
-    let charElement = useRef<HTMLElement | null>(null);
 
     let keypresses = useRef<Keypress[]>([]);
     let windowResizeTimeout = useRef<number>(-1);
     let timerInterval = useRef<number | null>(null);
     let time = useRef<number>(0);
 
+    const [finished, setFinished] = useState<boolean>(false);
     const [paragraphs, setParagraphs] = useState<Paragraph[]>([]);
     const [position, setPosition] = useState<Position>({
         pg: 0,
@@ -84,10 +86,15 @@ const Game = ({ paused, setPaused }: GameProps) => {
     // Update quick stats
     useInterval(() => {
         const newWpm =
-            time.current === 0 ? 0 : keypresses.current.length / 5 / (time.current / 60 / 1000);
+            time.current === 0
+                ? 0
+                : keypresses.current.filter((kp) => kp.letter !== 'Backspace').length /
+                  5 /
+                  (time.current / 60 / 1000);
         const newAcc = !keypresses.current.length
             ? 100
-            : (keypresses.current.filter((kp) => kp.correct).length / keypresses.current.length) *
+            : (keypresses.current.filter((kp) => kp.correct).length /
+                  keypresses.current.filter((kp) => kp.letter !== 'Backspace').length) *
               100;
         setQuickStats({
             time: time.current,
@@ -113,7 +120,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
         caretHeight.current = topMargin.current;
 
         firstParagraph.current?.setAttribute('style', `margin-top: ${topMargin.current}px`);
-    }, [firstParagraph.current, textContainer.current]);
+    }, [paragraphs.length]);
 
     const handleWindowResize = () => {
         // The new size isn't actually relevant, and the text reflows itself,
@@ -162,8 +169,10 @@ const Game = ({ paused, setPaused }: GameProps) => {
     // Compute initial and final positions
     // useLayoutEffect, because we need to wait for the DOM mutations to finish
     useLayoutEffect(() => {
-        charElement.current = getCharElement(initialPosition);
-        setPosition(initialPosition);
+        if (initialPosition) {
+            charElement.current = getCharElement(initialPosition);
+            setPosition(initialPosition);
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paragraphs.length]);
@@ -297,8 +306,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
                             pos.char -
                             1)
                 );
-            } else {
-                newPos = finalPosition;
             }
         } else if (
             pos.char -
@@ -322,8 +329,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
                             currentPg.displayedIgnoredCharIndices.filter((dICI) => dICI < pos.char)
                                 .length)
                 );
-            } else {
-                newPos = initialPosition;
             }
         } else {
             newPos = offsetPositionWithinParagraph(newPos, currentPg, offset);
@@ -356,7 +361,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
     };
 
     const initialPosition = useMemo(() => {
-        console.log('initialPosition changed');
         if (paragraphs && paragraphs.length) {
             const initialPos = offsetPositionWithinParagraph(
                 { pg: 0, char: -1, realChar: -1 },
@@ -364,29 +368,35 @@ const Game = ({ paused, setPaused }: GameProps) => {
                 1
             );
             return initialPos;
-        } else {
-            return { pg: -1, char: -1, realChar: -1 };
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paragraphs[0]]);
 
     const finalPosition = useMemo(() => {
-        console.log('finalPosition changed');
         if (paragraphs && paragraphs.length) {
             const lastPgIdx = paragraphs.length - 1;
             let finalPos = {
                 pg: lastPgIdx,
                 char:
                     paragraphs[lastPgIdx].text.length -
-                    paragraphs[lastPgIdx].controlCharIndices.length -
-                    1,
-                realChar: paragraphs[lastPgIdx].text.length - 1,
+                    paragraphs[lastPgIdx].controlCharIndices.length,
+                realChar: paragraphs[lastPgIdx].text.length,
             };
             finalPos = offsetPositionWithinParagraph(finalPos, paragraphs[lastPgIdx], -1);
             return finalPos;
-        } else {
-            return { pg: -1, char: -1, realChar: -1 };
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paragraphs[paragraphs.length - 1]]);
+
+    // Check finish condition
+    useEffect(() => {
+        if (finalPosition && shallowCompare(position, finalPosition)) {
+            setFinished(true);
+            setPaused(true);
+            // TODO: redirect to results page
+        }
+    }, [position, finalPosition, setPaused]);
 
     const insertCharElement = (pos: Position, newChar: string): Paragraph[] => {
         // TODO: test if newPg and newPgs are necessary
@@ -424,6 +434,7 @@ const Game = ({ paused, setPaused }: GameProps) => {
     const tryInputBackspace = (pos: Position) => {
         const currentElement = getCharElement(pos);
         if (currentElement) {
+            keypresses.current.push({ time: time.current, position: pos, letter: 'Backspace' });
             if (currentElement.classList.contains('text-surplus')) {
                 removeCharElement(pos);
             }
@@ -435,10 +446,20 @@ const Game = ({ paused, setPaused }: GameProps) => {
         let newPgs = [...paragraphs];
         if (letter === charElement.current?.textContent) {
             charElement.current?.classList.add('text-correct');
-            keypresses.current.push({ position: pos, letter: letter, correct: true });
+            keypresses.current.push({
+                time: time.current,
+                position: pos,
+                letter: letter,
+                correct: true,
+            });
         } else {
             charElement.current?.classList.add('text-incorrect');
-            keypresses.current.push({ position: pos, letter: letter, correct: false });
+            keypresses.current.push({
+                time: time.current,
+                position: pos,
+                letter: letter,
+                correct: false,
+            });
             if (charElement.current?.textContent === ' ') {
                 newPgs = insertCharElement(position, letter);
                 charElement.current?.classList.add('text-surplus');
@@ -474,12 +495,6 @@ const Game = ({ paused, setPaused }: GameProps) => {
             // setting newPgs has already begun at this point, no need to set it here too
             // setParagraphs(newPgs);
             setPosition(newPos);
-
-            // Check exit condition
-            if (newPos === finalPosition) {
-                console.log('finished');
-                // TODO: redirect to results page
-            }
         }
     };
 
@@ -531,7 +546,12 @@ const Game = ({ paused, setPaused }: GameProps) => {
             <aside id="quick-stats" className={paused ? '' : 'pale'}>
                 <QuickStats time={quickStats.time} wpm={quickStats.wpm} acc={quickStats.acc} />
             </aside>
-            <section id="text-area" onClick={() => setPaused(!paused)}>
+            <section
+                id="text-area"
+                onClick={() => {
+                    setPaused(finished || !paused);
+                }}
+            >
                 <div
                     className="text-container"
                     tabIndex={1}
