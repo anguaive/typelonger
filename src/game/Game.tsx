@@ -475,8 +475,11 @@ const Game = ({ paused, setPaused }: GameProps) => {
         event.preventDefault();
 
         let newPos = { ...position };
-
-        if (event.key === 'Backspace') {
+        if (event.key === 'Escape') {
+            setPaused(finished || true);
+        } else if (event.key === 'Enter') {
+            setPaused(finished || false);
+        } else if (event.key === 'Backspace') {
             newPos = offsetPosition(position, paragraphs, -1);
             tryInputBackspace(newPos);
             setPosition(newPos);

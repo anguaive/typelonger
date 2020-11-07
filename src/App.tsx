@@ -9,11 +9,7 @@ import Matchmaking from './Matchmaking';
 import Profile from './profile/Profile';
 import Rankings from './rankings/Rankings';
 import Auth from './auth/Auth';
-import Settings, {
-    AppSettings,
-    SETTINGS_STORAGE,
-    defaultSettings,
-} from './settings/Settings';
+import Settings, { AppSettings, SETTINGS_STORAGE, defaultSettings } from './settings/Settings';
 import NoMatch from './NoMatch';
 import TextDetails from './text-details/TextDetails';
 import Texts from './texts/Texts';
@@ -30,12 +26,8 @@ const App = () => {
     });
     const [settings, setSettings] = useState<AppSettings>(
         (() => {
-            const storedSettings = window.localStorage.getItem(
-                SETTINGS_STORAGE
-            );
-            return storedSettings
-                ? JSON.parse(storedSettings)
-                : defaultSettings;
+            const storedSettings = window.localStorage.getItem(SETTINGS_STORAGE);
+            return storedSettings ? JSON.parse(storedSettings) : defaultSettings;
         })()
     );
 
@@ -47,26 +39,15 @@ const App = () => {
         const skippedElementTypes = ['INPUT', 'TEXTAREA'];
         const locationHead = location.pathname.split('/')[1];
         event.preventDefault();
-        if (
-            !skippedElementTypes.includes(
-                (event.target as HTMLElement).nodeName
-            )
-        ) {
+        if (!skippedElementTypes.includes((event.target as HTMLElement).nodeName)) {
             switch (event.key) {
                 case 's':
                     if (locationHead === 'profile') {
                         setSearchHidden(false);
                     }
                     break;
-                case 'Enter':
-                    if (locationHead === 'game') {
-                        setPaused(false);
-                    }
+                default:
                     break;
-                case 'Escape':
-                    if (locationHead === 'game') {
-                        setPaused(true);
-                    }
             }
         }
     };
@@ -113,9 +94,7 @@ const App = () => {
         },
         {
             path: '/settings',
-            component: (
-                <Settings settings={settings} setSettings={setSettings} />
-            ),
+            component: <Settings settings={settings} setSettings={setSettings} />,
         },
         {
             path: '/text',
@@ -136,17 +115,11 @@ const App = () => {
         <>
             <Menu paused={paused} loggedIn={!!authStatus.userName} />
             <TransitionGroup component={null}>
-                <CSSTransition
-                    key={location.key}
-                    classNames="page"
-                    timeout={300}
-                >
+                <CSSTransition key={location.key} classNames="page" timeout={300}>
                     <Switch location={location}>
                         {routes.map((route, i) => (
                             <Route key={i} path={route.path}>
-                                <section className="page">
-                                    {route.component}
-                                </section>
+                                <section className="page">{route.component}</section>
                             </Route>
                         ))}
                     </Switch>
