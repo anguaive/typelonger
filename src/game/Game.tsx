@@ -527,10 +527,19 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             }
         }
 
-        // for (let pg = 0; pg <= highestReachedPg; pg++) {
-        //     const thisPgKeypresses = keypresses.filter((kp) => kp.position.pg === pg);
-        // }
+        for (let pg = 0; pg <= highestReachedPg; pg++) {
+            const kps = keypresses.filter((kp) => kp.position.pg === pg);
+            const correctKps = kps.filter((kp) => kp.correct);
+            const nonBackspaceKps = kps.filter((kp) => kp.letter !== 'Backspace');
+            const time = statsList[pg].time;
 
+            statsList[pg].wpm = time === 0 ? 0 : nonBackspaceKps.length / 5 / (time / 60 / 1000);
+            statsList[pg].acc = !kps.length
+                ? 100
+                : (correctKps.length / nonBackspaceKps.length) * 100;
+        }
+
+        console.log(statsList);
         return statsList;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paused]);
