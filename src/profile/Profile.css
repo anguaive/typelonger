@@ -1,18 +1,16 @@
 #profile {
     --profile-row-height: 244px;
-    --userinfo-expanded-height: calc(100vh - var(--menu-height) - 2.5rem);
-    height: 100%;
+    --userinfo-expanded-height: calc(100vh - 2rem);
+    height: calc(100% - 2rem);
+    width: calc(100% - 2rem);
     display: grid;
-    height: 100%;
+    gap: 1rem 1rem;
+    margin: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-template-rows: calc(var(--profile-row-height) + 1rem) 1fr;
+    grid-template-rows: var(--profile-row-height) 1fr;
     grid-template-areas:
         'info info top recent'
         'graph graph top recent';
-}
-
-#profile > * {
-    padding: 1rem;
 }
 
 #user-info-grid {
@@ -33,6 +31,26 @@
     height: calc(var(--profile-row-height) - 1rem);
     grid-area: info;
     transition: height var(--long-transition);
+    display: flex;
+    flex-direction: column;
+}
+
+#top-performances {
+    display: flex;
+    flex-direction: column;
+    grid-area: top;
+}
+
+#recent-performances {
+    display: flex;
+    flex-direction: column;
+    grid-area: recent;
+}
+
+#performance-graph {
+    grid-area: graph;
+    display: flex;
+    flex-direction: column;
 }
 
 .user-actions {
@@ -45,28 +63,22 @@
     margin-left: 1rem;
 }
 
-#top-performances {
-    grid-area: top;
-    overflow: visible;
-}
-
-#recent-performances {
-    grid-area: recent;
-    overflow: visible;
-}
-
-#performance-graph {
-    grid-area: graph;
+#user-info .container,
+#performance-graph .container,
+#top-performances .performance-container,
+#recent-performances .performance-container {
+    flex-grow: 1;
 }
 
 .user-info__picture {
     grid-area: picture;
-    height: calc(var(--profile-row-height) - 3rem);
-    width: calc(var(--profile-row-height) - 3rem);
+    height: calc(var(--profile-row-height) - 4rem);
+    width: calc(var(--profile-row-height) - 4rem);
     margin: 1rem 0 0 1rem;
     object-fit: contain;
     display: inline-block;
     border: 2px solid black;
+    box-sizing: border-box;
 }
 
 .user-info__username {
@@ -155,8 +167,6 @@
 .performance-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
     padding-left: 0.5rem;
     overflow-y: auto;
     scrollbar-width: none;

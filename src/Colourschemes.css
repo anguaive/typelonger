@@ -2,6 +2,10 @@
     --background-color: #eee;
     --text-active-color: #000;
     --text-inactive-color: #888;
+    --menu-logo-background-color: #242424;
+    --menu-background-color: #393939;
+    --menu-background-hover-color: #323232;
+    --menu-foreground-color: #bbb;
     --gamearea-background-color: #fff;
     --gametext-correct-color: black;
     --gametext-incorrect-color: red;
@@ -36,6 +40,10 @@
     --background-color: #333;
     --text-active-color: #fff;
     --text-inactive-color: #888;
+    --menu-logo-background-color: #242424;
+    --menu-background-color: #393939;
+    --menu-background-hover-color: #323232;
+    --menu-foreground-color: #bbb;
     --gamearea-background-color: #3d3d3d;
     --gametext-correct-color: white;
     --gametext-incorrect-color: #ff5959;

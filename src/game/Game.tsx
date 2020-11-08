@@ -3,7 +3,7 @@ import useInterval from '@use-it/interval';
 import { shallowCompare } from '../utils';
 import { Keypress, Position, Paragraph, ComputedStats } from '../types';
 import './Game.css';
-import SegmentStats from '../segment-stats/SegmentStats';
+import Chart from '../segment-stats/SegmentStats';
 import QuickStats from './QuickStats';
 
 interface GameProps {
@@ -105,7 +105,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
 
     // Fetch text
     useEffect(() => {
-        fetch('http://localhost:3001/gameTextIgnoreDebug')
+        fetch('http://localhost:3001/gameText')
             .then((response) => response.json())
             .then((data) => {
                 const pgs = data.paragraphsText.map((text: string) => {
@@ -540,9 +540,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                 </div>
             </section>
             <section id="scorebar"></section>
-            <section id="detailed-stats">
-                {paused && <SegmentStats keypresses={keypresses} />}
-            </section>
+            <section id="detailed-stats">{paused && <Chart width={600} height={200} />}</section>
         </main>
     );
 };

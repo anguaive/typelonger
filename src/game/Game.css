@@ -3,8 +3,10 @@
     --text-area-horizontal-padding: 4rem;
     height: 100%;
     display: grid;
-    grid-template-columns: var(--aside-width) auto var(--aside-width);
-    grid-template-rows: 20% 55% auto;
+    grid-template-columns: calc(var(--aside-width) - var(--menu-width-closed) - 1rem) 1fr var(
+            --aside-width
+        );
+    grid-template-rows: 20% 45% 1fr;
     grid-template-areas:
         'title text-area scorebar'
         'quick-stats text-area scorebar'
@@ -30,6 +32,9 @@
 
 #detailed-stats {
     grid-area: detailed-stats;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #quick-stats {

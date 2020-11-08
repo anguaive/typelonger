@@ -42,25 +42,34 @@ const Menu = ({ paused, loggedIn }: MenuProps) => {
                 path: '/auth',
                 name: 'Log in',
                 icon: 'face',
-                style: 'menu-glowing',
+                style: 'nav-item-glowing',
             });
         }
         setLinks(initialLinksCopy);
     }, [loggedIn]);
 
     return (
-        <div id="menu-bar">
+        <>
             <CSSTransition classNames="menu" in={paused} timeout={300}>
                 {(state) => (
                     <nav id="menu">
-                        <ul>
+                        <ul id="menu-navbar">
+                            <li className="nav-logo">
+                                <Link to="/">
+                                    <span className="link-name">typelonger</span>
+                                    <i className="link-icon material-icons md-48">expand_more</i>
+                                </Link>
+                            </li>
                             {links.map((link, i) => (
-                                <li className={link.style || undefined} key={i}>
+                                <li
+                                    className={['nav-item', link.style || undefined].join(' ')}
+                                    key={i}
+                                >
                                     <Link to={link.path}>
-                                        <i className="material-icons md-48">
+                                        <i className="link-icon material-icons md-48">
                                             {link.icon}
                                         </i>
-                                        {link.name}
+                                        <span className="link-name">{link.name}</span>
                                     </Link>
                                 </li>
                             ))}
@@ -68,7 +77,7 @@ const Menu = ({ paused, loggedIn }: MenuProps) => {
                     </nav>
                 )}
             </CSSTransition>
-        </div>
+        </>
     );
 };
 
