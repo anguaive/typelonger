@@ -89,3 +89,9 @@ export interface Keypress {
 export interface AuthStatus {
     userName: string;
 }
+
+export interface ChartAreaProps {
+    width: number;
+    height: number;
+    margin?: { top: number; right: number; bottom: number; left: number };
+}

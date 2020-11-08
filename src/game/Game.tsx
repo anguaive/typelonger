@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import useInterval from '@use-it/interval';
 import { shallowCompare } from '../utils';
+import { max } from 'd3-array';
 import { Keypress, Position, Paragraph, ComputedStats } from '../types';
 import './Game.css';
-import Chart from '../segment-stats/SegmentStats';
+import SegmentStatsChart from '../charts/SegmentStatsChart';
 import QuickStats from './QuickStats';
 
 interface GameProps {
@@ -364,7 +365,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             setPaused(true);
             // TODO: redirect to results page
         }
-    }, [position, finalPosition, setPaused]);
+    }, [position, finalPosition, setPaused, setFinished]);
 
     const insertCharElement = (pos: Position, newChar: string): Paragraph[] => {
         // TODO: test if newPg and newPgs are necessary
@@ -474,6 +475,66 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         }
     };
 
+    // No need to recompute this on every keypress, because the consumer component is only shown
+    // when the game is paused
+    const segmentStats = useMemo(() => {
+        // TODO: optimize
+        let statsList: ComputedStats[] = [];
+        const highestReachedPg = max(keypresses, (kp: Keypress) => kp.position.pg);
+        if (highestReachedPg === undefined) {
+            return [];
+        }
+
+        // The keypresses array is ordered by the timestamps, and the user can backtrack to previous
+        // paragraphs/segments, so the array might look something like this:
+        // [{pg:1, time:0}, ..., {pg:1, time: 2000}, {pg:2, time: 2200}, ..., {pg:2, time: 2400},
+        // {pg:1, time: 2500}, ...]
+        // We can't measure the time spent in pg1 by grouping all of pg1's keypresses into a single list
+        // because we took a short detour to pg2. Subtracting the lowest pg1 timestamp (0) from the
+        // highest (2500) would thus be incorrect. Instead, we gather all the distinct pg1 sequences
+        // into a list, compute the total time spent in each sequence, and add them all up. This
+        // doesn't take the keypresses between different pg sequences into account, so each sequence must start
+        // with the previous sequence's last keypress.
+        let previousKp: Keypress | null = null;
+        let sequencesLists: number[][][] = [];
+        for (let kp of keypresses) {
+            const kppg = kp.position.pg;
+            if (previousKp && previousKp.position.pg === kppg) {
+                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(kp.time);
+            } else {
+                if (!sequencesLists[kppg]) {
+                    sequencesLists[kppg] = [];
+                }
+                sequencesLists[kppg].push([]);
+                if (previousKp) {
+                    sequencesLists[kppg][sequencesLists[kppg].length - 1].push(previousKp.time);
+                }
+                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(kp.time);
+            }
+            previousKp = kp;
+        }
+
+        for (let i = 0; i < sequencesLists.length; i++) {
+            let seqList = sequencesLists[i];
+            if (seqList && seqList.length) {
+                let sum = 0;
+                for (let seq of seqList) {
+                    if (seq && seq.length) {
+                        sum += seq[seq.length - 1] - seq[0];
+                    }
+                }
+                statsList.push({ time: sum, wpm: 0, acc: 100 });
+            }
+        }
+
+        // for (let pg = 0; pg <= highestReachedPg; pg++) {
+        //     const thisPgKeypresses = keypresses.filter((kp) => kp.position.pg === pg);
+        // }
+
+        return statsList;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [paused]);
+
     // can be memoized
     const displayedText = useMemo(() => {
         return (
@@ -540,7 +601,9 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                 </div>
             </section>
             <section id="scorebar"></section>
-            <section id="detailed-stats">{paused && <Chart width={600} height={200} />}</section>
+            <section id="detailed-stats">
+                {paused && <SegmentStatsChart data={segmentStats} width={600} height={200} />}
+            </section>
         </main>
     );
 };
