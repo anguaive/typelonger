@@ -515,12 +515,12 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
 
     return (
         <main id="game">
-            <aside id="game-title" className={paused ? '' : 'pale'}>
-                <div className="game-title__title">The Witcher - Blood of Elves</div>
-                <div className="game-title__section">Chapter one</div>
-            </aside>
             <aside id="quick-stats" className={paused ? '' : 'pale'}>
                 <QuickStats time={quickStats.time} wpm={quickStats.wpm} acc={quickStats.acc} />
+            </aside>
+            <aside id="title" className={paused ? '' : 'pale'}>
+                <div className="text-title">The Witcher - Blood of Elves</div>
+                <div className="section-title">Chapter one</div>
             </aside>
             <section
                 id="text-area"
@@ -534,7 +534,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                     ref={textContainer}
                     onKeyDown={(event) => handleKeypress(event)}
                 >
-                    <div className="scroll-guide" ref={scrollGuide} />
+                    <div className="scroll-guide" ref={scrollGuide}></div>
                     {displayedText}
                     <div className="caret" ref={caret} />
                 </div>
