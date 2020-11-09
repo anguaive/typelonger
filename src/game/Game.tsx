@@ -190,10 +190,12 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
     };
 
     const processParagraphs = (pgs: Paragraph[]) => {
-        pgs.forEach((pg, pgIndex) => {
+        for (let pgIndex = 0; pgIndex < pgs.length; pgIndex++) {
+            let pg = pgs[pgIndex];
+
             // Only process paragraphs that have changed
-            if (pg.text === pgs[pgIndex].text) {
-                // TODO: can't break inside forEach XD
+            if (pg.text === paragraphs[pgIndex]?.text) {
+                break;
             }
 
             // Reset the index arrays we're going to modify
@@ -245,7 +247,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                 pg.displayedIgnoredCharIndices[i] =
                     iCI - pg.controlCharIndices.filter((cCI) => cCI < iCI).length;
             });
-        }); // pgs.forEach
+        }
 
         setParagraphs(pgs);
     };
