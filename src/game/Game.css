@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     margin-right: 6rem;
 }
 
@@ -82,6 +82,11 @@
 
 .scroll-guide {
     height: 1px;
+}
+
+.segment-stats-chart-container {
+    width: 800px;
+    height: 80%;
 }
 
 #title {

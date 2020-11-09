@@ -92,7 +92,7 @@ export interface AuthStatus {
 }
 
 export interface ChartAreaProps {
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
     margin?: { top: number; right: number; bottom: number; left: number };
 }

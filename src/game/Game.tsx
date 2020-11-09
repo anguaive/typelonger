@@ -613,12 +613,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             <section id="scorebar"></section>
             <section id="detailed-stats">
                 {paused && (
-                    <SegmentStatsChart
-                        data={segmentStats}
-                        paragraphsCount={paragraphs.length}
-                        width={600}
-                        height={200}
-                    />
+                    <SegmentStatsChart data={segmentStats} paragraphsCount={paragraphs.length} />
                 )}
             </section>
         </main>

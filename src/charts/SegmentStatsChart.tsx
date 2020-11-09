@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Keypress, ChartAreaProps, ComputedStats } from '../types';
 import { extendArrayWith } from '../utils';
 import { Group } from '@vx/group';
+import { GridRows } from '@vx/grid';
+import { AxisLeft, AxisBottom } from '@vx/axis';
 import { Bar } from '@vx/shape';
 import { scaleLinear, scalePower, scaleBand } from '@vx/scale';
 import { max } from 'd3-array';
@@ -20,10 +22,16 @@ const getAcc = (d: ComputedStats) => d.acc;
 const SegmentStatsChart = ({
     data,
     paragraphsCount,
-    width,
-    height,
-    margin = { top: 0, right: 0, bottom: 0, left: 0 },
+    margin = { top: 32 + 16, right: 32, bottom: 32, left: 32 },
 }: SegmentStatsChartProps & ChartAreaProps) => {
+    const container = useRef<HTMLDivElement>(null);
+    if (!container || !data.length) {
+        return null;
+    }
+
+    const width = container.current?.clientWidth || 0;
+    const height = container.current?.clientHeight || 0;
+    const highestWpm = max(data, getWpm) || 0;
     const extendedData: Array<ComputedStats | null> = extendArrayWith(data, paragraphsCount, null);
 
     // bounds
@@ -39,6 +47,17 @@ const SegmentStatsChart = ({
         clamp: true,
         exponent: 2,
     });
+
+    const wpmTickValues = () => {
+        let values = [];
+        let delta = highestWpm < 100 ? 10 : 20;
+        let current = 0;
+        while (current <= highestWpm) {
+            values.push((current += delta));
+        }
+        return values;
+    };
+
     const colorScale = (acc: number) => {
         if (acc === 100) {
             return 'rgb(0, 255, 255)';
@@ -50,7 +69,7 @@ const SegmentStatsChart = ({
     };
 
     const yScale = scaleLinear<number>({
-        domain: [0, max(data, getWpm) as number],
+        domain: [0, highestWpm],
         range: [yMax, 0],
     });
 
@@ -62,33 +81,73 @@ const SegmentStatsChart = ({
     });
 
     return (
-        <svg width={width} height={height} className="segment-stats-chart">
-            <rect x={0} y={0} width={width} height={height} fill={'#eeeeee'} rx={14} />
-            <Group top={margin.top} left={margin.left}>
-                {extendedData.map((data, i) => {
-                    let barHeight: number, fillColor: string;
-                    const x = xScale(i);
-                    const barWidth = xScale.bandwidth();
-                    if (data) {
-                        barHeight = yMax - (yScale(getWpm(data)) as number);
-                        fillColor = colorScale(getAcc(data)) as string;
-                    } else {
-                        barHeight = 0;
-                        fillColor = 'rgb(128, 128, 128)';
-                    }
-                    return (
-                        <Bar
-                            key={`bar-${i}`}
-                            x={x}
-                            y={yMax - barHeight}
-                            width={barWidth}
-                            height={barHeight}
-                            fill={fillColor}
-                        />
-                    );
-                })}
-            </Group>
-        </svg>
+        <div className="segment-stats-chart-container" ref={container}>
+            <svg width={width} height={height} className="segment-stats-chart">
+                <GridRows
+                    top={margin.top}
+                    left={margin.left}
+                    scale={yScale}
+                    width={xMax}
+                    tickValues={wpmTickValues()}
+                    stroke={'#cccccc'}
+                />
+                <Group top={margin.top} left={margin.left}>
+                    {extendedData.map((data, i) => {
+                        let barHeight: number, fillColor: string;
+                        const x = xScale(i);
+                        const barWidth = xScale.bandwidth();
+                        if (data) {
+                            barHeight = yMax - (yScale(getWpm(data)) as number);
+                            fillColor = colorScale(getAcc(data)) as string;
+                        } else {
+                            barHeight = 0.04 * yMax;
+                            fillColor = 'rgb(192, 192, 192)';
+                        }
+                        return (
+                            <Bar
+                                key={`bar-${i}`}
+                                x={x}
+                                y={yMax - barHeight}
+                                width={barWidth}
+                                height={barHeight}
+                                fill={fillColor}
+                            />
+                        );
+                    })}
+                </Group>
+                <AxisLeft
+                    top={margin.top}
+                    left={margin.left - 8}
+                    label={'WPM'}
+                    labelProps={{
+                        fontSize: 16,
+                    }}
+                    scale={yScale}
+                    hideAxisLine
+                    hideTicks
+                    hideZero
+                    tickValues={wpmTickValues()}
+                    tickLabelProps={() => ({
+                        fill: 'black',
+                        fontSize: 16,
+                        textAnchor: 'middle',
+                    })}
+                />
+                <AxisBottom
+                    top={yMax + margin.top - 8}
+                    left={margin.left}
+                    scale={xScale}
+                    numTicks={Math.max(paragraphsCount, 32)}
+                    hideAxisLine
+                    hideTicks
+                    tickLabelProps={() => ({
+                        fill: 'black',
+                        fontSize: 16,
+                        textAnchor: 'middle',
+                    })}
+                />
+            </svg>
+        </div>
     );
 };
 
