@@ -106,7 +106,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
 
     // Fetch text
     useEffect(() => {
-        fetch('http://localhost:3001/gameText')
+        fetch('http://localhost:3001/gameTextShort')
             .then((response) => response.json())
             .then((data) => {
                 const pgs = data.paragraphsText.map((text: string) => {
@@ -533,6 +533,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             const nonBackspaceKps = kps.filter((kp) => kp.letter !== 'Backspace');
             const time = statsList[pg].time;
 
+            statsList[pg].pg = pg;
             statsList[pg].wpm = time === 0 ? 0 : nonBackspaceKps.length / 5 / (time / 60 / 1000);
             statsList[pg].acc = !kps.length
                 ? 100
@@ -611,7 +612,14 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             </section>
             <section id="scorebar"></section>
             <section id="detailed-stats">
-                {paused && <SegmentStatsChart data={segmentStats} width={600} height={200} />}
+                {paused && (
+                    <SegmentStatsChart
+                        data={segmentStats}
+                        paragraphsCount={paragraphs.length}
+                        width={600}
+                        height={200}
+                    />
+                )}
             </section>
         </main>
     );

@@ -87,3 +87,14 @@ export const formatTime = (ms: number): string => {
 export const shallowCompare = (obj1: any, obj2: any) =>
     Object.keys(obj1).length === Object.keys(obj2).length &&
     Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj1[key] === obj2[key]);
+
+// if array is shorter than desiredLength, extend it to desiredLength with the specified
+// fillValue
+export const extendArrayWith = <T>(array: T[], desiredLength: number, fillValue: T) => {
+    if (array.length > desiredLength) {
+        return array;
+    }
+
+    const fillArray = Array(desiredLength - array.length).fill(fillValue);
+    return array.concat(fillArray);
+};

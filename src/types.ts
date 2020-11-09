@@ -77,6 +77,7 @@ export interface ComputedStats {
     time: number;
     wpm: number;
     acc: number;
+    pg?: number;
 }
 
 export interface Keypress {
