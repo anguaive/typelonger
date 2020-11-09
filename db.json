@@ -9,6 +9,22 @@
 			"^'abcabc ^'abc $abc $$^'abc "
 		]
 	},
+	"gameTextShort": {
+		"paragraphsText": [
+			"point ",
+			"hold ",
+			"between ",
+			"for ",
+			"very ",
+			"have ",
+			"orange ",
+			"accident ",
+			"the ",
+			"simple ",
+			"think ",
+			"similar "
+		]
+	},
     "gameText": {
         "paragraphsText": [
             "^'What for, if I may ask?^' ",
