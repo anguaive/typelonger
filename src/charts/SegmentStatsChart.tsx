@@ -22,7 +22,7 @@ const getAcc = (d: ComputedStats) => d.acc;
 const SegmentStatsChart = ({
     data,
     paragraphsCount,
-    margin = { top: 32 + 16, right: 32, bottom: 32, left: 32 },
+    margin = { top: 32 + 16, right: 32, bottom: 32, left: 64 },
 }: SegmentStatsChartProps & ChartAreaProps) => {
     const container = useRef<HTMLDivElement>(null);
     if (!container || !data.length) {
@@ -116,11 +116,13 @@ const SegmentStatsChart = ({
                     })}
                 </Group>
                 <AxisLeft
-                    top={margin.top}
+                    top={margin.top + 4}
                     left={margin.left - 8}
-                    label={'WPM'}
+                    label={'wpm'}
                     labelProps={{
-                        fontSize: 16,
+                        dx: 16,
+                        dy: 0,
+                        fontSize: 20,
                     }}
                     scale={yScale}
                     hideAxisLine
