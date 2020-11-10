@@ -57,8 +57,6 @@ const Menu = ({ paused, loggedIn, location }: MenuProps) => {
         return false;
     };
 
-    console.log('menu rendering');
-
     return (
         <>
             <CSSTransition classNames="menu" in={paused} timeout={300}>
