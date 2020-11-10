@@ -106,7 +106,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
 
     // Fetch text
     useEffect(() => {
-        fetch('http://localhost:3001/gameTextShort')
+        fetch('http://localhost:3001/gameText')
             .then((response) => response.json())
             .then((data) => {
                 const pgs = data.paragraphsText.map((text: string) => {
@@ -193,10 +193,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         for (let pgIndex = 0; pgIndex < pgs.length; pgIndex++) {
             let pg = pgs[pgIndex];
 
-            // Only process paragraphs that have changed
-            if (pg.text === paragraphs[pgIndex]?.text) {
-                break;
-            }
+            // TODO: only process paragraphs that have changed since last time
 
             // Reset the index arrays we're going to modify
             pg.ignoredCharIndices = [];
