@@ -131,7 +131,7 @@ const App = () => {
 
     return (
         <>
-            <Menu paused={paused} loggedIn={!!authStatus.userName} />
+            <Menu paused={paused} loggedIn={!!authStatus.userName} location={location} />
             <TransitionGroup component={null}>
                 <CSSTransition key={location.key} classNames="page" timeout={300}>
                     <Switch location={location}>

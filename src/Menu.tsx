@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ interface NavLink {
 interface MenuProps {
     paused: boolean;
     loggedIn: boolean;
+    location: any;
 }
 
 const initialLinks: NavLink[] = [
@@ -25,7 +26,7 @@ const initialLinks: NavLink[] = [
     { path: '/settings', name: 'Settings', icon: 'settings' },
 ];
 
-const Menu = ({ paused, loggedIn }: MenuProps) => {
+const Menu = ({ paused, loggedIn, location }: MenuProps) => {
     const [links, setLinks] = useState<NavLink[]>(initialLinks);
 
     useEffect(() => {
@@ -48,6 +49,16 @@ const Menu = ({ paused, loggedIn }: MenuProps) => {
         setLinks(initialLinksCopy);
     }, [loggedIn]);
 
+    const isSelected = (link: NavLink) => {
+        const locationHead = location.pathname.split('/')[1];
+        if ('/' + locationHead === link.path) {
+            return true;
+        }
+        return false;
+    };
+
+    console.log('menu rendering');
+
     return (
         <>
             <CSSTransition classNames="menu" in={paused} timeout={300}>
@@ -60,19 +71,24 @@ const Menu = ({ paused, loggedIn }: MenuProps) => {
                                     <i className="link-icon material-icons md-48">expand_more</i>
                                 </Link>
                             </li>
-                            {links.map((link, i) => (
-                                <li
-                                    className={['nav-item', link.style || undefined].join(' ')}
-                                    key={i}
-                                >
-                                    <Link to={link.path}>
-                                        <i className="link-icon material-icons md-48">
-                                            {link.icon}
-                                        </i>
-                                        <span className="link-name">{link.name}</span>
-                                    </Link>
-                                </li>
-                            ))}
+                            {links.map((link, i) => {
+                                const selected = isSelected(link) ? 'nav-item-selected' : null;
+                                return (
+                                    <li
+                                        className={['nav-item', selected, link.style || null].join(
+                                            ' '
+                                        )}
+                                        key={i}
+                                    >
+                                        <Link to={link.path}>
+                                            <i className="link-icon material-icons md-48">
+                                                {link.icon}
+                                            </i>
+                                            <span className="link-name">{link.name}</span>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </nav>
                 )}
