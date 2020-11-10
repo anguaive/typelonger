@@ -328,6 +328,44 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         return pos;
     };
 
+    const paragraphQuotes = useMemo(() => {
+        const lenChars = 32;
+        if (!paragraphs || !paragraphs.length) {
+            return [];
+        }
+
+        const quotes: string[] = [];
+        for (let pg of paragraphs) {
+            let quote = '';
+            if (pg.text.length < lenChars) {
+                quote = pg.text;
+            } else {
+                quote = pg.text.slice(0, lenChars);
+                quote = quote.slice(0, quote.lastIndexOf(' ')) + '...';
+            }
+            quotes.push(quote);
+        }
+
+        // Remove control chars from quotes. The quote is always at the beginning of a paragraph,
+        // so cCI can be used
+        for (let i = 0; i < quotes.length; i++) {
+            let quote = quotes[i];
+            const cCI = paragraphs[i].controlCharIndices;
+            if (!cCI.length) {
+                continue;
+            }
+            let quoteFragments: string[] = [];
+            let previousCI = 0;
+            for (let ci of cCI) {
+                quoteFragments.push(quote.slice(previousCI, ci));
+                previousCI = ci + 1;
+            }
+            quotes[i] = quoteFragments.join('');
+        }
+
+        return quotes;
+    }, [paragraphs.length]);
+
     const initialPosition = useMemo(() => {
         if (paragraphs && paragraphs.length) {
             const initialPos = offsetPositionWithinParagraph(
@@ -539,7 +577,6 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                 : (correctKps.length / nonBackspaceKps.length) * 100;
         }
 
-        console.log(statsList);
         return statsList;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paused]);
