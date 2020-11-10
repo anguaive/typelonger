@@ -31,7 +31,7 @@ const Settings = ({ settings, setSettings }: SettingsProps) => {
         <main id="settings">
             <section>
                 <span className="container-title">Colour scheme</span>
-                <div title="Cock" className="container colourscheme-settings">
+                <div className="container colourscheme-settings">
                     {colourschemes.map((scheme, i) => (
                         <button
                             key={i}
