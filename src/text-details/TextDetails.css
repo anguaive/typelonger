@@ -90,10 +90,19 @@
 
 #text-best-performances {
     grid-area: best-perfs;
+    display: flex;
+    flex-direction: column;
 }
 
 #your-best-performances {
     grid-area: your-perfs;
+    display: flex;
+    flex-direction: column;
+}
+
+#text-best-performances .performance-container,
+#your-best-performances .performance-container {
+    flex-grow: 1;
 }
 
 .section-container {
