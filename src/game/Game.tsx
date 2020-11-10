@@ -648,9 +648,11 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             </section>
             <section id="scorebar"></section>
             <section id="detailed-stats">
-                {paused && (
-                    <SegmentStatsChart data={segmentStats} paragraphQuotes={paragraphQuotes} />
-                )}
+                <div className="segment-stats-chart-container">
+                    {paused && (
+                        <SegmentStatsChart data={segmentStats} paragraphQuotes={paragraphQuotes} />
+                    )}
+                </div>
             </section>
         </main>
     );

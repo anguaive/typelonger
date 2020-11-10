@@ -1,7 +1,24 @@
+.segment-stats-chart {
+    height: 100%;
+    width: 100%;
+}
+
+.segment-stats-grid line {
+    stroke: var(--panel-border-color);
+}
+
+.segment-stats-axis * {
+    font-family: Fixedsys;
+    fill: var(--text-active-color);
+    font-size: 1.1rem;
+    text-anchor: middle;
+}
+
 .tooltip {
     font-family: Fixedsys;
-    background-color: var(--panel-border-color);
-    border: 1px solid var(--panel-background-color);
+    background-color: var(--panel-color);
+    border: 2px solid var(--panel-border-color);
+    padding: 1rem;
     border-radius: 0.5rem;
 }
 

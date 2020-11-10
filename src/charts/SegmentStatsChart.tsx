@@ -49,6 +49,7 @@ const SegmentStatsChart = ({
     const width = container.current?.clientWidth || 0;
     const height = container.current?.clientHeight || 0;
     const highestWpm = max(data, getWpm) || 0;
+
     const extendedData: Array<ComputedStats | null> = extendArrayWith(
         data,
         paragraphQuotes.length,
@@ -71,7 +72,7 @@ const SegmentStatsChart = ({
 
     const wpmTickValues = () => {
         let values = [];
-        let delta = highestWpm < 100 ? 10 : 20;
+        let delta = highestWpm < 100 ? 20 : 40;
         let current = 0;
         while (current <= highestWpm) {
             values.push((current += delta));
@@ -117,19 +118,15 @@ const SegmentStatsChart = ({
     ) : null;
 
     return (
-        <div
-            className="segment-stats-chart-container"
-            ref={container}
-            style={{ position: 'relative' }}
-        >
-            <svg width={width} height={height} ref={containerRef} className="segment-stats-chart">
+        <div className="segment-stats-chart" ref={container} style={{ position: 'relative' }}>
+            <svg width={width} height={height} ref={containerRef}>
                 <GridRows
                     top={margin.top}
                     left={margin.left}
                     scale={yScale}
                     width={xMax}
                     tickValues={wpmTickValues()}
-                    stroke={'#cccccc'}
+                    className="segment-stats-grid"
                 />
                 <Group top={margin.top} left={margin.left}>
                     {extendedData.map((data, i) => {
@@ -176,24 +173,14 @@ const SegmentStatsChart = ({
                     })}
                 </Group>
                 <AxisLeft
-                    top={margin.top + 4}
+                    top={margin.top}
                     left={margin.left - 8}
-                    label={'wpm'}
-                    labelProps={{
-                        dx: 16,
-                        dy: 0,
-                        fontSize: 20,
-                    }}
                     scale={yScale}
                     hideAxisLine
                     hideTicks
                     hideZero
                     tickValues={wpmTickValues()}
-                    tickLabelProps={() => ({
-                        fill: 'black',
-                        fontSize: 16,
-                        textAnchor: 'middle',
-                    })}
+                    tickClassName="segment-stats-axis"
                 />
                 <AxisBottom
                     top={yMax + margin.top - 8}
@@ -202,11 +189,7 @@ const SegmentStatsChart = ({
                     numTicks={Math.max(paragraphQuotes.length, 32)}
                     hideAxisLine
                     hideTicks
-                    tickLabelProps={() => ({
-                        fill: 'black',
-                        fontSize: 16,
-                        textAnchor: 'middle',
-                    })}
+                    tickClassName="segment-stats-axis"
                 />
             </svg>
             {tooltipOpen && tooltipData && (
@@ -214,7 +197,8 @@ const SegmentStatsChart = ({
                     key={Math.random()} // TODO: the docs say this should be set to random. Figure out why
                     top={tooltipTop}
                     left={tooltipLeft}
-                    className={'tooltip'}
+                    className="tooltip"
+                    style={{ position: 'absolute' }} // overwrite the default inline style
                 >
                     <div className="tooltip__title">
                         <strong>{tooltipData.quote}</strong>
