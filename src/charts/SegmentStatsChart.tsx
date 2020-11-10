@@ -1,17 +1,24 @@
 import React, { useRef } from 'react';
 import { Keypress, ChartAreaProps, ComputedStats } from '../types';
-import { extendArrayWith } from '../utils';
+import { formatTime, extendArrayWith } from '../utils';
 import { Group } from '@vx/group';
+import { SeriesPoint } from '@vx/shape/lib/types';
 import { GridRows } from '@vx/grid';
 import { AxisLeft, AxisBottom } from '@vx/axis';
 import { Bar } from '@vx/shape';
+import { useTooltip, useTooltipInPortal } from '@vx/tooltip';
 import { scaleLinear, scalePower, scaleBand } from '@vx/scale';
 import { max } from 'd3-array';
 import './SegmentStatsChart.css';
 
 interface SegmentStatsChartProps {
     data: ComputedStats[];
-    paragraphsCount: number;
+    paragraphQuotes: string[];
+}
+
+interface TooltipData {
+    stats: ComputedStats | null;
+    quote: string;
 }
 
 // accessors
@@ -21,10 +28,20 @@ const getAcc = (d: ComputedStats) => d.acc;
 
 const SegmentStatsChart = ({
     data,
-    paragraphsCount,
+    paragraphQuotes,
     margin = { top: 32 + 16, right: 32, bottom: 32, left: 64 },
 }: SegmentStatsChartProps & ChartAreaProps) => {
+    const {
+        tooltipOpen,
+        tooltipLeft,
+        tooltipTop,
+        tooltipData,
+        hideTooltip,
+        showTooltip,
+    } = useTooltip<TooltipData>();
+    const { containerRef, TooltipInPortal } = useTooltipInPortal();
     const container = useRef<HTMLDivElement>(null);
+    let tooltipTimeout: number;
     if (!container || !data.length) {
         return null;
     }
@@ -32,7 +49,11 @@ const SegmentStatsChart = ({
     const width = container.current?.clientWidth || 0;
     const height = container.current?.clientHeight || 0;
     const highestWpm = max(data, getWpm) || 0;
-    const extendedData: Array<ComputedStats | null> = extendArrayWith(data, paragraphsCount, null);
+    const extendedData: Array<ComputedStats | null> = extendArrayWith(
+        data,
+        paragraphQuotes.length,
+        null
+    );
 
     // bounds
     const xMax = width - margin.left - margin.right;
@@ -80,9 +101,28 @@ const SegmentStatsChart = ({
         padding: 0.2,
     });
 
+    const tooltipStats = tooltipData?.stats ? (
+        <>
+            <div className="tooltip__value">
+                {formatTime(tooltipData.stats?.time || 0)}{' '}
+                <span className="tooltip__hint">time</span>
+            </div>
+            <div className="tooltip__value">
+                {tooltipData.stats?.wpm.toFixed(2)} <span className="tooltip__hint">wpm</span>
+            </div>
+            <div className="tooltip__value">
+                {tooltipData.stats?.acc.toFixed(2)} <span className="tooltip__hint">acc</span>
+            </div>
+        </>
+    ) : null;
+
     return (
-        <div className="segment-stats-chart-container" ref={container}>
-            <svg width={width} height={height} className="segment-stats-chart">
+        <div
+            className="segment-stats-chart-container"
+            ref={container}
+            style={{ position: 'relative' }}
+        >
+            <svg width={width} height={height} ref={containerRef} className="segment-stats-chart">
                 <GridRows
                     top={margin.top}
                     left={margin.left}
@@ -94,7 +134,7 @@ const SegmentStatsChart = ({
                 <Group top={margin.top} left={margin.left}>
                     {extendedData.map((data, i) => {
                         let barHeight: number, fillColor: string;
-                        const x = xScale(i);
+                        const x = xScale(i) as number;
                         const barWidth = xScale.bandwidth();
                         if (data) {
                             barHeight = yMax - (yScale(getWpm(data)) as number);
@@ -111,6 +151,26 @@ const SegmentStatsChart = ({
                                 width={barWidth}
                                 height={barHeight}
                                 fill={fillColor}
+                                onMouseLeave={() => {
+                                    tooltipTimeout = window.setTimeout(() => {
+                                        hideTooltip();
+                                    }, 300);
+                                }}
+                                onMouseMove={(event) => {
+                                    if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                                    if (container && container.current) {
+                                        const top = event.clientY - container.current.offsetTop;
+                                        const left = margin.left + x + barWidth / 2;
+                                        showTooltip({
+                                            tooltipData: {
+                                                quote: paragraphQuotes[i],
+                                                stats: data,
+                                            },
+                                            tooltipTop: top,
+                                            tooltipLeft: left,
+                                        });
+                                    }
+                                }}
                             />
                         );
                     })}
@@ -139,7 +199,7 @@ const SegmentStatsChart = ({
                     top={yMax + margin.top - 8}
                     left={margin.left}
                     scale={xScale}
-                    numTicks={Math.max(paragraphsCount, 32)}
+                    numTicks={Math.max(paragraphQuotes.length, 32)}
                     hideAxisLine
                     hideTicks
                     tickLabelProps={() => ({
@@ -149,6 +209,20 @@ const SegmentStatsChart = ({
                     })}
                 />
             </svg>
+            {tooltipOpen && tooltipData && (
+                <TooltipInPortal
+                    key={Math.random()} // TODO: the docs say this should be set to random. Figure out why
+                    top={tooltipTop}
+                    left={tooltipLeft}
+                    className={'tooltip'}
+                >
+                    <div className="tooltip__title">
+                        <strong>{tooltipData.quote}</strong>
+                    </div>
+                    {tooltipStats}
+                </TooltipInPortal>
+            )}
+            )
         </div>
     );
 };

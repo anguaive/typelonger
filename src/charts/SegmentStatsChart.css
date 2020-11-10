@@ -1,0 +1,27 @@
+.tooltip {
+    font-family: Fixedsys;
+    background-color: var(--panel-border-color);
+    border: 1px solid var(--panel-background-color);
+    border-radius: 0.5rem;
+}
+
+.tooltip__title {
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.tooltip > * {
+    color: var(--text-active-color);
+    line-height: 1.5rem;
+}
+
+.tooltip__value {
+    padding-left: 1rem;
+    font-size: 1.2rem;
+}
+
+.tooltip__hint {
+    filter: opacity(0.5);
+    font-size: 0.8em;
+}
