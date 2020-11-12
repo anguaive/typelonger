@@ -1,5 +1,13 @@
-node_modules/
-dist/
-build/
-.idea/
+# client build artifacts and node modules
+client/node_modules/
+client/build/
+
+# API build artifacts
+api/bin/
+api/obj/
+
+# IntelliJ IDE project specific settings
+*/.idea/
+
+# ctags
 tags
