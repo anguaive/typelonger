@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 namespace api.Models
 {
     // Add profile data for application users by adding properties to the User class
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
     }
 }
