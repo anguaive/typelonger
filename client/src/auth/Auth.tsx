@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Auth.css';
-import { User } from '../types';
+import AuthService from './auth';
 
 interface RegisterData {
     [key: string]: string;
@@ -82,6 +82,7 @@ const Auth = () => {
 
     const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        console.log('submitting register');
     };
 
     const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
@@ -125,6 +126,7 @@ const Auth = () => {
                             {lengthConstraint('name')}
                         </div>
                         <input
+                            required
                             minLength={validationRules['nameMinLength']}
                             maxLength={validationRules['nameMaxLength']}
                             pattern="[a-zA-Z0-9_]*"
@@ -149,6 +151,7 @@ const Auth = () => {
                             {lengthConstraint('alias')}
                         </div>
                         <input
+                            required
                             minLength={validationRules['aliasMinLength']}
                             maxLength={validationRules['aliasMaxLength']}
                             pattern="[a-zA-Z0-9_]*"
@@ -168,6 +171,7 @@ const Auth = () => {
                             <div>Must be a valid e-mail address!</div>
                         </div>
                         <input
+                            required
                             name="email"
                             type="email"
                             placeholder="e-mail"
@@ -185,6 +189,7 @@ const Auth = () => {
                             {lengthConstraint('password')}
                         </div>
                         <input
+                            required
                             minLength={validationRules['passwordMinLength']}
                             maxLength={validationRules['passwordMaxLength']}
                             name="password"
@@ -204,6 +209,7 @@ const Auth = () => {
                             <div>Must match the previous given password.</div>
                         </div>
                         <input
+                            required
                             minLength={validationRules['passwordMinLength']}
                             maxLength={validationRules['passwordMaxLength']}
                             name="passwordRepeat"
@@ -228,6 +234,7 @@ const Auth = () => {
                     <label>
                         Name
                         <input
+                            required
                             name="name"
                             placeholder="name"
                             onChange={(event) => handleLoginChange(event)}
@@ -236,6 +243,7 @@ const Auth = () => {
                     <label>
                         Password
                         <input
+                            required
                             name="password"
                             type="password"
                             placeholder="password"
