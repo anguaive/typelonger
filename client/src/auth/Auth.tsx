@@ -1,45 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Auth.css';
+import { User } from '../types';
 
-interface RegisterForm {
-    name?: string;
-    alias?: string;
-    email?: string;
-    password?: string;
-    passwordRepeat?: string;
+interface RegisterData {
+    [key: string]: string;
+
+    name: string;
+    alias: string;
+    email: string;
+    password: string;
+    passwordRepeat: string;
 }
 
-interface LoginForm {
-    name?: string;
-    password?: string;
+interface LoginData {
+    [key: string]: string;
+
+    name: string;
+    password: string;
 }
+
+interface UserValidationRules {
+    [key: string]: number;
+    nameMinLength: number;
+    nameMaxLength: number;
+    aliasMinLength: number;
+    aliasMaxLength: number;
+    passwordMinLength: number;
+    passwordMaxLength: number;
+}
+
+const initialRegisterData = {
+    name: '',
+    alias: '',
+    email: '',
+    password: '',
+    passwordRepeat: '',
+};
+
+const initialLoginData = {
+    name: '',
+    password: '',
+};
+
+const validationRules: UserValidationRules = {
+    nameMinLength: 1,
+    nameMaxLength: 32,
+    aliasMinLength: 1,
+    aliasMaxLength: 32,
+    passwordMinLength: 8,
+    passwordMaxLength: 48,
+};
 
 const Auth = () => {
-    const [registerData, setRegisterData] = useState<RegisterForm>({});
-    const [registerValidationErrors, setRegisterValidatonErrors] = useState<
-        string[]
-    >([]);
-
-    const [loginData, setLoginData] = useState<LoginForm>({});
-    const [loginValidationErrors, setLoginValidatonErrors] = useState<string[]>(
-        []
+    const [registerData, setRegisterData] = useState<RegisterData>(
+        initialRegisterData
     );
+
+    const [loginData, setLoginData] = useState<LoginData>(initialLoginData);
+
+    const handleRegisterChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const newRegisterData = { ...registerData };
+        newRegisterData[event.target.name] = event.target.value;
+        setRegisterData(newRegisterData);
+
+        if (event.target.name === 'passwordRepeat') {
+            if (event.target.value !== newRegisterData.password) {
+                event.target.setCustomValidity('Please match your previous password.');
+            } else {
+                event.target.setCustomValidity('');
+            }
+        }
+    };
+
+    const handleLoginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newLoginData = { ...loginData };
+        newLoginData[event.target.name] = event.target.value;
+        setLoginData(newLoginData);
+    };
 
     const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Check if name is valid and available
-        // Check if alias is valid
-        // Check if email is valid and available
-        // Check if password is valid
-        // Check is password and password repeat match
-        // Proceed with submission
     };
 
     const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Check if a user with the given name exists
-        // Check if the given password is correct
-        // Proceed with submission
     };
 
     const showHint = (event: React.FocusEvent<HTMLLabelElement>) => {
@@ -48,6 +94,15 @@ const Auth = () => {
 
     const hideHint = (event: React.FocusEvent<HTMLLabelElement>) => {
         (event.target.previousSibling as Element).classList.add('hidden');
+    };
+
+    const lengthConstraint = (inputName: string) => {
+        return (
+            <div>
+                Must be between {validationRules[inputName + 'MinLength']} and{' '}
+                {validationRules[inputName + 'MaxLength']} characters.
+            </div>
+        );
     };
 
     return (
@@ -59,59 +114,106 @@ const Auth = () => {
                         onFocus={(event) => showHint(event)}
                         onBlur={(event) => hideHint(event)}
                     >
-                        Name
-                        <span className="hint hidden">
-                            {`May only contain alphanumeric characters and the _ underscore character, and mustn't be longer than 32 characters.`}
-                        </span>
-                        <input placeholder="name" />
-                    </label>
-                    <label
-                        onFocus={(event) => showHint(event)}
-                        onBlur={(event) => hideHint(event)}
-                    >
-                        Alias
-                        <span className="hint hidden">
-                            {`May only contain alphanumeric characters and the _ underscore character, and mustn't be longer than 32 characters.`}
-                        </span>
-                        <input placeholder="alias" />
-                    </label>
-                    <label
-                        onFocus={(event) => showHint(event)}
-                        onBlur={(event) => hideHint(event)}
-                    >
-                        E-mail address
-                        <span className="hint hidden">
-                            Must be a valid e-mail address!
-                        </span>
-                        <input placeholder="e-mail" />
-                    </label>
-                    <label
-                        onFocus={(event) => showHint(event)}
-                        onBlur={(event) => hideHint(event)}
-                    >
-                        Password
-                        <span className="hint hidden">
-                            Must be between 6 and 48 characters.
-                        </span>
-                        <input placeholder="password" />
-                    </label>
-                    <label
-                        onFocus={(event) => showHint(event)}
-                        onBlur={(event) => hideHint(event)}
-                    >
-                        Repeat password
-                        <span className="hint hidden">
-                            Must match the previous given password.
-                        </span>
+                        <div>
+                            Name <span className="asterisk">*</span>
+                        </div>
+                        <div className="hint hidden">
+                            <div>
+                                May only contain alphanumeric characters and the
+                                _ underscore character.
+                            </div>
+                            {lengthConstraint('name')}
+                        </div>
                         <input
-                            name="repeatPassword"
-                            placeholder="repeat password"
+                            minLength={validationRules['nameMinLength']}
+                            maxLength={validationRules['nameMaxLength']}
+                            pattern="[a-zA-Z0-9_]*"
+                            name="name"
+                            value={registerData.name}
+                            placeholder="name"
+                            onChange={(event) => handleRegisterChange(event)}
                         />
                     </label>
-                    <div className="auth-form__validation_errors">
-                        {registerValidationErrors.map((error) => (
-                            <div className="validation-error">{error}</div>
-                        ))}
+                    <label
+                        onFocus={(event) => showHint(event)}
+                        onBlur={(event) => hideHint(event)}
+                    >
+                        <div>
+                            Alias <span className="asterisk">*</span>
+                        </div>
+                        <div className="hint hidden">
+                            <div>
+                                May only contain alphanumeric characters and the
+                                _ underscore character.
+                            </div>
+                            {lengthConstraint('alias')}
+                        </div>
+                        <input
+                            minLength={validationRules['aliasMinLength']}
+                            maxLength={validationRules['aliasMaxLength']}
+                            pattern="[a-zA-Z0-9_]*"
+                            name="alias"
+                            placeholder="alias"
+                            onChange={(event) => handleRegisterChange(event)}
+                        />
+                    </label>
+                    <label
+                        onFocus={(event) => showHint(event)}
+                        onBlur={(event) => hideHint(event)}
+                    >
+                        <div>
+                            E-mail address <span className="asterisk">*</span>
+                        </div>
+                        <div className="hint hidden">
+                            <div>Must be a valid e-mail address!</div>
+                        </div>
+                        <input
+                            name="email"
+                            type="email"
+                            placeholder="e-mail"
+                            onChange={(event) => handleRegisterChange(event)}
+                        />
+                    </label>
+                    <label
+                        onFocus={(event) => showHint(event)}
+                        onBlur={(event) => hideHint(event)}
+                    >
+                        <div>
+                            Password <span className="asterisk">*</span>
+                        </div>
+                        <div className="hint hidden">
+                            {lengthConstraint('password')}
+                        </div>
+                        <input
+                            minLength={validationRules['passwordMinLength']}
+                            maxLength={validationRules['passwordMaxLength']}
+                            name="password"
+                            type="password"
+                            placeholder="password"
+                            onChange={(event) => handleRegisterChange(event)}
+                        />
+                    </label>
+                    <label
+                        onFocus={(event) => showHint(event)}
+                        onBlur={(event) => hideHint(event)}
+                    >
+                        <div>
+                            Repeat password <span className="asterisk">*</span>
+                        </div>
+                        <div className="hint hidden">
+                            <div>Must match the previous given password.</div>
+                        </div>
+                        <input
+                            minLength={validationRules['passwordMinLength']}
+                            maxLength={validationRules['passwordMaxLength']}
+                            name="passwordRepeat"
+                            type="password"
+                            placeholder="repeat password"
+                            onChange={(event) => handleRegisterChange(event)}
+                        />
+                    </label>
+                    <div>
+                        <span className="asterisk">*</span> required
                     </div>
                     <div className="auth-form__button-group">
                         <button className="button button-primary" type="submit">
@@ -125,17 +227,21 @@ const Auth = () => {
                 <form onSubmit={(event) => submitLogin(event)}>
                     <label>
                         Name
-                        <input placeholder="name" />
+                        <input
+                            name="name"
+                            placeholder="name"
+                            onChange={(event) => handleLoginChange(event)}
+                        />
                     </label>
                     <label>
                         Password
-                        <input placeholder="password" />
+                        <input
+                            name="password"
+                            type="password"
+                            placeholder="password"
+                            onChange={(event) => handleLoginChange(event)}
+                        />
                     </label>
-                    <div className="auth-form__validation_errors">
-                        {loginValidationErrors.map((error) => (
-                            <div className="validation-error">{error}</div>
-                        ))}
-                    </div>
                     <div className="auth-form__button-group">
                         <button className="button" type="button">
                             Forgot password

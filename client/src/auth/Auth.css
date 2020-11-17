@@ -49,3 +49,7 @@
 .auth-form__button-group > *:not(:last-child) {
     margin-right: 1rem;
 }
+
+.asterisk {
+    color: var(--accent-color) !important;
+}
