@@ -364,6 +364,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         }
 
         return quotes;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paragraphs.length]);
 
     const initialPosition = useMemo(() => {

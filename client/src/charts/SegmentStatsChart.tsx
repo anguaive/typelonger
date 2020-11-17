@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { Keypress, ChartAreaProps, ComputedStats } from '../types';
 import { formatTime, extendArrayWith } from '../utils';
 import { Group } from '@vx/group';
-import { SeriesPoint } from '@vx/shape/lib/types';
 import { GridRows } from '@vx/grid';
 import { AxisLeft, AxisBottom } from '@vx/axis';
 import { Bar } from '@vx/shape';
@@ -22,7 +21,7 @@ interface TooltipData {
 }
 
 // accessors
-const getTime = (d: ComputedStats) => d.time;
+// const getTime = (d: ComputedStats) => d.time;
 const getWpm = (d: ComputedStats) => d.wpm;
 const getAcc = (d: ComputedStats) => d.acc;
 
@@ -61,8 +60,6 @@ const SegmentStatsChart = ({
     const yMax = height - margin.top - margin.bottom;
 
     // scales
-    const x = scalePower<number>({ domain: [0, 100], range: [0, 100], clamp: true, exponent: 2 });
-
     const colorScaleInner = scalePower<string>({
         domain: [0, 7, 10],
         range: ['rgb(255, 0, 0)', 'rgb(255, 255, 0', 'rgb(0, 255, 0)'],

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 
 // TODO: :focus on keyboard events only
-// TODO: better transition
 
 interface NavLink {
     path: string;
