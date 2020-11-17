@@ -1,23 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import './Auth.css';
+import { RegisterData, LoginData } from '../types';
 import AuthService from './auth';
-
-interface RegisterData {
-    [key: string]: string;
-
-    name: string;
-    alias: string;
-    email: string;
-    password: string;
-    passwordRepeat: string;
-}
-
-interface LoginData {
-    [key: string]: string;
-
-    name: string;
-    password: string;
-}
+const authService = new AuthService();
 
 interface UserValidationRules {
     [key: string]: number;
@@ -52,11 +38,19 @@ const validationRules: UserValidationRules = {
 };
 
 const Auth = () => {
+    const history = useHistory();
     const [registerData, setRegisterData] = useState<RegisterData>(
         initialRegisterData
     );
-
     const [loginData, setLoginData] = useState<LoginData>(initialLoginData);
+    const [loginWarning, setLoginWarning] = useState<string>('');
+
+    // Reset the login warning if the form input changes
+    useEffect(() => {
+        if (loginWarning) {
+            setLoginWarning('');
+        }
+    }, [loginData]);
 
     const handleRegisterChange = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -67,7 +61,9 @@ const Auth = () => {
 
         if (event.target.name === 'passwordRepeat') {
             if (event.target.value !== newRegisterData.password) {
-                event.target.setCustomValidity('Please match your previous password.');
+                event.target.setCustomValidity(
+                    'Please match your previous password.'
+                );
             } else {
                 event.target.setCustomValidity('');
             }
@@ -82,11 +78,36 @@ const Auth = () => {
 
     const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log('submitting register');
+        authService
+            .register(registerData)
+            .then((response) => console.log(response))
+            .catch((error) => console.log(error));
     };
 
     const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        authService
+            .login(loginData)
+            .then((response) => {
+                return response.json().then((data) => ({
+                    status: response.status,
+                    data,
+                }));
+            })
+            .then((response: { status: number; data: any }) => {
+                switch(response.status) {
+                    case 200: // Ok, token is returned
+                        authService.setToken(response.data.token);
+                        history.push('/');
+                        break;
+                    case 400: // Bad request, error is returned
+                        setLoginWarning(response.data.error);
+                        break;
+                    default:
+                        break;
+                }
+            })
+            .catch((error) => console.log(error));
     };
 
     const showHint = (event: React.FocusEvent<HTMLLabelElement>) => {
@@ -250,6 +271,7 @@ const Auth = () => {
                             onChange={(event) => handleLoginChange(event)}
                         />
                     </label>
+                    <div className="validation-error">{loginWarning}</div>
                     <div className="auth-form__button-group">
                         <button className="button" type="button">
                             Forgot password

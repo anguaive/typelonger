@@ -96,3 +96,20 @@ export interface ChartAreaProps {
     height?: number;
     margin?: { top: number; right: number; bottom: number; left: number };
 }
+
+export interface RegisterData {
+    [key: string]: string;
+
+    name: string;
+    alias: string;
+    email: string;
+    password: string;
+    passwordRepeat: string;
+}
+
+export interface LoginData {
+    [key: string]: string;
+
+    name: string;
+    password: string;
+}
