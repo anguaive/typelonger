@@ -21,5 +21,16 @@ namespace api.Data
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Alias> Aliases { get; set; }
+        public DbSet<Text> Texts { get; set; }
+        public DbSet<Section> Sections { get; set; }
+        public DbSet<Performance> Performances { get; set; }
+        public DbSet<RawStats> RawStats { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+        }
     }
 }
