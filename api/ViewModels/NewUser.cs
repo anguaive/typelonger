@@ -7,6 +7,8 @@ namespace api.ViewModels
         [Required]
         // TODO: Additional username validation
         public string Username { get; set; }
+
+        public string Alias { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }

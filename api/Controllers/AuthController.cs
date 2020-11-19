@@ -19,7 +19,7 @@ using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredCla
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/auth")]    
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly JwtOptions _jwtOptions;
@@ -38,7 +38,7 @@ namespace api.Controllers
         [HttpGet("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login([FromQuery] string username, [FromQuery] string password)
         {
             var user = await _userManager.FindByNameAsync(username);
             var passwordIsValid = await _userManager.CheckPasswordAsync(user, password);
@@ -48,17 +48,16 @@ namespace api.Controllers
                 _logger.LogInformation("Failed login. Invalid username or password.");
                 return BadRequest(new
                 {
-                    error = "",
-                    error_description = "The username or password is invalid."
+                    error = "The username or password is invalid."
                 });
             }
-            
+
             // Check if the email is confirmed
-            
+
             // Generate ID token
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            
+
             var token = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Issuer,

@@ -59,6 +59,8 @@ namespace api
 
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
                         ValidIssuer = Configuration["jwt:issuer"],
                         ValidAudience = Configuration["jwt:issuer"],
 
@@ -68,6 +70,12 @@ namespace api
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
+
                     options.Stores.MaxLengthForKeys = 128;
                     options.SignIn.RequireConfirmedAccount = true;
                 })
