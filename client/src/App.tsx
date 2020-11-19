@@ -24,6 +24,12 @@ const App = () => {
     const [sessionData, setSessionData] = useState<SessionData>(
         {name: '', alias: ''});
 
+    // State responsible for restoring the game state
+    const [gameTime, setGameTime] = useState<number>(0);
+    const [gameKeypresses, setGameKeypresses] = useState<Keypress[]>([]);
+    const [gameParagraphs, setGameParagraphs] = useState<Paragraph[]>([]);
+    const [gamePosition, setGamePosition] = useState<Position>({pg: 0, char: -1, realChar: -1});
+
     const [settings, setSettings] = useState<AppSettings>(
         (() => {
             const storedSettings = window.localStorage.getItem(SETTINGS_STORAGE);
@@ -63,21 +69,16 @@ const App = () => {
         }
     };
 
-    const logOut = () => {
-        console.log('logging out');
-        setAuthStatus({ ...authStatus, userName: '' });
-    };
-
     useEffect(() => {
         document.body.className = settings.colourscheme;
-    });
+    }, []);
 
     useEffect(() => {
         document.addEventListener('keyup', keyboardHandler, false);
         return () => {
             document.removeEventListener('keyup', keyboardHandler, false);
         };
-    });
+    }, []);
 
     const routes: AppRoute[] = [
         {
@@ -88,6 +89,14 @@ const App = () => {
                     setPaused={setPaused}
                     finished={finished}
                     setFinished={setFinished}
+                    time={gameTime}
+                    setTime={setGameTime}
+                    keypresses={gameKeypresses}
+                    setKeypresses={setGameKeypresses}
+                    paragraphs={gameParagraphs}
+                    setParagraphs={setGameParagraphs}
+                    position={gamePosition}
+                    setPosition={setGamePosition}
                 />
             ),
         },

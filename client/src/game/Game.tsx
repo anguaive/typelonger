@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
+import React, {
+    useState,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useMemo,
+} from 'react';
 import useInterval from '@use-it/interval';
 import { shallowCompare } from '../utils';
 import { max } from 'd3-array';
@@ -9,9 +15,17 @@ import QuickStats from './QuickStats';
 
 interface GameProps {
     paused: boolean;
-    setPaused: React.Dispatch<React.SetStateAction<boolean>>;
+    setPaused: (_: boolean) => void;
     finished: boolean;
-    setFinished: React.Dispatch<React.SetStateAction<boolean>>;
+    setFinished: (_: boolean) => void;
+    time: number;
+    setTime: (_: number) => void;
+    keypresses: Keypress[];
+    setKeypresses: (_: Keypress[]) => void;
+    paragraphs: Paragraph[];
+    setParagraphs: (_: Paragraph[]) => void;
+    position: Position;
+    setPosition: (_: Position) => void;
 }
 
 // How often the timer ticks
@@ -20,7 +34,26 @@ const defaultTimerInterval = 100;
 // How often the quick stats visuals are updated
 const quickStatsInterval = 1000;
 
-const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
+const initialPosition: Position = {
+    pg: 0,
+    char: -1,
+    realChar: -1,
+};
+
+const Game = ({
+    paused,
+    setPaused,
+    finished,
+    setFinished,
+    time,
+    setTime,
+    keypresses,
+    setKeypresses,
+    paragraphs,
+    setParagraphs,
+    position,
+    setPosition,
+}: GameProps) => {
     const textContainer = useRef<HTMLDivElement>(null);
     const scrollGuide = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
@@ -31,15 +64,6 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
 
     let windowResizeTimeout = useRef<number>(-1);
     let timerInterval = useRef<number | null>(null);
-    let time = useRef<number>(0);
-
-    const [keypresses, setKeypresses] = useState<Keypress[]>([]);
-    const [paragraphs, setParagraphs] = useState<Paragraph[]>([]);
-    const [position, setPosition] = useState<Position>({
-        pg: 0,
-        char: 0,
-        realChar: 0,
-    });
 
     const [quickStats, setQuickStats] = useState<ComputedStats>({
         time: 0,
@@ -49,24 +73,24 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
 
     // Update timer
     useInterval(() => {
-        time.current += timerInterval.current || 0;
+        setTime((time += timerInterval.current || 0));
     }, timerInterval.current);
 
     // Update quick stats
     useInterval(() => {
         const newWpm =
-            time.current === 0
+            time === 0
                 ? 0
                 : keypresses.filter((kp) => kp.letter !== 'Backspace').length /
                   5 /
-                  (time.current / 60 / 1000);
+                  (time / 60 / 1000);
         const newAcc = !keypresses.length
             ? 100
             : (keypresses.filter((kp) => kp.correct).length /
                   keypresses.filter((kp) => kp.letter !== 'Backspace').length) *
               100;
         setQuickStats({
-            time: time.current,
+            time: time,
             wpm: newWpm,
             acc: newAcc,
         });
@@ -84,11 +108,16 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
     useEffect(() => {
         // Typescript whines about textContainer possibly being undefined,
         // even if I'm making sure it's not :shrug:
-        // @ts-ignore
-        topMargin.current = Math.floor(textContainer.current?.clientHeight / 3 || 0);
+        topMargin.current = Math.floor(
+            // @ts-ignore
+            textContainer.current?.clientHeight / 3 || 0
+        );
         caretHeight.current = topMargin.current;
 
-        firstParagraph.current?.setAttribute('style', `margin-top: ${topMargin.current}px`);
+        firstParagraph.current?.setAttribute(
+            'style',
+            `margin-top: ${topMargin.current}px`
+        );
     }, [paragraphs.length]);
 
     const handleWindowResize = () => {
@@ -96,30 +125,35 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         // but the caret needs to be realigned manually
 
         window.clearTimeout(windowResizeTimeout.current);
-        windowResizeTimeout.current = window.setTimeout(handleWindowResizeEnd, 200);
+        windowResizeTimeout.current = window.setTimeout(
+            handleWindowResizeEnd,
+            200
+        );
     };
 
     const handleWindowResizeEnd = () => {
-        scrollText(position);
-        moveCaret(position);
+        scrollText();
+        moveCaret();
     };
 
     // Fetch text
     useEffect(() => {
-        fetch('http://localhost:3001/gameText')
-            .then((response) => response.json())
-            .then((data) => {
-                const pgs = data.paragraphsText.map((text: string) => {
-                    return {
-                        text: text,
-                        controlCharIndices: [],
-                        ignoredCharIndices: [],
-                        displayedIgnoredCharIndices: [],
-                        surplusCharIndices: [],
-                    };
+        if(!paragraphs.length) {
+            fetch('http://localhost:3001/gameText')
+                .then((response) => response.json())
+                .then((data) => {
+                    const pgs = data.paragraphsText.map((text: string) => {
+                        return {
+                            text: text,
+                            controlCharIndices: [],
+                            ignoredCharIndices: [],
+                            displayedIgnoredCharIndices: [],
+                            surplusCharIndices: [],
+                        };
+                    });
+                    processParagraphs(pgs);
                 });
-                processParagraphs(pgs);
-            });
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -128,8 +162,8 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         const newCharElement = getCharElement(position);
         if (newCharElement) {
             charElement.current = newCharElement;
-            scrollText(position);
-            moveCaret(position);
+            scrollText();
+            moveCaret();
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -138,9 +172,42 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
     // Compute initial and final positions
     // useLayoutEffect, because we need to wait for the DOM mutations to finish
     useLayoutEffect(() => {
-        if (initialPosition) {
-            charElement.current = getCharElement(initialPosition);
-            setPosition(initialPosition);
+        if (paragraphs.length) {
+            if (shallowCompare(initialPosition, position)) {
+                const newPos = offsetPositionWithinParagraph(
+                    initialPosition,
+                    paragraphs[0],
+                    1
+                );
+
+                charElement.current = getCharElement(newPos);
+                setPosition(newPos);
+            } else {
+                charElement.current = getCharElement(position);
+            }
+
+            // Compute styles on positions that received keypresses
+            if (keypresses.length) {
+                for (const kp of keypresses) {
+                    // Only look at chars behind the current position
+                    if(position.char > kp.position.char) {
+                        const kpChar = getCharElement(kp.position);
+                        if (kp.correct) {
+                            kpChar?.classList.add('text-correct');
+                        } else {
+                            kpChar?.classList.add('text-incorrect');
+                        }
+
+                        if (
+                            paragraphs[kp.position.pg].surplusCharIndices.includes(
+                                kp.position.realChar
+                            )
+                        ) {
+                            kpChar?.classList.add('text-surplus');
+                        }
+                    }
+                }
+            }
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,7 +233,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paused]);
 
-    const scrollText = (pos: Position) => {
+    const scrollText = () => {
         const char = getCharElement(position);
 
         if (char) {
@@ -174,17 +241,22 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                 topMargin.current -= char.offsetTop - caretHeight.current;
             }
 
-            firstParagraph.current?.setAttribute('style', `margin-top: ${topMargin.current}px`);
+            firstParagraph.current?.setAttribute(
+                'style',
+                `margin-top: ${topMargin.current}px`
+            );
         }
     };
 
-    const moveCaret = (pos: Position) => {
+    const moveCaret = () => {
         const char = getCharElement(position);
 
         if (char) {
             caret.current?.setAttribute(
                 'style',
-                `margin-top: ${caretHeight.current}px; margin-left: ${char.offsetLeft - 1}px`
+                `margin-top: ${caretHeight.current}px; margin-left: ${
+                    char.offsetLeft - 1
+                }px`
             );
         }
     };
@@ -242,14 +314,19 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
 
             pg.ignoredCharIndices.forEach((iCI, i) => {
                 pg.displayedIgnoredCharIndices[i] =
-                    iCI - pg.controlCharIndices.filter((cCI) => cCI < iCI).length;
+                    iCI -
+                    pg.controlCharIndices.filter((cCI) => cCI < iCI).length;
             });
         }
 
         setParagraphs(pgs);
     };
 
-    const offsetPosition = (pos: Position, pgs: Paragraph[], offset: number): Position => {
+    const offsetPosition = (
+        pos: Position,
+        pgs: Paragraph[],
+        offset: number
+    ): Position => {
         if (offset === 0) {
             return pos;
         }
@@ -257,7 +334,10 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         let newPos = { ...pos };
         const currentPg = pgs[pos.pg];
         // To next paragraph, if there is one
-        if (pos.char + offset > currentPg.text.length - currentPg.controlCharIndices.length - 1) {
+        if (
+            pos.char + offset >
+            currentPg.text.length - currentPg.controlCharIndices.length - 1
+        ) {
             if (pos.pg !== pgs.length - 1) {
                 newPos.pg++;
                 newPos.char = -1;
@@ -269,15 +349,18 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                     offset -
                         (currentPg.text.length -
                             currentPg.controlCharIndices.length -
-                            currentPg.displayedIgnoredCharIndices.filter((iCI) => iCI > pos.char)
-                                .length -
+                            currentPg.displayedIgnoredCharIndices.filter(
+                                (iCI) => iCI > pos.char
+                            ).length -
                             pos.char -
                             1)
                 );
             }
         } else if (
             pos.char -
-                currentPg.displayedIgnoredCharIndices.filter((dICI) => dICI < pos.char).length +
+                currentPg.displayedIgnoredCharIndices.filter(
+                    (dICI) => dICI < pos.char
+                ).length +
                 offset <
             0
         ) {
@@ -286,7 +369,8 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                 const prevPg = pgs[pos.pg - 1];
 
                 newPos.pg--;
-                newPos.char = prevPg.text.length - prevPg.controlCharIndices.length;
+                newPos.char =
+                    prevPg.text.length - prevPg.controlCharIndices.length;
                 newPos.realChar = prevPg.text.length;
 
                 newPos = offsetPosition(
@@ -294,8 +378,9 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                     pgs,
                     offset +
                         (pos.char -
-                            currentPg.displayedIgnoredCharIndices.filter((dICI) => dICI < pos.char)
-                                .length)
+                            currentPg.displayedIgnoredCharIndices.filter(
+                                (dICI) => dICI < pos.char
+                            ).length)
                 );
             }
         } else {
@@ -367,17 +452,13 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paragraphs.length]);
 
-    const initialPosition = useMemo(() => {
-        if (paragraphs && paragraphs.length) {
-            const initialPos = offsetPositionWithinParagraph(
-                { pg: 0, char: -1, realChar: -1 },
-                paragraphs[0],
-                1
-            );
-            return initialPos;
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [paragraphs[0]]);
+    // const initialPosition = useMemo(() => {
+
+    //     if (paragraphs && paragraphs.length) {
+    //         return initialPos;
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [paragraphs[0]]);
 
     const finalPosition = useMemo(() => {
         if (paragraphs && paragraphs.length) {
@@ -389,7 +470,11 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                     paragraphs[lastPgIdx].controlCharIndices.length,
                 realChar: paragraphs[lastPgIdx].text.length,
             };
-            finalPos = offsetPositionWithinParagraph(finalPos, paragraphs[lastPgIdx], -1);
+            finalPos = offsetPositionWithinParagraph(
+                finalPos,
+                paragraphs[lastPgIdx],
+                -1
+            );
             return finalPos;
         }
 
@@ -410,7 +495,9 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         const currentPg = paragraphs[pos.pg];
         const newPg = { ...currentPg };
         newPg.text =
-            currentPg.text.slice(0, pos.realChar) + newChar + currentPg.text.slice(pos.realChar);
+            currentPg.text.slice(0, pos.realChar) +
+            newChar +
+            currentPg.text.slice(pos.realChar);
         newPg.surplusCharIndices.push(pos.realChar);
         const newPgs = [...paragraphs];
         newPgs.splice(pos.pg, 1, newPg);
@@ -423,7 +510,9 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
     const removeCharElement = (pos: Position) => {
         const currentPg = paragraphs[pos.pg];
         const newPg = { ...currentPg };
-        newPg.text = currentPg.text.slice(0, pos.realChar) + currentPg.text.slice(pos.realChar + 1);
+        newPg.text =
+            currentPg.text.slice(0, pos.realChar) +
+            currentPg.text.slice(pos.realChar + 1);
         newPg.surplusCharIndices.pop();
         const newPgs = [...paragraphs];
         newPgs.splice(pos.pg, 1, newPg);
@@ -431,7 +520,9 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
     };
 
     const getCharElement = (pos: Position): HTMLElement | null => {
-        const paragraphElements = textContainer.current?.getElementsByClassName('pg');
+        const paragraphElements = textContainer.current?.getElementsByClassName(
+            'pg'
+        );
         if (paragraphElements && paragraphElements.length) {
             return paragraphElements[pos.pg].children[pos.char] as HTMLElement;
         }
@@ -443,12 +534,16 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         if (currentElement) {
             setKeypresses([
                 ...keypresses,
-                { time: time.current, position: pos, letter: 'Backspace' },
+                { time: time, position: pos, letter: 'Backspace' },
             ]);
             if (currentElement.classList.contains('text-surplus')) {
                 removeCharElement(pos);
             }
-            currentElement.classList.remove('text-correct', 'text-incorrect', 'text-surplus');
+            currentElement.classList.remove(
+                'text-correct',
+                'text-incorrect',
+                'text-surplus'
+            );
         }
     };
 
@@ -459,7 +554,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             setKeypresses([
                 ...keypresses,
                 {
-                    time: time.current,
+                    time: time,
                     position: pos,
                     letter: letter,
                     correct: true,
@@ -470,7 +565,7 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             setKeypresses([
                 ...keypresses,
                 {
-                    time: time.current,
+                    time: time,
                     position: pos,
                     letter: letter,
                     correct: false,
@@ -518,7 +613,10 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
     const segmentStats = useMemo(() => {
         // TODO: optimize
         let statsList: ComputedStats[] = [];
-        const highestReachedPg = max(keypresses, (kp: Keypress) => kp.position.pg);
+        const highestReachedPg = max(
+            keypresses,
+            (kp: Keypress) => kp.position.pg
+        );
         if (highestReachedPg === undefined) {
             return [];
         }
@@ -538,16 +636,22 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         for (let kp of keypresses) {
             const kppg = kp.position.pg;
             if (previousKp && previousKp.position.pg === kppg) {
-                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(kp.time);
+                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
+                    kp.time
+                );
             } else {
                 if (!sequencesLists[kppg]) {
                     sequencesLists[kppg] = [];
                 }
                 sequencesLists[kppg].push([]);
                 if (previousKp) {
-                    sequencesLists[kppg][sequencesLists[kppg].length - 1].push(previousKp.time);
+                    sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
+                        previousKp.time
+                    );
                 }
-                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(kp.time);
+                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
+                    kp.time
+                );
             }
             previousKp = kp;
         }
@@ -568,11 +672,16 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
         for (let pg = 0; pg <= highestReachedPg; pg++) {
             const kps = keypresses.filter((kp) => kp.position.pg === pg);
             const correctKps = kps.filter((kp) => kp.correct);
-            const nonBackspaceKps = kps.filter((kp) => kp.letter !== 'Backspace');
+            const nonBackspaceKps = kps.filter(
+                (kp) => kp.letter !== 'Backspace'
+            );
             const time = statsList[pg].time;
 
             statsList[pg].pg = pg;
-            statsList[pg].wpm = time === 0 ? 0 : nonBackspaceKps.length / 5 / (time / 60 / 1000);
+            statsList[pg].wpm =
+                time === 0
+                    ? 0
+                    : nonBackspaceKps.length / 5 / (time / 60 / 1000);
             statsList[pg].acc = !kps.length
                 ? 100
                 : (correctKps.length / nonBackspaceKps.length) * 100;
@@ -597,11 +706,15 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
                             {letters.map((letter, letterIndex) => {
                                 let letterElement = null;
 
-                                if (!pg.controlCharIndices.includes(letterIndex)) {
+                                if (
+                                    !pg.controlCharIndices.includes(letterIndex)
+                                ) {
                                     letterElement = (
                                         <span
                                             className={
-                                                pg.ignoredCharIndices.includes(letterIndex)
+                                                pg.ignoredCharIndices.includes(
+                                                    letterIndex
+                                                )
                                                     ? 'text-ignored'
                                                     : ''
                                             }
@@ -624,7 +737,11 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
     return (
         <main id="game">
             <aside id="quick-stats" className={paused ? '' : 'pale'}>
-                <QuickStats time={quickStats.time} wpm={quickStats.wpm} acc={quickStats.acc} />
+                <QuickStats
+                    time={quickStats.time}
+                    wpm={quickStats.wpm}
+                    acc={quickStats.acc}
+                />
             </aside>
             <aside id="title" className={paused ? '' : 'pale'}>
                 <div className="text-title">The Witcher - Blood of Elves</div>
@@ -651,7 +768,10 @@ const Game = ({ paused, setPaused, finished, setFinished }: GameProps) => {
             <section id="detailed-stats">
                 <div className="segment-stats-chart-container">
                     {paused && (
-                        <SegmentStatsChart data={segmentStats} paragraphQuotes={paragraphQuotes} />
+                        <SegmentStatsChart
+                            data={segmentStats}
+                            paragraphQuotes={paragraphQuotes}
+                        />
                     )}
                 </div>
             </section>
