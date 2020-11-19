@@ -13,7 +13,7 @@ import Settings, { AppSettings, SETTINGS_STORAGE, defaultSettings } from './sett
 import NoMatch from './NoMatch';
 import TextDetails from './text-details/TextDetails';
 import Texts from './texts/Texts';
-import { AuthStatus } from './types';
+import {Keypress, Paragraph, Position, SessionData} from './types';
 
 interface AppRoute {
     path: string;
@@ -21,9 +21,9 @@ interface AppRoute {
 }
 
 const App = () => {
-    const [authStatus, setAuthStatus] = useState<AuthStatus>({
-        userName: 'Username',
-    });
+    const [sessionData, setSessionData] = useState<SessionData>(
+        {name: '', alias: ''});
+
     const [settings, setSettings] = useState<AppSettings>(
         (() => {
             const storedSettings = window.localStorage.getItem(SETTINGS_STORAGE);
@@ -99,8 +99,8 @@ const App = () => {
             path: '/profile',
             component: (
                 <Profile
-                    authStatus={authStatus}
-                    logOut={logOut}
+                    sessionData={sessionData}
+                    setSessionData={setSessionData}
                     searchHidden={searchHidden}
                     setSearchHidden={setSearchHidden}
                 />
@@ -131,7 +131,7 @@ const App = () => {
 
     return (
         <>
-            <Menu paused={paused} loggedIn={!!authStatus.userName} location={location} />
+            <Menu paused={paused} sessionData={sessionData} location={location} />
             <TransitionGroup component={null}>
                 <CSSTransition key={location.key} classNames="page" timeout={300}>
                     <Switch location={location}>

@@ -30,6 +30,10 @@ class Auth {
         return fetch(Auth.URL + `/login?username=${data.name}&password=${data.password}`);
     }
 
+    logout() {
+        this.removeToken();
+    }
+
 }
 
 export default Auth;

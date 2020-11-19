@@ -5,19 +5,21 @@ import { formatHours } from '../utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PerformanceCard from '../cards/PerformanceCard';
 import Radio from '../radio/Radio';
-import { User, AuthStatus } from '../types';
+import { User, SessionData } from '../types';
 import { getPerfActions } from '../utils';
 import Card from '../cards/Card';
 import InputPopup from '../input-popup/InputPopup';
+import AuthService from '../auth/auth';
+const authService = new AuthService();
 
 interface ProfileProps {
-    authStatus: AuthStatus;
-    logOut: Function;
+    sessionData: SessionData;
+    setSessionData: React.Dispatch<React.SetStateAction<SessionData>>;
     searchHidden: boolean;
     setSearchHidden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Profile = ({ authStatus, logOut, searchHidden, setSearchHidden }: ProfileProps) => {
+const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }: ProfileProps) => {
     const [profile, setProfile] = useState<User>();
     const [bioEditorHidden, setBioEditorHidden] = useState(true);
     const [newAliasHidden, setNewAliasHidden] = useState(true);
@@ -175,7 +177,7 @@ const Profile = ({ authStatus, logOut, searchHidden, setSearchHidden }: ProfileP
                         )}
                     </div>
                     <div className="user-actions">
-                        {authStatus.userName === profile.name && (
+                        {sessionData.name === profile.name && (
                             <>
                                 <button className="button" onClick={() => setNewAliasHidden(false)}>
                                     New alias
@@ -186,7 +188,7 @@ const Profile = ({ authStatus, logOut, searchHidden, setSearchHidden }: ProfileP
                                 >
                                     Edit bio
                                 </button>
-                                <button className="button" onClick={() => logOut()}>
+                                <button className="button" onClick={() => authService.logout()}>
                                     Log out
                                 </button>
                             </>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
+import {SessionData} from "./types";
 
 // TODO: :focus on keyboard events only
 
@@ -13,7 +14,7 @@ interface NavLink {
 
 interface MenuProps {
     paused: boolean;
-    loggedIn: boolean;
+    sessionData: SessionData;
     location: any;
 }
 
@@ -25,13 +26,13 @@ const initialLinks: NavLink[] = [
     { path: '/settings', name: 'Settings', icon: 'settings' },
 ];
 
-const Menu = ({ paused, loggedIn, location }: MenuProps) => {
+const Menu = ({ paused, sessionData, location }: MenuProps) => {
     const [links, setLinks] = useState<NavLink[]>(initialLinks);
 
     useEffect(() => {
         // Deep copy of initialLinks
         const initialLinksCopy = initialLinks.slice();
-        if (loggedIn) {
+        if (!!sessionData.name) {
             initialLinksCopy.splice(3, 0, {
                 path: '/profile',
                 name: 'Profile',
@@ -46,7 +47,7 @@ const Menu = ({ paused, loggedIn, location }: MenuProps) => {
             });
         }
         setLinks(initialLinksCopy);
-    }, [loggedIn]);
+    }, [sessionData]);
 
     const isSelected = (link: NavLink) => {
         const locationHead = location.pathname.split('/')[1];

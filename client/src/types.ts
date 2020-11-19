@@ -87,8 +87,9 @@ export interface Keypress {
     correct?: boolean;
 }
 
-export interface AuthStatus {
-    userName: string;
+export interface SessionData {
+    name: string;
+    alias: string;
 }
 
 export interface ChartAreaProps {
