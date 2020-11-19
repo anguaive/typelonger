@@ -19,7 +19,7 @@ namespace api.Models
         public long TextId { get; set; }
 
         // Navigation properties
-        public Text Text { get; set; }
-        public List<Performance> Performances { get; set; }
+        public virtual Text Text { get; set; }
+        public virtual List<Performance> Performances { get; set; }
     }
 }

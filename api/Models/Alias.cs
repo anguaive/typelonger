@@ -22,8 +22,8 @@ namespace api.Models
         public string UserId { get; set; }
 
         // Navigation properties
-        public ApplicationUser User { get; set; }
-        public List<Performance> Performances { get; set; }
+        public virtual ApplicationUser User { get; set; }
+        public virtual List<Performance> Performances { get; set; }
 
     }
 }

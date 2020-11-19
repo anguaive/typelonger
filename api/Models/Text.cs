@@ -20,6 +20,6 @@ namespace api.Models
         public long Length { get; set; }
 
         // Navigation properties
-        public List<Section> Sections { get; set; }
+        public virtual List<Section> Sections { get; set; }
     }
 }

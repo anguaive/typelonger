@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using api.Models;
 using api.Services;
 using api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +37,7 @@ namespace api.Controllers
             _logger = loggerFactory.CreateLogger<AuthController>();
         }
 
+        [AllowAnonymous]
         [HttpGet("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -73,12 +76,14 @@ namespace api.Controllers
             return Ok(new {token = new JwtSecurityTokenHandler().WriteToken(token)});
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Register([FromBody] NewUser newUser)
         {
             // Create new user with the given credentials
-            var user = new ApplicationUser {UserName = newUser.Username, Email = newUser.Email};
+            var alias = new Alias {Name = newUser.Alias, DateOfCreation = DateTime.UtcNow};
+            var user = new ApplicationUser {UserName = newUser.Username, Email = newUser.Email, DateOfRegistration = DateTime.UtcNow, Aliases = new List<Alias> {alias}};
             var userCreation = await _userManager.CreateAsync(user, newUser.Password);
 
             if (userCreation.Succeeded)

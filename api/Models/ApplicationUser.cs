@@ -16,6 +16,6 @@ namespace api.Models
         public DateTime DateOfRegistration { get; set; }
 
         // Navigation properties
-        public List<Alias> Aliases { get; set; }
+        public virtual List<Alias> Aliases { get; set; }
     }
 }

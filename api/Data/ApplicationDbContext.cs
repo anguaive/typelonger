@@ -14,10 +14,13 @@ namespace api.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
+        private readonly SeedData _seedData;
+
         public ApplicationDbContext(
             DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+            IOptions<OperationalStoreOptions> operationalStoreOptions, SeedData seedData) : base(options, operationalStoreOptions)
         {
+            _seedData = seedData;
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -30,6 +33,8 @@ namespace api.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            _seedData.Seed(builder);
 
         }
     }

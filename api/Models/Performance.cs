@@ -18,8 +18,8 @@ namespace api.Models
         public long SectionId { get; set; }
 
         // Navigation properties
-        public Alias Alias { get; set; }
-        public Section Section { get; set; }
-        public List<RawStats> RawStats { get; set; }
+        public virtual Alias Alias { get; set; }
+        public virtual Section Section { get; set; }
+        public virtual List<RawStats> RawStats { get; set; }
     }
 }

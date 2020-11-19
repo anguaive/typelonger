@@ -15,6 +15,6 @@ namespace api.Models
         public long PerformanceId { get; set; }
 
         // Navigation properties
-        public Performance Performance { get; set; }
+        public virtual Performance Performance { get; set; }
     }
 }
