@@ -34,7 +34,6 @@ body,
     --long-transition: 600ms;
     --menu-width-closed: 5rem;
     --menu-width: 16rem;
-    --page-height: calc(100vh - 0.5rem - var(--menu-height));
 }
 
 #root {

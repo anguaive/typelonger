@@ -5,13 +5,6 @@ export interface Action {
     handler: Function;
 }
 
-export interface Keypress {
-    time: number;
-    position: Position;
-    letter: string;
-    correct?: boolean;
-}
-
 export const getUserActions = (alias: Alias, location: any, history: any) => [
     {
         text: 'View profile',
