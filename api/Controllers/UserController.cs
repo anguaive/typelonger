@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -23,23 +25,47 @@ namespace api.Controllers
 
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetApplicationUsers()
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ViewModels.User>> GetApplicationUsers()
         {
-            return await _context.ApplicationUsers.ToListAsync();
+            List<ViewModels.User> users = new List<ViewModels.User>();
+
+            var query = from appUser in _context.ApplicationUsers
+                .AsNoTracking()
+                .Include(appUser => appUser.Aliases)
+
+                select appUser;
+
+            foreach (var appUser in query)
+            {
+                users.Add(appUser.ToViewModel());
+            }
+
+            return Ok(users);
         }
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApplicationUser>> GetApplicationUser(string id)
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ViewModels.User>> GetApplicationUser(string id)
         {
-            var applicationUser = await _context.ApplicationUsers.FindAsync(id);
+            var query = from appUser in _context.ApplicationUsers
+                    .AsNoTracking()
+                    .Include(appUser => appUser.Aliases)
+                    .Where(user => user.Id == id)
+                select appUser;
+
+            var applicationUser = await query.SingleOrDefaultAsync();
 
             if (applicationUser == null)
             {
                 return NotFound();
             }
 
-            return applicationUser;
+            return applicationUser.ToViewModel();
         }
 
         // PUT: api/User/5
@@ -74,51 +100,31 @@ namespace api.Controllers
             return NoContent();
         }
 
-        // POST: api/User
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<ApplicationUser>> PostApplicationUser(ApplicationUser applicationUser)
-        {
-            _context.ApplicationUsers.Add(applicationUser);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ApplicationUserExists(applicationUser.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetApplicationUser", new { id = applicationUser.Id }, applicationUser);
-        }
-
-        // DELETE: api/User/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ApplicationUser>> DeleteApplicationUser(string id)
-        {
-            var applicationUser = await _context.ApplicationUsers.FindAsync(id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-
-            _context.ApplicationUsers.Remove(applicationUser);
-            await _context.SaveChangesAsync();
-
-            return applicationUser;
-        }
-
         private bool ApplicationUserExists(string id)
         {
             return _context.ApplicationUsers.Any(e => e.Id == id);
+        }
+    }
+
+    internal static class UserControllerExtensions
+    {
+        public static ViewModels.User ToViewModel(this ApplicationUser applicationUser)
+        {
+            if (applicationUser == null)
+            {
+                return null;
+            }
+
+            var viewModel = new ViewModels.User
+            {
+                Name = applicationUser.UserName,
+                Biography = applicationUser.Biography,
+                PictureURL = applicationUser.PictureURL,
+                DateOfRegistration = applicationUser.DateOfRegistration,
+                Aliases = applicationUser.Aliases.Select(alias => alias.ToProfileViewModel()).ToList()
+            };
+
+            return viewModel;
         }
     }
 }

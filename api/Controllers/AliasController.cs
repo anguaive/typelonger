@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.ViewModels;
 
 namespace api.Controllers
 {
@@ -23,9 +24,9 @@ namespace api.Controllers
 
         // GET: api/Alias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Alias>>> GetAliases()
+        public async Task<ActionResult<IEnumerable<AliasListView>>> GetAliases()
         {
-            return await _context.Aliases.ToListAsync();
+            return NotFound();
         }
 
         // GET: api/Alias/5
@@ -83,28 +84,36 @@ namespace api.Controllers
             _context.Aliases.Add(@alias);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAlias", new { id = @alias.Id }, @alias);
+            return CreatedAtAction("GetAlias", new {id = @alias.Id}, @alias);
         }
 
-        // DELETE: api/Alias/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Alias>> DeleteAlias(long id)
-        {
-            var @alias = await _context.Aliases.FindAsync(id);
-            if (@alias == null)
-            {
-                return NotFound();
-            }
-
-            _context.Aliases.Remove(@alias);
-            await _context.SaveChangesAsync();
-
-            return @alias;
-        }
 
         private bool AliasExists(long id)
         {
             return _context.Aliases.Any(e => e.Id == id);
+        }
+    }
+
+    internal static class AliasControllerExtensions
+    {
+        public static AliasDetailsView ToProfileViewModel(this Alias alias)
+        {
+            if (alias == null)
+            {
+                return null;
+            }
+
+            var profileView = new AliasDetailsView
+            {
+                Name = alias.Name,
+                DateOfCreation = alias.DateOfCreation,
+                Points = alias.Points,
+                Time = alias.Time,
+                Wpm = alias.Wpm,
+                Accuracy = alias.Accuracy
+            };
+
+            return profileView;
         }
     }
 }
