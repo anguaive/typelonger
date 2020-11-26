@@ -79,6 +79,7 @@ namespace api
 
                     options.Stores.MaxLengthForKeys = 128;
                     options.SignIn.RequireConfirmedAccount = true;
+                    options.User.RequireUniqueEmail = true;
                 })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using Alias = api.Models.Alias;
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace api.Controllers
@@ -26,14 +27,12 @@ namespace api.Controllers
     {
         private readonly JwtOptions _jwtOptions;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger _logger;
 
-        public AuthController(IOptions<JwtOptions> jwtOptions, UserManager<ApplicationUser> userManager, ILoggerFactory loggerFactory, SignInManager<ApplicationUser> signInManager)
+        public AuthController(IOptions<JwtOptions> jwtOptions, UserManager<ApplicationUser> userManager, ILoggerFactory loggerFactory)
         {
             _jwtOptions = jwtOptions.Value;
             _userManager = userManager;
-            _signInManager = signInManager;
             _logger = loggerFactory.CreateLogger<AuthController>();
         }
 
