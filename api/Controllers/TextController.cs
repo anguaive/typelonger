@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -23,81 +25,42 @@ namespace api.Controllers
 
         // GET: api/Text
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Text>>> GetTexts()
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<TextListView>> GetTexts()
         {
-            return await _context.Texts.ToListAsync();
+            List<TextListView> texts = new List<TextListView>();
+
+            var query = from t in _context.Texts
+                    .AsNoTracking()
+                    .Include(t => t.Sections)
+                select t;
+
+            foreach(var text in query)
+            {
+                texts.Add(text.ToListView());
+            }
+
+            return Ok(texts);
         }
 
         // GET: api/Text/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Text>> GetText(long id)
         {
-            var text = await _context.Texts.FindAsync(id);
+            var query = from t in _context.Texts
+                    .AsNoTracking()
+                    .Include(t => t.Sections)
+                    .ThenInclude(s => s.Performances)
+                    .Where(t => t.Id == id)
+                select t;
+
+            var text = await query.SingleOrDefaultAsync();
 
             if (text == null)
             {
                 return NotFound();
             }
-
-            return text;
-        }
-
-        // PUT: api/Text/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutText(long id, Text text)
-        {
-            if (id != text.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(text).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TextExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Text
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Text>> PostText(Text text)
-        {
-            _context.Texts.Add(text);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetText", new { id = text.Id }, text);
-        }
-
-        // DELETE: api/Text/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Text>> DeleteText(long id)
-        {
-            var text = await _context.Texts.FindAsync(id);
-            if (text == null)
-            {
-                return NotFound();
-            }
-
-            _context.Texts.Remove(text);
-            await _context.SaveChangesAsync();
 
             return text;
         }
@@ -105,6 +68,29 @@ namespace api.Controllers
         private bool TextExists(long id)
         {
             return _context.Texts.Any(e => e.Id == id);
+        }
+    }
+
+    internal static class TextControllerExtensions
+    {
+        public static TextListView ToListView(this Text text)
+        {
+            if (text == null)
+            {
+                return null;
+            }
+
+            var listView = new TextListView
+            {
+                Id = text.Id,
+                Title = text.Title,
+                Author = text.Author,
+                Genres = text.Genres,
+                SectionCount = text.Sections.Count,
+                Length = text.Sections.Sum(section => section.Content.Length)
+            };
+
+            return listView;
         }
     }
 }
