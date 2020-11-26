@@ -12,6 +12,7 @@ import { Keypress, Position, Paragraph, ComputedStats } from '../../utils/types'
 import './Game.css';
 import SegmentStatsChart from '../charts/SegmentStatsChart';
 import QuickStats from './QuickStats';
+import { useParams } from 'react-router-dom';
 
 interface GameProps {
     paused: boolean;
@@ -26,7 +27,6 @@ interface GameProps {
     setParagraphs: (_: Paragraph[]) => void;
     position: Position;
     setPosition: (_: Position) => void;
-    sectionId: number;
 }
 
 // How often the timer ticks
@@ -54,8 +54,8 @@ const Game = ({
     setParagraphs,
     position,
     setPosition,
-    sectionId
 }: GameProps) => {
+    const {sectionId} = useParams();
     const textContainer = useRef<HTMLDivElement>(null);
     const scrollGuide = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);

@@ -18,7 +18,7 @@ interface MenuProps {
 }
 
 const initialLinks: NavLink[] = [
-    { path: '/game', name: 'Play', icon: 'keyboard' },
+    { path: '/game/1', name: 'Play', icon: 'keyboard' },
     { path: '/texts', name: 'Browse', icon: 'menu_book' },
     { path: '/matchmaking', name: 'Matchmaking', icon: 'sports_esports' },
     { path: '/rankings', name: 'Rankings', icon: 'emoji_events' },

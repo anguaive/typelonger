@@ -6,11 +6,7 @@ import './TextDetails.css';
 import { Text } from '../../utils/types';
 import { getPerfActions } from '../../utils/utils';
 
-interface TextDetailsProps {
-    setSectionId: (_: number) => void;
-}
-
-const TextDetails = ({ setSectionId }: TextDetailsProps) => {
+const TextDetails = () => {
     const [text, setText] = useState<Text>();
     const [selectedSection, setSelectedSection] = useState(0);
     const location = useLocation();

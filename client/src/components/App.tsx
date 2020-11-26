@@ -30,7 +30,6 @@ const App = () => {
     const [gameKeypresses, setGameKeypresses] = useState<Keypress[]>([]);
     const [gameParagraphs, setGameParagraphs] = useState<Paragraph[]>([]);
     const [gamePosition, setGamePosition] = useState<Position>({pg: 0, char: -1, realChar: -1});
-    const [gameSectionId, setGameSectionId] = useState<number>(5);
 
     const [settings, setSettings] = useState<AppSettings>(
         (() => {
@@ -84,7 +83,7 @@ const App = () => {
 
     const routes: AppRoute[] = [
         {
-            path: '/game',
+            path: '/game/:sectionId',
             component: (
                 <Game
                     paused={paused}
@@ -99,7 +98,6 @@ const App = () => {
                     setParagraphs={setGameParagraphs}
                     position={gamePosition}
                     setPosition={setGamePosition}
-                    sectionId={gameSectionId}
                 />
             ),
         },
@@ -126,7 +124,7 @@ const App = () => {
         },
         {
             path: '/text',
-            component: <TextDetails setSectionId={setGameSectionId}/>,
+            component: <TextDetails/>,
         },
         {
             path: '/texts',

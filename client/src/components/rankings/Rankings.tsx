@@ -19,11 +19,11 @@ const Rankings = () => {
     const history = useHistory();
 
     useEffect(() => {
-        fetch('http://localhost:3001/users')
-            .then((response) => response.json())
-            .then((data) => {
-                setItems(data);
-            });
+        // fetch('http://localhost:3001/users')
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         setItems(data);
+        //     });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
