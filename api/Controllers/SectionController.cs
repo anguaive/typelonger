@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -23,6 +25,8 @@ namespace api.Controllers
 
         // GET: api/Section
         [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Section>>> GetSections()
         {
             return await _context.Sections.ToListAsync();
@@ -30,81 +34,53 @@ namespace api.Controllers
 
         // GET: api/Section/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Section>> GetSection(long id)
+        public async Task<ActionResult<SectionDetailsView>> GetSection(long id)
         {
-            var section = await _context.Sections.FindAsync(id);
+            var query = from s in _context.Sections
+                    .AsNoTracking()
+                    .Include(s => s.Text)
+                    .Where(s => s.Id == id)
+                select s;
+
+            var section = await query.SingleOrDefaultAsync();
 
             if (section == null)
             {
                 return NotFound();
             }
 
-            return section;
-        }
-
-        // PUT: api/Section/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSection(long id, Section section)
-        {
-            if (id != section.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(section).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SectionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Section
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Section>> PostSection(Section section)
-        {
-            _context.Sections.Add(section);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetSection", new { id = section.Id }, section);
-        }
-
-        // DELETE: api/Section/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Section>> DeleteSection(long id)
-        {
-            var section = await _context.Sections.FindAsync(id);
-            if (section == null)
-            {
-                return NotFound();
-            }
-
-            _context.Sections.Remove(section);
-            await _context.SaveChangesAsync();
-
-            return section;
+            return Ok(section.ToDetailsView());
         }
 
         private bool SectionExists(long id)
         {
             return _context.Sections.Any(e => e.Id == id);
+        }
+    }
+
+    internal static class SectionControllerExtensions
+    {
+        public static string[] GetParagraphs(this Section section)
+        {
+            var paragraphs = section.Content.Split('\n');
+            return paragraphs.Select(pg => String.Concat(pg, " ")).ToArray();
+        }
+
+        public static SectionDetailsView ToDetailsView(this Section section)
+        {
+            if (section == null)
+            {
+                return null;
+            }
+
+            var detailsView = new SectionDetailsView
+            {
+                Title = section.Title,
+                TextTitle = section.Text.Title,
+                ContentParagraphs = section.GetParagraphs()
+            };
+
+            return detailsView;
         }
     }
 }
