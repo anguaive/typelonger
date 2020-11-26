@@ -9,8 +9,8 @@ import { User, SessionData } from '../../utils/types';
 import { getPerfActions } from '../../utils/utils';
 import Card from '../cards/Card';
 import InputPopup from '../input-popup/InputPopup';
-import AuthService from '../../utils/auth';
-const authService = new AuthService();
+import { getProfile } from '../../utils/dbservice';
+import { SessionContext, logout } from '../../utils/auth';
 
 interface ProfileProps {
     sessionData: SessionData;
@@ -29,23 +29,21 @@ const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }:
     const history = useHistory();
 
     useEffect(() => {
-        fetch('http://localhost:3001/userProfile')
-            .then((response) => response.json())
-            .then((data) => {
-                // I have not realized how fucky it is to parse date from JSON
-                // before deciding on it, so I'm ignoring it. It's just
-                // placeholder data anyway
-                setProfile({ ...data, since: new Date() });
-                setBioValue(data.bio);
-            });
-        // For some reason eslint complains about the empty deps array,
-        // even though it's the RECOMMENDED way of running the hook
-        // on mount only
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        if(username) {
+            getProfile(username)
+                .then((data) => {
+                    if(data) {
+                        setProfile({...data, since: new Date()});
+                        setBioValue(data.bio);
+                    }
+                });
+        }
+    }, [username]);
 
     if (profile === undefined) {
-        return null;
+        return (
+            <div>User not found!</div>
+        )
     }
 
     const createNewAlias = (newName: string) => {
@@ -177,7 +175,7 @@ const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }:
                         )}
                     </div>
                     <div className="user-actions">
-                        {sessionData.name === profile.name && (
+                        {sessionData && sessionData.name === profile.name && (
                             <>
                                 <button className="button" onClick={() => setNewAliasHidden(false)}>
                                     New alias
@@ -188,7 +186,7 @@ const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }:
                                 >
                                     Edit bio
                                 </button>
-                                <button className="button" onClick={() => authService.logout()}>
+                                <button className="button" onClick={() => logout()}>
                                     Log out
                                 </button>
                             </>

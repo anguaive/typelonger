@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import './Auth.css';
 import { RegisterData, LoginData } from '../../utils/types';
-import AuthService from '../../utils/auth';
-const authService = new AuthService();
+import { register, login, setToken } from '../../utils/auth';
 
 interface UserValidationRules {
     [key: string]: number;
@@ -78,16 +77,14 @@ const Auth = () => {
 
     const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        authService
-            .register(registerData)
+            register(registerData)
             .then((response) => console.log(response))
             .catch((error) => console.log(error));
     };
 
     const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        authService
-            .login(loginData)
+            login(loginData)
             .then((response) => {
                 return response.json().then((data) => ({
                     status: response.status,
@@ -97,7 +94,7 @@ const Auth = () => {
             .then((response: { status: number; data: any }) => {
                 switch(response.status) {
                     case 200: // Ok, token is returned
-                        authService.setToken(response.data.token);
+                        setToken(response.data.token);
                         history.push('/');
                         break;
                     case 400: // Bad request, error is returned

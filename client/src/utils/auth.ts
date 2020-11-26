@@ -1,39 +1,43 @@
-import {RegisterData, LoginData} from './types';
+import {RegisterData, LoginData, SessionData} from './types';
+import React, {createContext, SetStateAction} from 'react';
 
-class AuthService {
-    static KEY = "authToken";
-    static URL = "https://localhost:5001/api/auth";
-
-    getToken() {
-        return window.localStorage.getItem(AuthService.KEY);
-    }
-
-    setToken(token: string) {
-        window.localStorage.setItem(AuthService.KEY, token);
-    }
-
-    removeToken() {
-        window.localStorage.removeItem(AuthService.KEY);
-    }
-
-    register(data: RegisterData) {
-        return fetch(AuthService.URL + '/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({username: data.name, alias: data.alias, email: data.email, password: data.password})
-        });
-    }
-
-    login(data: LoginData) {
-        return fetch(AuthService.URL + `/login?username=${data.name}&password=${data.password}`);
-    }
-
-    logout() {
-        this.removeToken();
-    }
-
+type SessionContextType = {
+    sessionData: SessionData;
+    setSessionData: (_: SessionData) => void;
 }
 
-export default AuthService;
+export const SessionContext = createContext<Partial<SessionContextType>>({});
+
+const url = "https://localhost:5001/api/auth";
+const key = "authToken";
+
+export const getToken = () => {
+    return window.localStorage.getItem(key);
+}
+
+export const setToken = (token: string) => {
+    window.localStorage.setItem(key, token);
+}
+
+export const removeToken = () => {
+    window.localStorage.removeItem(key);
+}
+
+export const register = (data: RegisterData) => {
+    return fetch(url + '/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username: data.name, alias: data.alias, email: data.email, password: data.password})
+    });
+}
+
+export const login = (data: LoginData) => {
+    return fetch(url + `/login?username=${data.name}&password=${data.password}`);
+}
+
+export const logout = () => {
+    removeToken();
+}
+
