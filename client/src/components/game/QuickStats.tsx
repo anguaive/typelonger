@@ -2,7 +2,7 @@ import React from 'react';
 import { formatTime } from '../../utils/utils';
 import { ComputedStats } from '../../utils/types';
 
-const QuickStats = ({ time, wpm, acc }: ComputedStats) => {
+const QuickStats = ({ time, wpm, accuracy }: ComputedStats) => {
     return (
         <section className="stats-container">
             <div className="time">{formatTime(time)}</div>
@@ -11,7 +11,7 @@ const QuickStats = ({ time, wpm, acc }: ComputedStats) => {
                 <span className="unit"> wpm</span>
             </div>
             <div className="acc">
-                {acc.toFixed(2)}
+                {accuracy.toFixed(2)}
                 <span className="unit"> acc</span>
             </div>
         </section>

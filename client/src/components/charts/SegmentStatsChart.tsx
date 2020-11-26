@@ -23,7 +23,7 @@ interface TooltipData {
 // accessors
 // const getTime = (d: ComputedStats) => d.time;
 const getWpm = (d: ComputedStats) => d.wpm;
-const getAcc = (d: ComputedStats) => d.acc;
+const getAcc = (d: ComputedStats) => d.accuracy;
 
 const SegmentStatsChart = ({
     data,
@@ -109,7 +109,7 @@ const SegmentStatsChart = ({
                 {tooltipData.stats?.wpm.toFixed(2)} <span className="tooltip__hint">wpm</span>
             </div>
             <div className="tooltip__value">
-                {tooltipData.stats?.acc.toFixed(2)} <span className="tooltip__hint">acc</span>
+                {tooltipData.stats?.accuracy.toFixed(2)} <span className="tooltip__hint">acc</span>
             </div>
         </>
     ) : null;

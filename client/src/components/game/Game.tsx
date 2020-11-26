@@ -70,7 +70,7 @@ const Game = ({
     const [quickStats, setQuickStats] = useState<ComputedStats>({
         time: 0,
         wpm: 0,
-        acc: 100,
+        accuracy: 100,
     });
 
     // Update timer
@@ -94,7 +94,7 @@ const Game = ({
         setQuickStats({
             time: time,
             wpm: newWpm,
-            acc: newAcc,
+            accuracy: newAcc,
         });
     }, quickStatsInterval);
 
@@ -668,7 +668,7 @@ const Game = ({
                         sum += seq[seq.length - 1] - seq[0];
                     }
                 }
-                statsList.push({ time: sum, wpm: 0, acc: 100 });
+                statsList.push({ time: sum, wpm: 0, accuracy: 100 });
             }
         }
 
@@ -685,7 +685,7 @@ const Game = ({
                 time === 0
                     ? 0
                     : nonBackspaceKps.length / 5 / (time / 60 / 1000);
-            statsList[pg].acc = !kps.length
+            statsList[pg].accuracy = !kps.length
                 ? 100
                 : (correctKps.length / nonBackspaceKps.length) * 100;
         }
@@ -743,7 +743,7 @@ const Game = ({
                 <QuickStats
                     time={quickStats.time}
                     wpm={quickStats.wpm}
-                    acc={quickStats.acc}
+                    accuracy={quickStats.accuracy}
                 />
             </aside>
             <aside id="title" className={paused ? '' : 'pale'}>

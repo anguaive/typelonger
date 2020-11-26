@@ -32,7 +32,7 @@ const PerformanceCard = (perf: Performance) => {
                     <span className="unit">wpm</span>
                 </div>
                 <div>
-                    {perf.acc.toFixed(2)}
+                    {perf.accuracy.toFixed(2)}
                     <span className="unit">acc</span>
                 </div>
             </div>

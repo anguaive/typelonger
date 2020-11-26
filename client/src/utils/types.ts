@@ -4,7 +4,7 @@ export interface Performance {
     when: Date;
     points: number;
     time: number;
-    acc: number;
+    accuracy: number;
     wpm: number;
     rank: 'Normal' | 'Bronze' | 'Silver' | 'Gold';
     aliasName?: string;
@@ -16,7 +16,7 @@ export interface Alias {
     username: string;
     points: number;
     time: number;
-    acc: number;
+    accuracy: number;
     wpm: number;
     topPerformances: Performance[];
     recentPerformances: Performance[];
@@ -76,7 +76,7 @@ export interface ComputedStats {
     // Current time elapsed (ms), words per minute, and accuracy (%)
     time: number;
     wpm: number;
-    acc: number;
+    accuracy: number;
     pg?: number;
 }
 

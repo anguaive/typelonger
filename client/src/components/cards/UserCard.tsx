@@ -23,7 +23,7 @@ const UserCard = ({ alias, placement }: { alias: Alias; placement: number }) => 
                     <div className="unit">wpm</div>
                 </div>
                 <div>
-                    {alias.acc.toFixed(2)}
+                    {alias.accuracy.toFixed(2)}
                     <div className="unit">acc</div>
                 </div>
             </div>

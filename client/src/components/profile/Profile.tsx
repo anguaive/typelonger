@@ -52,7 +52,7 @@ const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }:
             username: profile.name,
             points: 0,
             time: 0,
-            acc: 0,
+            accuracy: 0,
             wpm: 0,
             topPerformances: [],
             recentPerformances: [],
@@ -140,7 +140,7 @@ const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }:
                                         <span className="unit">wpm</span>
                                     </div>
                                     <div className="user-info__stat">
-                                        {profile.aliases[selectedAlias].acc.toFixed(2)}{' '}
+                                        {profile.aliases[selectedAlias].accuracy.toFixed(2)}{' '}
                                         <span className="unit">acc</span>
                                     </div>
                                 </div>
