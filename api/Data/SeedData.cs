@@ -11,9 +11,6 @@ namespace api.Data
 {
     public class SeedData
     {
-        public async void SeedUsers(UserManager<ApplicationUser> userManager)
-        {
-        }
 
         public async void Seed(ModelBuilder builder)
         {
