@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import './Profile.css';
-import { formatHours } from '../utils';
+import { formatHours } from '../../utils/utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PerformanceCard from '../cards/PerformanceCard';
 import Radio from '../radio/Radio';
-import { User, SessionData } from '../types';
-import { getPerfActions } from '../utils';
+import { User, SessionData } from '../../utils/types';
+import { getPerfActions } from '../../utils/utils';
 import Card from '../cards/Card';
 import InputPopup from '../input-popup/InputPopup';
-import AuthService from '../auth/auth';
+import AuthService from '../../utils/auth';
 const authService = new AuthService();
 
 interface ProfileProps {

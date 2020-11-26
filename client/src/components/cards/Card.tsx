@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { Action } from '../utils';
+import { Action } from '../../utils/utils';
 import './Card.css';
 
 const Card = ({

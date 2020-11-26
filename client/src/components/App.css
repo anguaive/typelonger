@@ -2,7 +2,7 @@
     font-family: 'Fixedsys';
     font-weight: normal;
     font-style: normal;
-    src: url(./res/fsex300.woff2) format('woff2');
+    src: url(../resources/fsex300.woff2) format('woff2');
 }
 
 /* Rules for material icons */

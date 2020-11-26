@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import './Auth.css';
-import { RegisterData, LoginData } from '../types';
-import AuthService from './auth';
+import { RegisterData, LoginData } from '../../utils/types';
+import AuthService from '../../utils/auth';
 const authService = new AuthService();
 
 interface UserValidationRules {

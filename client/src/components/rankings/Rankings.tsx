@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
-import './Texts.css';
-import { Text } from '../types';
-import { getTextActions } from '../utils';
-import TextCard from '../cards/TextCard';
+import './Rankings.css';
+import { Alias } from '../../utils/types';
+import { getUserActions } from '../../utils/utils';
+import UserCard from '../cards/UserCard';
 import Card from '../cards/Card';
 import Radio from '../radio/Radio';
 
-const Texts = () => {
-    const sortOptions = ['title', 'author', 'length', 'popularity'];
-    const [items, setItems] = useState<Text[]>();
+const Rankings = () => {
+    const sortOptions = ['rank', 'time', 'wpm', 'acc'];
+    const positionOptions = ['top', 'near me'];
+    const [items, setItems] = useState<Alias[]>();
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState(0);
+    const [position, setPosition] = useState(0);
     const itemsPerPage = 10;
     const location = useLocation();
     const history = useHistory();
 
     useEffect(() => {
-        fetch('http://localhost:3001/texts')
+        fetch('http://localhost:3001/users')
             .then((response) => response.json())
             .then((data) => {
                 setItems(data);
@@ -30,20 +32,21 @@ const Texts = () => {
     }
 
     return (
-        <main id="texts">
-            <section id="texts-list">
+        <main id="rankings">
+            <section id="rankings-list">
                 {items
                     .slice(page * itemsPerPage, Math.min((page + 1) * itemsPerPage, items.length))
                     .map((item, i) => (
-                        <Card key={i} actions={getTextActions(item, location, history)}>
-                            <TextCard text={item} />
+                        <Card key={i} actions={getUserActions(item, location, history)}>
+                            <UserCard alias={item} placement={page * itemsPerPage + i + 1} />
                         </Card>
                     ))}
             </section>
-            <section id="texts-actions" className="list-actions">
+            <section id="rankings-actions" className="list-actions">
+                <Radio values={positionOptions} selected={position} setSelected={setPosition} />
                 <Radio values={sortOptions} selected={sort} setSelected={setSort} />
             </section>
-            <section id="texts-controls" className="list-controls">
+            <section id="rankings-controls" className="list-controls">
                 <div className="list-buttons">
                     <button className="button svg-button" onClick={() => setPage(0)}>
                         <i className="material-icons md-36">first_page</i>
@@ -82,4 +85,4 @@ const Texts = () => {
     );
 };
 
-export default Texts;
+export default Rankings;

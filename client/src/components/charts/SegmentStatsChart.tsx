@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { Keypress, ChartAreaProps, ComputedStats } from '../types';
-import { formatTime, extendArrayWith } from '../utils';
+import { Keypress, ChartAreaProps, ComputedStats } from '../../utils/types';
+import { formatTime, extendArrayWith } from '../../utils/utils';
 import { Group } from '@vx/group';
 import { GridRows } from '@vx/grid';
 import { AxisLeft, AxisBottom } from '@vx/axis';

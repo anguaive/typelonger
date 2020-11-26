@@ -6,9 +6,9 @@ import React, {
     useMemo,
 } from 'react';
 import useInterval from '@use-it/interval';
-import { shallowCompare } from '../utils';
+import { shallowCompare } from '../../utils/utils';
 import { max } from 'd3-array';
-import { Keypress, Position, Paragraph, ComputedStats } from '../types';
+import { Keypress, Position, Paragraph, ComputedStats } from '../../utils/types';
 import './Game.css';
 import SegmentStatsChart from '../charts/SegmentStatsChart';
 import QuickStats from './QuickStats';
@@ -26,6 +26,7 @@ interface GameProps {
     setParagraphs: (_: Paragraph[]) => void;
     position: Position;
     setPosition: (_: Position) => void;
+    sectionId: number;
 }
 
 // How often the timer ticks
@@ -53,6 +54,7 @@ const Game = ({
     setParagraphs,
     position,
     setPosition,
+    sectionId
 }: GameProps) => {
     const textContainer = useRef<HTMLDivElement>(null);
     const scrollGuide = useRef<HTMLDivElement>(null);
@@ -139,10 +141,10 @@ const Game = ({
     // Fetch text
     useEffect(() => {
         if(!paragraphs.length) {
-            fetch('http://localhost:3001/gameText')
+            fetch(`https://localhost:5001/api/section/${sectionId}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    const pgs = data.paragraphsText.map((text: string) => {
+                    const pgs = data.contentParagraphs.map((text: string) => {
                         return {
                             text: text,
                             controlCharIndices: [],
@@ -192,6 +194,7 @@ const Game = ({
                     // Only look at chars behind the current position
                     if(position.char > kp.position.char) {
                         const kpChar = getCharElement(kp.position);
+                        kpChar?.classList.remove('text-correct', 'text-incorrect', 'text-surplus');
                         if (kp.correct) {
                             kpChar?.classList.add('text-correct');
                         } else {

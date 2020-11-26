@@ -1,7 +1,7 @@
 import React from 'react';
 import './PerformanceCard.css';
-import { Performance } from '../types';
-import { formatTime } from '../utils';
+import { Performance } from '../../utils/types';
+import { formatTime } from '../../utils/utils';
 
 const PerformanceCard = (perf: Performance) => {
     const playedBy = perf.aliasName ? (

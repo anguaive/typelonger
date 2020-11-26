@@ -1,6 +1,6 @@
 import React from 'react';
-import { Alias } from '../types';
-import { formatHours } from '../utils';
+import { Alias } from '../../utils/types';
+import { formatHours } from '../../utils/utils';
 import './UserCard.css';
 
 const UserCard = ({ alias, placement }: { alias: Alias; placement: number }) => {

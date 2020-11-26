@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './App.css';
-import './Colourschemes.css';
+import '../Colourschemes.css';
 import Menu from './Menu';
 import Game from './game/Game';
 import Matchmaking from './Matchmaking';
@@ -13,7 +13,7 @@ import Settings, { AppSettings, SETTINGS_STORAGE, defaultSettings } from './sett
 import NoMatch from './NoMatch';
 import TextDetails from './text-details/TextDetails';
 import Texts from './texts/Texts';
-import {Keypress, Paragraph, Position, SessionData} from './types';
+import {Keypress, Paragraph, Position, SessionData} from '../utils/types';
 
 interface AppRoute {
     path: string;
@@ -22,13 +22,14 @@ interface AppRoute {
 
 const App = () => {
     const [sessionData, setSessionData] = useState<SessionData>(
-        {name: '', alias: ''});
+        {name: 'Username', alias: ''});
 
     // State responsible for restoring the game state
     const [gameTime, setGameTime] = useState<number>(0);
     const [gameKeypresses, setGameKeypresses] = useState<Keypress[]>([]);
     const [gameParagraphs, setGameParagraphs] = useState<Paragraph[]>([]);
     const [gamePosition, setGamePosition] = useState<Position>({pg: 0, char: -1, realChar: -1});
+    const [gameSectionId, setGameSectionId] = useState<number>(5);
 
     const [settings, setSettings] = useState<AppSettings>(
         (() => {
@@ -97,6 +98,7 @@ const App = () => {
                     setParagraphs={setGameParagraphs}
                     position={gamePosition}
                     setPosition={setGamePosition}
+                    sectionId={gameSectionId}
                 />
             ),
         },
@@ -125,7 +127,7 @@ const App = () => {
         },
         {
             path: '/text',
-            component: <TextDetails />,
+            component: <TextDetails setSectionId={setGameSectionId}/>,
         },
         {
             path: '/texts',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
-import {SessionData} from "./types";
+import {SessionData} from "../utils/types";
 
 // TODO: :focus on keyboard events only
 

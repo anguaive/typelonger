@@ -1,23 +1,23 @@
-import {RegisterData, LoginData} from '../types';
+import {RegisterData, LoginData} from './types';
 
-class Auth {
+class AuthService {
     static KEY = "authToken";
     static URL = "https://localhost:5001/api/auth";
 
     getToken() {
-        return window.localStorage.getItem(Auth.KEY);
+        return window.localStorage.getItem(AuthService.KEY);
     }
 
     setToken(token: string) {
-        window.localStorage.setItem(Auth.KEY, token);
+        window.localStorage.setItem(AuthService.KEY, token);
     }
 
     removeToken() {
-        window.localStorage.removeItem(Auth.KEY);
+        window.localStorage.removeItem(AuthService.KEY);
     }
 
     register(data: RegisterData) {
-        return fetch(Auth.URL + '/register', {
+        return fetch(AuthService.URL + '/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -27,7 +27,7 @@ class Auth {
     }
 
     login(data: LoginData) {
-        return fetch(Auth.URL + `/login?username=${data.name}&password=${data.password}`);
+        return fetch(AuthService.URL + `/login?username=${data.name}&password=${data.password}`);
     }
 
     logout() {
@@ -36,4 +36,4 @@ class Auth {
 
 }
 
-export default Auth;
+export default AuthService;

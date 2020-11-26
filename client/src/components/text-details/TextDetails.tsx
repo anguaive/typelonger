@@ -3,17 +3,21 @@ import { useLocation, useHistory } from 'react-router-dom';
 import PerformanceCard from '../cards/PerformanceCard';
 import Card from '../cards/Card';
 import './TextDetails.css';
-import { Text } from '../types';
-import { getPerfActions } from '../utils';
+import { Text } from '../../utils/types';
+import { getPerfActions } from '../../utils/utils';
 
-const TextDetails = () => {
+interface TextDetailsProps {
+    setSectionId: (_: number) => void;
+}
+
+const TextDetails = ({ setSectionId }: TextDetailsProps) => {
     const [text, setText] = useState<Text>();
     const [selectedSection, setSelectedSection] = useState(0);
     const location = useLocation();
     const history = useHistory();
 
     useEffect(() => {
-        fetch('http://localhost:3001/texts')
+        fetch('https://localhost:5001/api/texts')
             .then((response) => response.json())
             .then((data) => {
                 setText(data[0]);
@@ -25,7 +29,8 @@ const TextDetails = () => {
         return null;
     }
 
-    const ownTopPerf = text.sections[selectedSection].ownTopPerformance;
+    // const ownTopPerf = text.sections[selectedSection].ownTopPerformance;
+    const ownTopPerf = null;
 
     return (
         <main id="text-details">
@@ -100,7 +105,7 @@ const TextDetails = () => {
                 <div className="performance-container">
                     {text.sections[selectedSection].topPerformances ? (
                         text.sections[selectedSection].topPerformances!.map((perf, i) => (
-                            <Card
+                        <Card
                                 key={i}
                                 cardStyle={perf.rank}
                                 actions={getPerfActions(perf, location, history)}
@@ -118,7 +123,8 @@ const TextDetails = () => {
                 <div className="performance-container">
                     {ownTopPerf ? (
                         <Card
-                            cardStyle={ownTopPerf.rank}
+                            // cardStyle={ownTopPerf.rank}
+                            cardStyle={"gold"}
                             actions={getPerfActions(ownTopPerf, location, history)}
                         >
                             <PerformanceCard {...ownTopPerf} />

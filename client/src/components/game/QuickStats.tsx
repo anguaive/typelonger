@@ -1,6 +1,6 @@
 import React from 'react';
-import { formatTime } from '../utils';
-import { ComputedStats } from '../types';
+import { formatTime } from '../../utils/utils';
+import { ComputedStats } from '../../utils/types';
 
 const QuickStats = ({ time, wpm, acc }: ComputedStats) => {
     return (
