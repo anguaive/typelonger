@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
-import {SessionData} from "../utils/types";
+import {SessionContext} from '../utils/auth';
 
 // TODO: :focus on keyboard events only
 
@@ -14,7 +14,6 @@ interface NavLink {
 
 interface MenuProps {
     paused: boolean;
-    sessionData: SessionData;
     location: any;
 }
 
@@ -26,15 +25,16 @@ const initialLinks: NavLink[] = [
     { path: '/settings', name: 'Settings', icon: 'settings' },
 ];
 
-const Menu = ({ paused, sessionData, location }: MenuProps) => {
+const Menu = ({ paused, location }: MenuProps) => {
     const [links, setLinks] = useState<NavLink[]>(initialLinks);
+    const {sessionData, setSessionData} = useContext(SessionContext);
 
     useEffect(() => {
         // Deep copy of initialLinks
         const initialLinksCopy = initialLinks.slice();
-        if (!!sessionData.name) {
+        if (sessionData && !!sessionData.name) {
             initialLinksCopy.splice(3, 0, {
-                path: '/profile',
+                path: `/profile/${sessionData.name}`,
                 name: 'Profile',
                 icon: 'face',
             });

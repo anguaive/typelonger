@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './App.css';
@@ -14,6 +14,7 @@ import NoMatch from './NoMatch';
 import TextDetails from './text-details/TextDetails';
 import Texts from './texts/Texts';
 import {Keypress, Paragraph, Position, SessionData} from '../utils/types';
+import {SessionContext} from "../utils/auth";
 
 interface AppRoute {
     path: string;
@@ -107,11 +108,9 @@ const App = () => {
             component: <Matchmaking />,
         },
         {
-            path: '/profile',
+            path: '/profile/:username',
             component: (
                 <Profile
-                    sessionData={sessionData}
-                    setSessionData={setSessionData}
                     searchHidden={searchHidden}
                     setSearchHidden={setSearchHidden}
                 />
@@ -141,8 +140,8 @@ const App = () => {
     ];
 
     return (
-        <>
-            <Menu paused={paused} sessionData={sessionData} location={location} />
+        <SessionContext.Provider value={{sessionData: sessionData, setSessionData: (sessionData) => setSessionData(sessionData)}}>
+            <Menu paused={paused} location={location} />
             <TransitionGroup component={null}>
                 <CSSTransition key={location.key} classNames="page" timeout={300}>
                     <Switch location={location}>
@@ -154,7 +153,7 @@ const App = () => {
                     </Switch>
                 </CSSTransition>
             </TransitionGroup>
-        </>
+        </SessionContext.Provider>
     );
 };
 

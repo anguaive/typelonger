@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import React, {useState, useEffect, useContext} from 'react';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
 import './Profile.css';
 import { formatHours } from '../../utils/utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -13,20 +13,20 @@ import { getProfile } from '../../utils/dbservice';
 import { SessionContext, logout } from '../../utils/auth';
 
 interface ProfileProps {
-    sessionData: SessionData;
-    setSessionData: React.Dispatch<React.SetStateAction<SessionData>>;
     searchHidden: boolean;
     setSearchHidden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }: ProfileProps) => {
+const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
     const [profile, setProfile] = useState<User>();
     const [bioEditorHidden, setBioEditorHidden] = useState(true);
     const [newAliasHidden, setNewAliasHidden] = useState(true);
     const [bioValue, setBioValue] = useState('');
     const [selectedAlias, setSelectedAlias] = useState(0);
+    const {sessionData, setSessionData} = useContext(SessionContext);
     const location = useLocation();
     const history = useHistory();
+    const { username } = useParams();
 
     useEffect(() => {
         if(username) {
@@ -202,7 +202,7 @@ const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }:
                     <section id="top-performances">
                         <span className="container-title">Top performances</span>
                         <div className="performance-container">
-                            {profile.aliases[selectedAlias].topPerformances.length ? (
+                            {profile.aliases[selectedAlias].topPerformances && profile.aliases[selectedAlias].topPerformances.length ? (
                                 profile.aliases[selectedAlias].topPerformances.map((perf, i) => (
                                     <Card
                                         key={i}
@@ -226,7 +226,7 @@ const Profile = ({ sessionData, setSessionData, searchHidden, setSearchHidden }:
                     <section id="recent-performances">
                         <span className="container-title">Recent performances</span>
                         <div className="performance-container">
-                            {profile.aliases[selectedAlias].recentPerformances.length ? (
+                            {profile.aliases[selectedAlias].recentPerformances && profile.aliases[selectedAlias].recentPerformances.length ? (
                                 profile.aliases[selectedAlias].recentPerformances.map((perf, i) => (
                                     <Card
                                         key={i}
