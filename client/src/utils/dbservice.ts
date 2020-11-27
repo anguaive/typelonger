@@ -8,7 +8,7 @@ const handleErrors = (response: Response) => {
 }
 
 const request = (to: string, param?: any): Promise<any> => {
-    let requestUrl = `${url}/${to}${param ? param : ''}`;
+    let requestUrl = `${url}/${to}/${param ? param : ''}`;
     return fetch(requestUrl)
         .then(handleErrors)
         .then(response => response.json())
