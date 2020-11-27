@@ -28,6 +28,10 @@ interface GameProps {
     setParagraphs: (_: Paragraph[]) => void;
     position: Position;
     setPosition: (_: Position) => void;
+    textTitle: string;
+    setTextTitle: (_: string) => void;
+    sectionTitle: string;
+    setSectionTitle: (_: string) => void;
 }
 
 // How often the timer ticks
@@ -55,10 +59,12 @@ const Game = ({
     setParagraphs,
     position,
     setPosition,
+    textTitle,
+    setTextTitle,
+    sectionTitle,
+    setSectionTitle
 }: GameProps) => {
     const {sectionId} = useParams();
-    const [textTitle, setTextTitle] = useState<string>('');
-    const [sectionTitle, setSectionTitle] = useState<string>('');
     const textContainer = useRef<HTMLDivElement>(null);
     const scrollGuide = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);

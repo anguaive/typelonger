@@ -26,6 +26,8 @@ const App = () => {
         {name: 'Username', alias: ''});
 
     // State responsible for restoring the game state
+    const [gameTextTitle, setGameTextTitle] = useState<string>('');
+    const [gameSectionTitle, setGameSectionTitle] = useState<string>('');
     const [gameTime, setGameTime] = useState<number>(0);
     const [gameKeypresses, setGameKeypresses] = useState<Keypress[]>([]);
     const [gameParagraphs, setGameParagraphs] = useState<Paragraph[]>([]);
@@ -98,6 +100,10 @@ const App = () => {
                     setParagraphs={setGameParagraphs}
                     position={gamePosition}
                     setPosition={setGamePosition}
+                    textTitle={gameTextTitle}
+                    setTextTitle={setGameTextTitle}
+                    sectionTitle={gameSectionTitle}
+                    setSectionTitle={setGameSectionTitle}
                 />
             ),
         },
