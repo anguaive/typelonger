@@ -87,24 +87,27 @@ const Game = ({
         setTime((time += timerInterval.current || 0));
     }, timerInterval.current);
 
-    // Update quick stats
-    useInterval(() => {
+    const setNewQuickStats = () => {
         const newWpm =
             time === 0
                 ? 0
-                : keypresses.filter((kp) => kp.letter !== 'Backspace').length /
-                  5 /
-                  (time / 60 / 1000);
+                : keypresses.filter((kp) => kp.correct).length /
+                5 /
+                (time / 60 / 1000);
         const newAcc = !keypresses.length
             ? 100
             : (keypresses.filter((kp) => kp.correct).length /
-                  keypresses.filter((kp) => kp.letter !== 'Backspace').length) *
-              100;
+            keypresses.length) * 100;
         setQuickStats({
             time: time,
             wpm: newWpm,
             accuracy: newAcc,
         });
+    }
+
+    // Update quick stats
+    useInterval(() => {
+        setNewQuickStats();
     }, quickStatsInterval);
 
     // Window resize events
@@ -501,12 +504,12 @@ const Game = ({
         if (finalPosition && shallowCompare(position, finalPosition)) {
             setFinished(true);
             setPaused(true);
+            setNewQuickStats();
             // TODO: redirect to results page
         }
     }, [position, finalPosition, setPaused, setFinished]);
 
     const insertCharElement = (pos: Position, newChar: string): Paragraph[] => {
-        // TODO: test if newPg and newPgs are necessary
         const currentPg = paragraphs[pos.pg];
         const newPg = { ...currentPg };
         newPg.text =
@@ -547,9 +550,13 @@ const Game = ({
     const tryInputBackspace = (pos: Position) => {
         const currentElement = getCharElement(pos);
         if (currentElement) {
+            // Backspacing counts as a correct keypress if the last keypress
+            // on the same position was incorrect
+            const samePositionKeypresses = keypresses.filter(kp => shallowCompare(kp.position, pos));
+            const isCorrect = !samePositionKeypresses[samePositionKeypresses.length - 1].correct;
             setKeypresses([
                 ...keypresses,
-                { time: time, position: pos, letter: 'Backspace' },
+                { time: time, position: pos, letter: 'Backspace', correct: isCorrect },
             ]);
             if (currentElement.classList.contains('text-surplus')) {
                 removeCharElement(pos);
@@ -687,19 +694,16 @@ const Game = ({
         for (let pg = 0; pg <= highestReachedPg; pg++) {
             const kps = keypresses.filter((kp) => kp.position.pg === pg);
             const correctKps = kps.filter((kp) => kp.correct);
-            const nonBackspaceKps = kps.filter(
-                (kp) => kp.letter !== 'Backspace'
-            );
             const time = statsList[pg].time;
 
             statsList[pg].pg = pg;
             statsList[pg].wpm =
                 time === 0
                     ? 0
-                    : nonBackspaceKps.length / 5 / (time / 60 / 1000);
+                    : kps.filter(kp => kp.correct).length / 5 / (time / 60 / 1000);
             statsList[pg].accuracy = !kps.length
                 ? 100
-                : (correctKps.length / nonBackspaceKps.length) * 100;
+                : (correctKps.length / kps.length) * 100;
         }
 
         return statsList;

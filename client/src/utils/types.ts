@@ -96,7 +96,7 @@ export interface Keypress {
     position: Position;
     time: number;
     letter: string;
-    correct?: boolean;
+    correct: boolean;
 }
 
 export interface SessionData {
