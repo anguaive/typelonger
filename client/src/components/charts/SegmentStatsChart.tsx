@@ -100,7 +100,7 @@ const SegmentStatsChart = ({
     });
 
     const tooltipStats = tooltipData?.stats ? (
-        <>
+        <div className="tooltip__stats">
             <div className="tooltip__value">
                 {formatTime(tooltipData.stats?.time || 0)}{' '}
                 <span className="tooltip__hint">time</span>
@@ -111,7 +111,7 @@ const SegmentStatsChart = ({
             <div className="tooltip__value">
                 {tooltipData.stats?.accuracy.toFixed(2)} <span className="tooltip__hint">acc</span>
             </div>
-        </>
+        </div>
     ) : null;
 
     return (
@@ -148,7 +148,7 @@ const SegmentStatsChart = ({
                                 onMouseLeave={() => {
                                     tooltipTimeout = window.setTimeout(() => {
                                         hideTooltip();
-                                    }, 300);
+                                    }, 200);
                                 }}
                                 onMouseMove={(event) => {
                                     if (tooltipTimeout) clearTimeout(tooltipTimeout);

@@ -18,19 +18,20 @@
     font-family: Fixedsys;
     background-color: var(--panel-color);
     border: 2px solid var(--panel-border-color);
-    padding: 1rem;
     border-radius: 0.5rem;
 }
 
 .tooltip__title {
-    padding-top: 0.5rem;
-    padding-bottom: 1rem;
+    font-family: sans-serif;
+    padding: 0.5rem 1rem;
     font-size: 1.3rem;
+    background-color: var(--tooltip-title-background-color);
+    color: var(--tooltip-title-foreground-color);
+    border-radius: 0.5rem;
 }
 
-.tooltip > * {
-    color: var(--text-active-color);
-    line-height: 1.5rem;
+.tooltip__stats {
+    margin: 0.5rem 0;
 }
 
 .tooltip__value {

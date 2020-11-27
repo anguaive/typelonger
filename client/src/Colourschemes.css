@@ -6,6 +6,8 @@
     --menu-background-color: #393939;
     --menu-background-hover-color: #323232;
     --menu-foreground-color: #bbb;
+    --tooltip-title-background-color: #393939;
+    --tooltip-title-foreground-color: #bbb;
     --gamearea-background-color: #fff;
     --gametext-correct-color: black;
     --gametext-incorrect-color: red;
@@ -44,6 +46,8 @@
     --menu-background-color: #393939;
     --menu-background-hover-color: #323232;
     --menu-foreground-color: #bbb;
+    --tooltip-title-background-color: #393939;
+    --tooltip-title-foreground-color: #bbb;
     --gamearea-background-color: #3d3d3d;
     --gametext-correct-color: white;
     --gametext-incorrect-color: #ff5959;
