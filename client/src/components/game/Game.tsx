@@ -35,10 +35,10 @@ interface GameProps {
 }
 
 // How often the timer ticks
-const defaultTimerInterval = 100;
+const defaultTimerInterval = 5;
 
 // How often the quick stats visuals are updated
-const quickStatsInterval = 1000;
+const quickStatsInterval = 500;
 
 const initialPosition: Position = {
     pg: 0,
