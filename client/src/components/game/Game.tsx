@@ -9,6 +9,7 @@ import useInterval from '@use-it/interval';
 import { shallowCompare } from '../../utils/utils';
 import { max } from 'd3-array';
 import { Keypress, Position, Paragraph, ComputedStats } from '../../utils/types';
+import { getSection } from '../../utils/dbservice';
 import './Game.css';
 import SegmentStatsChart from '../charts/SegmentStatsChart';
 import QuickStats from './QuickStats';
@@ -56,6 +57,8 @@ const Game = ({
     setPosition,
 }: GameProps) => {
     const {sectionId} = useParams();
+    const [textTitle, setTextTitle] = useState<string>('');
+    const [sectionTitle, setSectionTitle] = useState<string>('');
     const textContainer = useRef<HTMLDivElement>(null);
     const scrollGuide = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
@@ -141,19 +144,22 @@ const Game = ({
     // Fetch text
     useEffect(() => {
         if(!paragraphs.length) {
-            fetch(`https://localhost:5001/api/section/${sectionId}`)
-                .then((response) => response.json())
+            getSection(sectionId)
                 .then((data) => {
-                    const pgs = data.contentParagraphs.map((text: string) => {
-                        return {
-                            text: text,
-                            controlCharIndices: [],
-                            ignoredCharIndices: [],
-                            displayedIgnoredCharIndices: [],
-                            surplusCharIndices: [],
-                        };
-                    });
-                    processParagraphs(pgs);
+                    if(data) {
+                        setTextTitle(data.textTitle);
+                        setSectionTitle(data.title);
+                        const pgs = data.contentParagraphs.map((text: string) => {
+                            return {
+                                text: text,
+                                controlCharIndices: [],
+                                ignoredCharIndices: [],
+                                displayedIgnoredCharIndices: [],
+                                surplusCharIndices: [],
+                            };
+                        });
+                        processParagraphs(pgs);
+                    }
                 });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -737,6 +743,10 @@ const Game = ({
         );
     }, [paragraphs]);
 
+    if(!textTitle || !sectionTitle) {
+        return <div>Section not found!</div>
+    }
+
     return (
         <main id="game">
             <aside id="quick-stats" className={paused ? '' : 'pale'}>
@@ -747,8 +757,8 @@ const Game = ({
                 />
             </aside>
             <aside id="title" className={paused ? '' : 'pale'}>
-                <div className="text-title">The Witcher - Blood of Elves</div>
-                <div className="section-title">Chapter one</div>
+                <div className="text-title">{textTitle}</div>
+                <div className="section-title">{sectionTitle}</div>
             </aside>
             <section
                 id="text-area"

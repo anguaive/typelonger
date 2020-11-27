@@ -15,7 +15,7 @@ export const getUserActions = (alias: Alias, location: any, history: any) => [
 export const getTextActions = (text: TextListView, location: any, history: any) => [
     {
         text: 'View details',
-        handler: () => history.push('text/TEXT_ID'),
+        handler: () => history.push(`text/${text.id}`),
     },
 ];
 
