@@ -1,4 +1,4 @@
-import { Alias, Text, Performance } from './types';
+import {Alias, Text, Performance, TextListView} from './types';
 
 export interface Action {
     text: string;
@@ -12,7 +12,7 @@ export const getUserActions = (alias: Alias, location: any, history: any) => [
     },
 ];
 
-export const getTextActions = (text: Text, location: any, history: any) => [
+export const getTextActions = (text: TextListView, location: any, history: any) => [
     {
         text: 'View details',
         handler: () => history.push('text/TEXT_ID'),

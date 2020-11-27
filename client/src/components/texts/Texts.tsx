@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import './Texts.css';
-import { Text } from '../../utils/types';
+import { TextListView } from '../../utils/types';
 import { getTextActions } from '../../utils/utils';
 import TextCard from '../cards/TextCard';
 import Card from '../cards/Card';
 import Radio from '../radio/Radio';
+import {getTexts} from '../../utils/dbservice';
 
 const Texts = () => {
     const sortOptions = ['title', 'author', 'length', 'popularity'];
-    const [items, setItems] = useState<Text[]>();
+    const [items, setItems] = useState<TextListView[]>();
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState(0);
     const itemsPerPage = 10;
@@ -17,11 +18,8 @@ const Texts = () => {
     const history = useHistory();
 
     useEffect(() => {
-        fetch('http://localhost:3001/texts')
-            .then((response) => response.json())
-            .then((data) => {
-                setItems(data);
-            });
+        getTexts()
+            .then(data => setItems(data));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

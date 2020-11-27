@@ -1,32 +1,28 @@
 import React from 'react';
 import './TextCard.css';
-import { Text } from '../../utils/types';
+import {TextListView} from '../../utils/types';
 
-const TextCard = ({ text }: { text: Text }) => {
+const TextCard = ({ text }: { text: TextListView }) => {
     return (
         <>
             <div className="text-card__title">{text.title}</div>
             <div className="text-card__author">by {text.author}</div>
             <div className="text-card__stats-container">
                 <div className="text-card__genres">
-                    {text.genre.split('|').map((genre, i) => (
+                    {text.genres.map((genre, i) => (
                         <div key={i}>{genre}</div>
                     ))}
                 </div>
                 <div>
-                    {text.popularity}
+                    {text.popularity || 0}
                     <span className="unit">popularity</span>
                 </div>
                 <div>
-                    {text.sections ? text.sections.length : 1}
+                    {text.sectionCount || 0}
                     <span className="unit">sections</span>
                 </div>
                 <div>
-                    {text.sections
-                        ? text.sections
-                              .map((section) => section.length)
-                              .reduce((acc, current) => acc + current)
-                        : 123}
+                    {Math.round(text.length / 5) || 0}
                     <span className="unit">words</span>
                 </div>
             </div>

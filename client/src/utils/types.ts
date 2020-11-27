@@ -40,15 +40,27 @@ export interface Section {
 }
 
 export interface Text {
+    id: number;
     title: string;
     coverPicture?: string;
     author: string;
     dateOfUpload: Date;
     dateOfCreation: Date;
     isbn: string;
-    genre: string;
+    genres: string[];
     popularity: number;
+    length: number;
     sections: Section[];
+}
+
+export interface TextListView {
+    id: number;
+    title: string;
+    author: string;
+    genres: string[];
+    popularity: string;
+    sectionCount: number;
+    length: number;
 }
 
 export interface Position {

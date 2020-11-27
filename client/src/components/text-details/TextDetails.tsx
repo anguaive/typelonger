@@ -36,7 +36,7 @@ const TextDetails = () => {
                     <div className="text-info__title">{text.title}</div>
                     <img src={text.coverPicture} className="text-info__cover-picture" alt="Text" />
                     <div className="text-info__author">by {text.author}</div>
-                    <div className="text-info__genre">{text.genre}</div>
+                    {/*<div className="text-info__genre">{text.genre}</div>*/}
                     <div className="text-info__isbn">ISBN {text.isbn}</div>
                     <div className="text-info__stats">
                         <div className="text-info__popularity">
