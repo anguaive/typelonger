@@ -189,7 +189,7 @@ const Game = ({
         if (paragraphs.length) {
             if (shallowCompare(initialPosition, position)) {
                 const newPos = offsetPositionWithinParagraph(
-                    initialPosition,
+                    {...initialPosition},
                     paragraphs[0],
                     1
                 );
