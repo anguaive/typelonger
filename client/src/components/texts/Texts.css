@@ -16,9 +16,8 @@
 }
 
 #texts-list > .card {
-    flex-grow: 1;
     width: calc(100% - 2rem);
-    height: calc((var(--page-height) - 11rem) / 10);
+    height: calc((100vh - 11rem) / 10);
     margin-left: 1rem;
     margin-bottom: 1rem;
 }

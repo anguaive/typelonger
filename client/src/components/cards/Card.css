@@ -46,16 +46,15 @@
 .card {
     transition: transform var(--medium-transition) ease;
     border-radius: 0.5rem;
-    flex-basis: content;
     cursor: pointer;
     position: relative;
     box-sizing: border-box;
     color: var(--text-color);
     background: linear-gradient(
-        45deg,
-        var(--color1),
-        var(--color2),
-        var(--color3)
+            45deg,
+            var(--color1),
+            var(--color2),
+            var(--color3)
     );
 }
 
@@ -67,10 +66,10 @@
     /* background-size has to come after background
      * otherwise the animation does not work! */
     background: linear-gradient(
-        30deg,
-        rgba(0, 0, 0, 0),
-        var(--shine-color),
-        rgba(0, 0, 0, 0)
+            30deg,
+            rgba(0, 0, 0, 0),
+            var(--shine-color),
+            rgba(0, 0, 0, 0)
     );
     border-radius: 0.5rem;
     box-sizing: border-box;
