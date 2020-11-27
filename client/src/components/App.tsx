@@ -72,7 +72,7 @@ const App = () => {
 
     useEffect(() => {
         document.body.className = settings.colourscheme;
-    }, []);
+    }, [settings]);
 
     useEffect(() => {
         document.addEventListener('keyup', keyboardHandler, false);
