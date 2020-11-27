@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.ViewModels;
 
 namespace api.Controllers
 {
@@ -23,9 +24,25 @@ namespace api.Controllers
 
         // GET: api/Performance
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Performance>>> GetPerformances()
+        public ActionResult<IEnumerable<PerformanceDetailsView>> GetPerformances()
         {
-            return await _context.Performances.ToListAsync();
+            List<PerformanceDetailsView> performances = new List<PerformanceDetailsView>();
+
+            var query = from p in _context.Performances
+                    .AsNoTracking()
+                    .Include(p => p.RawStats)
+                    .Include(p => p.Alias)
+                    .ThenInclude(a => a.User)
+                    .Include(p => p.Section)
+                    .ThenInclude(s => s.Text)
+                select p;
+
+            foreach (var performance in query)
+            {
+                performances.Add(performance.ToDetailsViewModel());
+            }
+
+            return Ok(performances);
         }
 
         // GET: api/Performance/5
@@ -42,38 +59,6 @@ namespace api.Controllers
             return performance;
         }
 
-        // PUT: api/Performance/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPerformance(long id, Performance performance)
-        {
-            if (id != performance.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(performance).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PerformanceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Performance
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -83,28 +68,47 @@ namespace api.Controllers
             _context.Performances.Add(performance);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPerformance", new { id = performance.Id }, performance);
-        }
-
-        // DELETE: api/Performance/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Performance>> DeletePerformance(long id)
-        {
-            var performance = await _context.Performances.FindAsync(id);
-            if (performance == null)
-            {
-                return NotFound();
-            }
-
-            _context.Performances.Remove(performance);
-            await _context.SaveChangesAsync();
-
-            return performance;
+            return CreatedAtAction("GetPerformance", new {id = performance.Id}, performance);
         }
 
         private bool PerformanceExists(long id)
         {
             return _context.Performances.Any(e => e.Id == id);
+        }
+    }
+
+    internal static class PerformanceControllerExtensions
+    {
+        public static PerformanceDetailsView ToDetailsViewModel(this Performance performance)
+        {
+            if (performance == null)
+            {
+                return null;
+            }
+
+            var time = performance.RawStats.Sum(stats => stats.Time);
+            var correctKeypressCount = performance.RawStats.Sum(stats => stats.CorrectKeypressCount);
+            var keypressCount =
+                performance.RawStats.Sum(stats => stats.CorrectKeypressCount + stats.IncorrectKeypressCount);
+            var wpm = (double)correctKeypressCount / 5 / ((double)time / 1000 / 60);
+            var accuracy = (correctKeypressCount / (double)keypressCount) * 100;
+
+            var detailsView = new PerformanceDetailsView
+            {
+                Username = performance.Alias.User.UserName,
+                AliasName = performance.Alias.Name,
+                TextTitle = performance.Section.Text.Title,
+                SectionTitle = performance.Section.Title,
+                Date = performance.DateOfCompletion,
+                Points = performance.Points,
+                Time = time,
+                Wpm = wpm,
+                Accuracy = accuracy,
+                // TODO: Compute rank
+                Rank = PerformanceRank.Normal
+            };
+
+            return detailsView;
         }
     }
 }

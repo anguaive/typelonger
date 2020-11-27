@@ -24,9 +24,21 @@ namespace api.Controllers
 
         // GET: api/Alias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AliasListView>>> GetAliases()
+        public ActionResult<IEnumerable<AliasListView>> GetAliases()
         {
-            return NotFound();
+            List<AliasListView> aliases = new List<AliasListView>();
+
+            var query = from a in _context.Aliases
+                .AsNoTracking()
+                .Include(a => a.User)
+                select a;
+
+            foreach (var alias in query)
+            {
+                aliases.Add(alias.ToListViewModel());
+            }
+
+            return Ok(aliases);
         }
 
         // GET: api/Alias/5
@@ -114,6 +126,26 @@ namespace api.Controllers
             };
 
             return profileView;
+        }
+
+        public static AliasListView ToListViewModel(this Alias alias)
+        {
+            if (alias == null)
+            {
+                return null;
+            }
+
+            var listView = new AliasListView
+            {
+                Name = alias.Name,
+                Username = alias.User.UserName,
+                Points = alias.Points,
+                Time = alias.Time,
+                Wpm = alias.Wpm,
+                Accuracy = alias.Accuracy
+            };
+
+            return listView;
         }
     }
 }
