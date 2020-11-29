@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using api.Data;
 using api.Models;
+using api.Repositories;
 using api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +39,7 @@ namespace api
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<SeedData>();
+            services.AddTransient<ITextRepository, TextRepository>();
 
             services.AddCors(options =>
             {

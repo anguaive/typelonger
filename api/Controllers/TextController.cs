@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.Repositories;
 using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
@@ -16,11 +17,11 @@ namespace api.Controllers
     [ApiController]
     public class TextController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITextRepository _repository;
 
-        public TextController(ApplicationDbContext context)
+        public TextController(ITextRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/Text
@@ -29,17 +30,7 @@ namespace api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<TextListView>> GetTexts()
         {
-            List<TextListView> texts = new List<TextListView>();
-
-            var query = from t in _context.Texts
-                    .AsNoTracking()
-                    .Include(t => t.Sections)
-                select t;
-
-            foreach(var text in query)
-            {
-                texts.Add(text.ToListView());
-            }
+            var texts = _repository.Get();
 
             return Ok(texts);
         }
@@ -48,26 +39,14 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Text>> GetText(long id)
         {
-            var query = from t in _context.Texts
-                    .AsNoTracking()
-                    .Include(t => t.Sections)
-                    .ThenInclude(s => s.Performances)
-                    .Where(t => t.Id == id)
-                select t;
-
-            var text = await query.SingleOrDefaultAsync();
+            var text = await _repository.GetById(id);
 
             if (text == null)
             {
                 return NotFound();
             }
 
-            return text;
-        }
-
-        private bool TextExists(long id)
-        {
-            return _context.Texts.Any(e => e.Id == id);
+            return Ok(text);
         }
     }
 
