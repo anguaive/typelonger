@@ -39,7 +39,7 @@ namespace api.Controllers
 
             foreach (var appUser in query)
             {
-                users.Add(appUser.ToViewModel());
+                users.Add(appUser.ToView());
             }
 
             return Ok(users);
@@ -65,7 +65,7 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            return applicationUser.ToViewModel();
+            return applicationUser.ToView();
         }
 
         // PUT: api/User/5
@@ -108,23 +108,23 @@ namespace api.Controllers
 
     internal static class UserControllerExtensions
     {
-        public static ViewModels.User ToViewModel(this ApplicationUser applicationUser)
+        public static ViewModels.User ToView(this ApplicationUser applicationUser)
         {
             if (applicationUser == null)
             {
                 return null;
             }
 
-            var viewModel = new ViewModels.User
+            var view = new ViewModels.User
             {
                 Name = applicationUser.UserName,
                 Biography = applicationUser.Biography,
                 PictureURL = applicationUser.PictureURL,
                 DateOfRegistration = applicationUser.DateOfRegistration,
-                Aliases = applicationUser.Aliases.Select(alias => alias.ToProfileViewModel()).ToList()
+                Aliases = applicationUser.Aliases.Select(alias => alias.ToDetailsView()).ToList()
             };
 
-            return viewModel;
+            return view;
         }
     }
 }

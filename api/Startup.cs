@@ -40,6 +40,7 @@ namespace api
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<SeedData>();
             services.AddTransient<ITextRepository, TextRepository>();
+            services.AddTransient<ISectionRepository, SectionRepository>();
 
             services.AddCors(options =>
             {

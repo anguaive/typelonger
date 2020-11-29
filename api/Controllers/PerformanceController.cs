@@ -39,7 +39,7 @@ namespace api.Controllers
 
             foreach (var performance in query)
             {
-                performances.Add(performance.ToDetailsViewModel());
+                performances.Add(performance.ToDetailsView());
             }
 
             return Ok(performances);
@@ -79,7 +79,7 @@ namespace api.Controllers
 
     internal static class PerformanceControllerExtensions
     {
-        public static PerformanceDetailsView ToDetailsViewModel(this Performance performance)
+        public static PerformanceDetailsView ToDetailsView(this Performance performance)
         {
             if (performance == null)
             {

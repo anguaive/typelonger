@@ -108,14 +108,14 @@ namespace api.Controllers
 
     internal static class AliasControllerExtensions
     {
-        public static AliasDetailsView ToProfileViewModel(this Alias alias)
+        public static AliasDetailsView ToDetailsView(this Alias alias)
         {
             if (alias == null)
             {
                 return null;
             }
 
-            var profileView = new AliasDetailsView
+            var detailsView =  new AliasDetailsView
             {
                 Name = alias.Name,
                 DateOfCreation = alias.DateOfCreation,
@@ -125,7 +125,7 @@ namespace api.Controllers
                 Accuracy = alias.Accuracy
             };
 
-            return profileView;
+            return detailsView;
         }
 
         public static AliasListView ToListViewModel(this Alias alias)

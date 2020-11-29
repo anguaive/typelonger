@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.Repositories;
 using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
@@ -16,45 +17,36 @@ namespace api.Controllers
     [ApiController]
     public class SectionController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ISectionRepository _repository;
 
-        public SectionController(ApplicationDbContext context)
+        public SectionController(ISectionRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/Section
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Section>>> GetSections()
+        public  ActionResult<IEnumerable<SectionListView>> GetSections()
         {
-            return await _context.Sections.ToListAsync();
+            var sections = _repository.Get();
+
+            return Ok(sections);
         }
 
         // GET: api/Section/5
         [HttpGet("{id}")]
         public async Task<ActionResult<SectionDetailsView>> GetSection(long id)
         {
-            var query = from s in _context.Sections
-                    .AsNoTracking()
-                    .Include(s => s.Text)
-                    .Where(s => s.Id == id)
-                select s;
-
-            var section = await query.SingleOrDefaultAsync();
+            var section = await _repository.GetById(id);
 
             if (section == null)
             {
                 return NotFound();
             }
 
-            return Ok(section.ToDetailsView());
-        }
-
-        private bool SectionExists(long id)
-        {
-            return _context.Sections.Any(e => e.Id == id);
+            return Ok(section);
         }
     }
 
@@ -81,6 +73,26 @@ namespace api.Controllers
             };
 
             return detailsView;
+        }
+
+        public static SectionListView ToListView(this Section section)
+        {
+            if (section == null)
+            {
+                return null;
+            }
+
+            var listView = new SectionListView
+            {
+                Id = section.Id,
+                Title = section.Title,
+                Difficulty = section.Difficulty,
+                Length = section.Length,
+                TopPerformances = null,
+                UserTopPerformance = null
+            };
+
+            return listView;
         }
     }
 }
