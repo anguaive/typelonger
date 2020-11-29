@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.Repositories;
 using api.ViewModels;
 
 namespace api.Controllers
@@ -15,71 +16,26 @@ namespace api.Controllers
     [ApiController]
     public class PerformanceController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPerformanceRepository _repository;
 
-        public PerformanceController(ApplicationDbContext context)
+        public PerformanceController(IPerformanceRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/Performance
         [HttpGet]
-        public ActionResult<IEnumerable<PerformanceDetailsView>> GetPerformances()
+        public ActionResult<IEnumerable<PerformanceListView>> GetPerformances()
         {
-            List<PerformanceDetailsView> performances = new List<PerformanceDetailsView>();
-
-            var query = from p in _context.Performances
-                    .AsNoTracking()
-                    .Include(p => p.RawStats)
-                    .Include(p => p.Alias)
-                    .ThenInclude(a => a.User)
-                    .Include(p => p.Section)
-                    .ThenInclude(s => s.Text)
-                select p;
-
-            foreach (var performance in query)
-            {
-                performances.Add(performance.ToDetailsView());
-            }
+            var performances = _repository.Get();
 
             return Ok(performances);
-        }
-
-        // GET: api/Performance/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Performance>> GetPerformance(long id)
-        {
-            var performance = await _context.Performances.FindAsync(id);
-
-            if (performance == null)
-            {
-                return NotFound();
-            }
-
-            return performance;
-        }
-
-        // POST: api/Performance
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Performance>> PostPerformance(Performance performance)
-        {
-            _context.Performances.Add(performance);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPerformance", new {id = performance.Id}, performance);
-        }
-
-        private bool PerformanceExists(long id)
-        {
-            return _context.Performances.Any(e => e.Id == id);
         }
     }
 
     internal static class PerformanceControllerExtensions
     {
-        public static PerformanceDetailsView ToDetailsView(this Performance performance)
+        public static PerformanceListView ToListView(this Performance performance)
         {
             if (performance == null)
             {
@@ -93,7 +49,7 @@ namespace api.Controllers
             var wpm = (double)correctKeypressCount / 5 / ((double)time / 1000 / 60);
             var accuracy = (correctKeypressCount / (double)keypressCount) * 100;
 
-            var detailsView = new PerformanceDetailsView
+            var listView = new PerformanceListView
             {
                 Username = performance.Alias.User.UserName,
                 AliasName = performance.Alias.Name,
@@ -108,7 +64,7 @@ namespace api.Controllers
                 Rank = PerformanceRank.Normal
             };
 
-            return detailsView;
+            return listView;
         }
     }
 }

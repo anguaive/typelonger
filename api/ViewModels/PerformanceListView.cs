@@ -10,7 +10,7 @@ namespace api.ViewModels
         Normal
     }
 
-    public class PerformanceDetailsView
+    public class PerformanceListView
     {
         public string Username { get; set; }
         public string AliasName { get; set; }

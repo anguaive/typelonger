@@ -39,8 +39,10 @@ namespace api
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<SeedData>();
+
             services.AddTransient<ITextRepository, TextRepository>();
             services.AddTransient<ISectionRepository, SectionRepository>();
+            services.AddTransient<IPerformanceRepository, PerformanceRepository>();
 
             services.AddCors(options =>
             {
