@@ -43,6 +43,7 @@ namespace api
             services.AddTransient<ITextRepository, TextRepository>();
             services.AddTransient<ISectionRepository, SectionRepository>();
             services.AddTransient<IPerformanceRepository, PerformanceRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddCors(options =>
             {
