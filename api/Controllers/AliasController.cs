@@ -7,7 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.Repositories;
 using api.ViewModels;
+using IdentityServer4.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.Controllers
 {
@@ -15,96 +20,49 @@ namespace api.Controllers
     [ApiController]
     public class AliasController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IAliasRepository _repository;
 
-        public AliasController(ApplicationDbContext context)
+        public AliasController(IAliasRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        // GET: api/Alias
         [HttpGet]
         public ActionResult<IEnumerable<AliasListView>> GetAliases()
         {
-            List<AliasListView> aliases = new List<AliasListView>();
-
-            var query = from a in _context.Aliases
-                .AsNoTracking()
-                .Include(a => a.User)
-                select a;
-
-            foreach (var alias in query)
-            {
-                aliases.Add(alias.ToListViewModel());
-            }
+            var aliases = _repository.Get();
 
             return Ok(aliases);
         }
 
-        // GET: api/Alias/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Alias>> GetAlias(long id)
+        public async Task<ActionResult<Alias>> GetById(long id)
         {
-            var @alias = await _context.Aliases.FindAsync(id);
+            var alias = _repository.GetById(id);
 
-            if (@alias == null)
+            if (alias == null)
             {
                 return NotFound();
             }
 
-            return @alias;
+            return Ok(alias);
         }
 
-        // PUT: api/Alias/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAlias(long id, Alias @alias)
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] Alias alias)
         {
-            if (id != @alias.Id)
+            var username = User.Identity.Name;
+
+            var dbAlias = await _repository.Post(username, alias);
+            if (dbAlias == null)
             {
                 return BadRequest();
             }
 
-            _context.Entry(@alias).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AliasExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return CreatedAtAction(nameof(GetById), new {id = dbAlias.Id}, dbAlias);
         }
-
-        // POST: api/Alias
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Alias>> PostAlias(Alias @alias)
-        {
-            _context.Aliases.Add(@alias);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAlias", new {id = @alias.Id}, @alias);
-        }
-
-
-        private bool AliasExists(long id)
-        {
-            return _context.Aliases.Any(e => e.Id == id);
-        }
-    }
+}
 
     internal static class AliasControllerExtensions
     {
@@ -117,6 +75,7 @@ namespace api.Controllers
 
             var detailsView =  new AliasDetailsView
             {
+                Id = alias.Id,
                 Name = alias.Name,
                 DateOfCreation = alias.DateOfCreation,
                 Points = alias.Points,

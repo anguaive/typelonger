@@ -4,6 +4,7 @@ namespace api.ViewModels
 {
     public class AliasDetailsView
     {
+        public long Id { get; set; }
         public string Name { get; set; }
         public DateTime DateOfCreation { get; set; }
 
