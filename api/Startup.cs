@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ namespace api
             services.AddTransient<ISectionRepository, SectionRepository>();
             services.AddTransient<IPerformanceRepository, PerformanceRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IAliasRepository, AliasRepository>();
 
             services.AddCors(options =>
             {
@@ -57,12 +59,12 @@ namespace api
 
             services.AddAuthentication(options =>
                 {
-                    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(options =>
                 {
-                    options.RequireHttpsMetadata = true;
+                    options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
 
                     options.TokenValidationParameters = new TokenValidationParameters()
@@ -76,7 +78,7 @@ namespace api
                     };
                 });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            services.AddIdentityCore<ApplicationUser>(options =>
                 {
                     options.Password.RequiredLength = 8;
                     options.Password.RequireLowercase = false;
@@ -109,10 +111,10 @@ namespace api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseRouting();
             app.UseCors();
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

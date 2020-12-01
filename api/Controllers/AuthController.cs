@@ -63,10 +63,12 @@ namespace api.Controllers
             var token = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Issuer,
+                expires: DateTime.UtcNow.AddHours(1),
                 claims: new Claim[]
                 {
+                    new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 },
                 signingCredentials: signingCredentials
             );
