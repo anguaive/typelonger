@@ -64,7 +64,7 @@ namespace api.Repositories
                     .Where(appUser => appUser.NormalizedUserName == name.ToUpper())
                 select appUser;
 
-            var dbUser = await query.FirstOrDefaultAsync();
+            var dbUser = await query.SingleOrDefaultAsync();
             if (dbUser == null)
             {
                 return false;
