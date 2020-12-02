@@ -77,7 +77,8 @@ namespace api.Controllers
                 Biography = applicationUser.Biography,
                 PictureURL = applicationUser.PictureURL,
                 DateOfRegistration = applicationUser.DateOfRegistration,
-                Aliases = applicationUser.Aliases.Select(alias => alias.ToDetailsView()).ToList()
+                Aliases = applicationUser.Aliases.Select(alias => alias.ToDetailsView()).ToList(),
+                SelectedAliasId = applicationUser.SelectedAliasId
             };
 
             return view;

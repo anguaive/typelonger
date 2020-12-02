@@ -35,7 +35,8 @@ namespace api.Data
                     NormalizedUserName = "COSMO_KRAMER",
                     Email = "kramer@example.com",
                     NormalizedEmail = "KRAMER@EXAMPLE.COM",
-                    PasswordHash = hasher.HashPassword(null, "password")
+                    PasswordHash = hasher.HashPassword(null, "password"),
+                    SelectedAliasId = 1,
                 },
                 new ApplicationUser
                 {
@@ -45,6 +46,7 @@ namespace api.Data
                     Email = "bob.sacamano@example.com",
                     NormalizedEmail = "BOB.SACAMANO@EXAMPLE.COM",
                     PasswordHash = hasher.HashPassword(null, "password"),
+                    SelectedAliasId = 3
                 }
             );
 

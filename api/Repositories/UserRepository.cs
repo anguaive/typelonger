@@ -72,6 +72,7 @@ namespace api.Repositories
 
             dbUser.Biography = user.Biography;
             dbUser.PictureURL = user.PictureURL;
+            dbUser.SelectedAliasId = user.SelectedAliasId;
 
             await _context.SaveChangesAsync();
             return true;

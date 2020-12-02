@@ -11,5 +11,6 @@ namespace api.ViewModels
         public string PictureURL { get; set; }
         public DateTime DateOfRegistration { get; set; }
         public List<AliasDetailsView> Aliases { get; set; }
+        public long SelectedAliasId { get; set; }
     }
 }

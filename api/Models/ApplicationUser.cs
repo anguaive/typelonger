@@ -15,6 +15,9 @@ namespace api.Models
         public string Biography { get; set; }
         public DateTime DateOfRegistration { get; set; }
 
+        // Foreign keys
+        public long SelectedAliasId { get; set; }
+
         // Navigation properties
         public virtual List<Alias> Aliases { get; set; }
     }
