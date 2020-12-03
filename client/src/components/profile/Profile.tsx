@@ -124,7 +124,7 @@ const Profile = ({searchHidden, setSearchHidden}: ProfileProps) => {
             <section id="user-info">
                 <span className="container-title">User information</span>
                 <div id="user-info-grid" className="container">
-                    <img src={profile.picture} className="user-info__picture" alt="User"/>
+                    <img src={profile.picture || "https://via.placeholder.com/176x176"} className="user-info__picture" alt="User"/>
                     <div className="user-info__username">{profile.name}</div>
                     <div className="user-info__aliases">
                         <Radio
