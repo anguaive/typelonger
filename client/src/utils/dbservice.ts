@@ -45,3 +45,16 @@ export const postAlias = (aliasName: string) => {
     })
         .then(response => response.json());
 }
+
+export const patchUser = (username: string, user: {biography?: string, pictureUrl?: string, selectedAliasId?: number}) => {
+    let requestUrl = `${url}/user/${username}`;
+    return fetch(requestUrl, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify(user)
+    });
+}
+

@@ -4,7 +4,7 @@ import './Radio.css';
 interface RadioProps {
     values: string[];
     selected: number;
-    setSelected: React.Dispatch<React.SetStateAction<number>>;
+    setSelected: (_: number) => void;
 }
 
 const Radio = ({ values, selected, setSelected }: RadioProps) => {

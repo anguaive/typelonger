@@ -9,7 +9,7 @@ import { User, SessionData } from '../../utils/types';
 import { getPerfActions } from '../../utils/utils';
 import Card from '../cards/Card';
 import InputPopup from '../input-popup/InputPopup';
-import { getProfile, postAlias } from '../../utils/dbservice';
+import { getProfile, postAlias, patchUser } from '../../utils/dbservice';
 import { SessionContext, logout } from '../../utils/auth';
 
 interface ProfileProps {
@@ -22,7 +22,6 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
     const [bioEditorHidden, setBioEditorHidden] = useState(true);
     const [newAliasHidden, setNewAliasHidden] = useState(true);
     const [bioValue, setBioValue] = useState('');
-    const [selectedAlias, setSelectedAlias] = useState(0);
     const {sessionData, setSessionData} = useContext(SessionContext);
     const location = useLocation();
     const history = useHistory();
@@ -54,6 +53,20 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
         )
     }
 
+    let selectedAliasId = sessionData ? sessionData.aliasId : profile.aliases[0].id;
+    let selectedAlias = profile.aliases.find(alias => alias.id === selectedAliasId) || profile.aliases[0];
+    let isOwnProfile = sessionData && sessionData.name === profile.name;
+
+    const handleSelectAlias = (aliasId: number) => {
+        if(sessionData && setSessionData) {
+            setSessionData({...sessionData, aliasId: profile.aliases[aliasId].id});
+        }
+        if(isOwnProfile) {
+            patchUser(profile.name, {selectedAliasId: profile.aliases[aliasId].id})
+                .catch(error => console.log(error));
+        }
+    }
+
     const createNewAlias = (newName: string) => {
         postAlias(newName)
             .then(newAlias => {
@@ -64,7 +77,6 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
     };
 
     const submitSearch = (value: string) => {
-        console.log(value);
     };
 
     const resetBioEditor = () => {
@@ -118,33 +130,33 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                     <div className="user-info__aliases">
                         <Radio
                             values={profile.aliases.map((alias) => alias.name)}
-                            selected={selectedAlias}
-                            setSelected={setSelectedAlias}
+                            selected={profile.aliases.indexOf(selectedAlias)}
+                            setSelected={handleSelectAlias}
                         />
                     </div>
                     <TransitionGroup component={null}>
-                        <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
+                        <CSSTransition key={selectedAliasId} timeout={300} classNames="new-alias">
                             <>
-                                <div className="user-info__stats">
+                                  <div className="user-info__stats">
                                     <div className="user-info__stat">
                                         {profile.since.toDateString()}{' '}
                                         <span className="unit">since</span>
                                     </div>
                                     <div className="user-info__stat">
-                                        {formatHours(profile.aliases[selectedAlias].time || 0)}{' '}
+                                        {formatHours(selectedAlias.time || 0)}{' '}
                                         <span className="unit">hours</span>
                                     </div>
                                     <div className="user-info__stat">
-                                        {profile.aliases[selectedAlias].points}{' '}
+                                        {selectedAlias.points}{' '}
                                         <span className="unit">points</span>{' '}
-                                        <span className="user-info__rank">{profile.aliases[selectedAlias].rank}</span>
+                                        <span className="user-info__rank">{selectedAlias.rank}</span>
                                     </div>
                                     <div className="user-info__stat">
-                                        {profile.aliases[selectedAlias].wpm.toFixed(2)}{' '}
+                                        {selectedAlias.wpm.toFixed(2)}{' '}
                                         <span className="unit">wpm</span>
                                     </div>
                                     <div className="user-info__stat">
-                                        {profile.aliases[selectedAlias].accuracy.toFixed(2)}{' '}
+                                        {selectedAlias.accuracy.toFixed(2)}{' '}
                                         <span className="unit">acc</span>
                                     </div>
                                 </div>
@@ -179,7 +191,7 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                         )}
                     </div>
                     <div className="user-actions">
-                        {sessionData && sessionData.name === profile.name && (
+                        {isOwnProfile && (
                             <>
                                 <button className="button" onClick={() => setNewAliasHidden(false)}>
                                     New alias
@@ -202,12 +214,12 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                 </div>
             </section>
             <TransitionGroup component={null}>
-                <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
+                <CSSTransition key={selectedAliasId} timeout={300} classNames="new-alias">
                     <section id="top-performances">
                         <span className="container-title">Top performances</span>
                         <div className="performance-container">
-                            {profile.aliases[selectedAlias].topPerformances && profile.aliases[selectedAlias].topPerformances.length ? (
-                                profile.aliases[selectedAlias].topPerformances.map((perf, i) => (
+                            {selectedAlias.topPerformances && selectedAlias.topPerformances.length ? (
+                                selectedAlias.topPerformances.map((perf, i) => (
                                     <Card
                                         key={i}
                                         cardStyle={perf.rank}
@@ -226,12 +238,12 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                 </CSSTransition>
             </TransitionGroup>
             <TransitionGroup component={null}>
-                <CSSTransition key={selectedAlias} timeout={300} classNames="new-alias">
+                <CSSTransition key={selectedAliasId} timeout={300} classNames="new-alias">
                     <section id="recent-performances">
                         <span className="container-title">Recent performances</span>
                         <div className="performance-container">
-                            {profile.aliases[selectedAlias].recentPerformances && profile.aliases[selectedAlias].recentPerformances.length ? (
-                                profile.aliases[selectedAlias].recentPerformances.map((perf, i) => (
+                            {selectedAlias.recentPerformances && selectedAlias.recentPerformances.length ? (
+                                selectedAlias.recentPerformances.map((perf, i) => (
                                     <Card
                                         key={i}
                                         cardStyle={perf.rank}
