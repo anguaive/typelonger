@@ -8,5 +8,6 @@ namespace api.ViewModels
         public long Time { get; set; }
         public double Wpm { get; set; }
         public double Accuracy { get; set; }
+        public int Rank { get; set; }
     }
 }

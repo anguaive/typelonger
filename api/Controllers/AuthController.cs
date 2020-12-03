@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Alias = api.Models.Alias;
@@ -42,6 +41,7 @@ namespace api.Controllers
 
         [AllowAnonymous]
         [HttpGet("login")]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromQuery] string username, [FromQuery] string password)
@@ -85,6 +85,7 @@ namespace api.Controllers
 
         [AllowAnonymous]
         [HttpGet("authenticate")]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Authenticate()
@@ -120,6 +121,7 @@ namespace api.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Register([FromBody] NewUser newUser)
         {

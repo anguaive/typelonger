@@ -17,6 +17,7 @@ namespace api.Models
         public double Wpm { get; set; }
         public double Accuracy { get; set; }
         public long Time { get; set; }
+        public int Rank { get; set; }
 
         // Foreign keys
         public string UserId { get; set; }

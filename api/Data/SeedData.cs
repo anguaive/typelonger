@@ -179,6 +179,7 @@ Lambert snorted and turned his face away. Eskel and Vesemir looked at Geralt, an
                     Time = 93304223,
                     Wpm = 85.55,
                     Accuracy = 97.11,
+                    Rank = 1,
                     UserId = "1"
                 },
                 new Alias
@@ -190,6 +191,7 @@ Lambert snorted and turned his face away. Eskel and Vesemir looked at Geralt, an
                     Time = 1388820,
                     Wpm = 67.67,
                     Accuracy = 95.69,
+                    Rank = 2,
                     UserId = "2"
                 },
                 new Alias
@@ -201,6 +203,7 @@ Lambert snorted and turned his face away. Eskel and Vesemir looked at Geralt, an
                     Time = 2559302,
                     Wpm = 73.55,
                     Accuracy = 95.66,
+                    Rank = 3,
                     UserId = "2"
                 }
             );

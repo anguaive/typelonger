@@ -81,7 +81,8 @@ namespace api.Controllers
                 Points = alias.Points,
                 Time = alias.Time,
                 Wpm = alias.Wpm,
-                Accuracy = alias.Accuracy
+                Accuracy = alias.Accuracy,
+                Rank = alias.Rank
             };
 
             return detailsView;
@@ -101,7 +102,8 @@ namespace api.Controllers
                 Points = alias.Points,
                 Time = alias.Time,
                 Wpm = alias.Wpm,
-                Accuracy = alias.Accuracy
+                Accuracy = alias.Accuracy,
+                Rank = alias.Rank
             };
 
             return listView;
