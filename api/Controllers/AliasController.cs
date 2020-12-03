@@ -38,7 +38,7 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Alias>> GetById(long id)
         {
-            var alias = _repository.GetById(id);
+            var alias = await _repository.GetById(id);
 
             if (alias == null)
             {
