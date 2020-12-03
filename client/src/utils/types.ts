@@ -27,9 +27,9 @@ export interface Alias {
 export interface User {
     name: string;
     picture?: string;
-    since: Date;
+    dateOfRegistration: Date;
     aliases: Alias[];
-    bio: string;
+    biography: string;
 }
 
 export interface Section {

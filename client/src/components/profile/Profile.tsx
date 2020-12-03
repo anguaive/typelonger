@@ -1,34 +1,33 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { useLocation, useHistory, useParams } from 'react-router-dom';
+import {useLocation, useHistory, useParams} from 'react-router-dom';
 import './Profile.css';
-import { formatHours } from '../../utils/utils';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import {formatHours} from '../../utils/utils';
+import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import PerformanceCard from '../cards/PerformanceCard';
 import Radio from '../radio/Radio';
-import { User, SessionData } from '../../utils/types';
-import { getPerfActions } from '../../utils/utils';
+import {User, SessionData} from '../../utils/types';
+import {getPerfActions} from '../../utils/utils';
 import Card from '../cards/Card';
 import InputPopup from '../input-popup/InputPopup';
-import { getProfile, postAlias, patchUser } from '../../utils/dbservice';
-import { SessionContext, logout } from '../../utils/auth';
+import {getProfile, postAlias, patchUser} from '../../utils/dbservice';
+import {SessionContext, logout} from '../../utils/auth';
 
 interface ProfileProps {
     searchHidden: boolean;
     setSearchHidden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
+const Profile = ({searchHidden, setSearchHidden}: ProfileProps) => {
     const [profile, setProfile] = useState<User>();
     const [bioEditorHidden, setBioEditorHidden] = useState(true);
     const [newAliasHidden, setNewAliasHidden] = useState(true);
-    const [bioValue, setBioValue] = useState('');
     const {sessionData, setSessionData} = useContext(SessionContext);
     const location = useLocation();
     const history = useHistory();
-    const { username } = useParams();
+    const {username} = useParams();
 
     const handleLogout = () => {
-        if(setSessionData) {
+        if (setSessionData) {
             setSessionData({name: '', aliasId: -1});
         }
         logout();
@@ -36,12 +35,12 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
     }
 
     useEffect(() => {
-        if(username) {
+        if (username) {
             getProfile(username)
                 .then((data) => {
-                    if(data) {
-                        setProfile({...data, since: new Date()});
-                        setBioValue(data.bio);
+                    if (data) {
+                        console.log(data);
+                        setProfile({...data});
                     }
                 });
         }
@@ -58,10 +57,10 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
     let isOwnProfile = sessionData && sessionData.name === profile.name;
 
     const handleSelectAlias = (aliasId: number) => {
-        if(sessionData && setSessionData) {
+        if (sessionData && setSessionData) {
             setSessionData({...sessionData, aliasId: profile.aliases[aliasId].id});
         }
-        if(isOwnProfile) {
+        if (isOwnProfile) {
             patchUser(profile.name, {selectedAliasId: profile.aliases[aliasId].id})
                 .catch(error => console.log(error));
         }
@@ -80,12 +79,12 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
     };
 
     const resetBioEditor = () => {
-        setBioValue(profile.bio);
+        setProfile({...profile, biography: ''});
         setBioEditorHidden(true);
     };
 
     const saveBio = () => {
-        setProfile({ ...profile, bio: bioValue });
+        patchUser(profile.name, {biography: profile.biography});
         setBioEditorHidden(true);
     };
 
@@ -125,7 +124,7 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
             <section id="user-info">
                 <span className="container-title">User information</span>
                 <div id="user-info-grid" className="container">
-                    <img src={profile.picture} className="user-info__picture" alt="User" />
+                    <img src={profile.picture} className="user-info__picture" alt="User"/>
                     <div className="user-info__username">{profile.name}</div>
                     <div className="user-info__aliases">
                         <Radio
@@ -137,9 +136,9 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                     <TransitionGroup component={null}>
                         <CSSTransition key={selectedAliasId} timeout={300} classNames="new-alias">
                             <>
-                                  <div className="user-info__stats">
+                                <div className="user-info__stats">
                                     <div className="user-info__stat">
-                                        {profile.since.toDateString()}{' '}
+                                        {profile.dateOfRegistration}{' '}
                                         <span className="unit">since</span>
                                     </div>
                                     <div className="user-info__stat">
@@ -165,13 +164,13 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                     </TransitionGroup>
                     <div className="user-info__bio">
                         {bioEditorHidden ? (
-                            profile.bio
+                            profile.biography
                         ) : (
                             <form onSubmit={() => saveBio()} className="user-info__bio-editor">
                                 <textarea
                                     rows={16}
-                                    value={bioValue}
-                                    onChange={(event) => setBioValue(event.target.value)}
+                                    value={profile.biography}
+                                    onChange={(event) => setProfile({...profile, biography: event.target.value})}
                                 />
                                 <div className="user-info__bio-editor-actions">
                                     <button
@@ -249,7 +248,7 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                                         cardStyle={perf.rank}
                                         actions={getPerfActions(perf, location, history)}
                                     >
-                                        <PerformanceCard {...perf} key={i} />
+                                        <PerformanceCard {...perf} key={i}/>
                                     </Card>
                                 ))
                             ) : (
