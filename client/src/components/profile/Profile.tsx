@@ -128,7 +128,7 @@ const Profile = ({searchHidden, setSearchHidden}: ProfileProps) => {
                     <div className="user-info__username">{profile.name}</div>
                     <div className="user-info__aliases">
                         <Radio
-                            values={profile.aliases.map((alias) => alias.name)}
+                            values={profile.aliases.map(alias => alias.name)}
                             selected={profile.aliases.indexOf(selectedAlias)}
                             setSelected={handleSelectAlias}
                         />
@@ -138,17 +138,12 @@ const Profile = ({searchHidden, setSearchHidden}: ProfileProps) => {
                             <>
                                 <div className="user-info__stats">
                                     <div className="user-info__stat">
-                                        {profile.dateOfRegistration}{' '}
-                                        <span className="unit">since</span>
-                                    </div>
-                                    <div className="user-info__stat">
                                         {formatHours(selectedAlias.time || 0)}{' '}
                                         <span className="unit">hours</span>
                                     </div>
                                     <div className="user-info__stat">
                                         {selectedAlias.points}{' '}
                                         <span className="unit">points</span>{' '}
-                                        <span className="user-info__rank">{selectedAlias.rank}</span>
                                     </div>
                                     <div className="user-info__stat">
                                         {selectedAlias.wpm.toFixed(2)}{' '}
@@ -191,7 +186,7 @@ const Profile = ({searchHidden, setSearchHidden}: ProfileProps) => {
                     </div>
                     <div className="user-actions">
                         {isOwnProfile && (
-                            <>
+                            <div className="user-actions__buttons">
                                 <button className="button" onClick={() => setNewAliasHidden(false)}>
                                     New alias
                                 </button>
@@ -204,8 +199,11 @@ const Profile = ({searchHidden, setSearchHidden}: ProfileProps) => {
                                 <button className="button" onClick={() => handleLogout()}>
                                     Log out
                                 </button>
-                            </>
+                            </div>
                         )}
+                        <div className="user-actions__registration-date">
+                            since {new Date(profile.dateOfRegistration).toDateString()}
+                        </div>
                     </div>
                     <div className="user-info__expand">
                         <i className="material-icons md-36">expand_more</i>

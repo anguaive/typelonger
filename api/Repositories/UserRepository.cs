@@ -48,6 +48,12 @@ namespace api.Repositories
             var query = from appUser in _context.ApplicationUsers
                     .AsNoTracking()
                     .Include(appUser => appUser.Aliases)
+                        .ThenInclude(alias => alias.Performances)
+                        .ThenInclude(perf => perf.RawStats)
+                    .Include(appUser => appUser.Aliases)
+                        .ThenInclude(alias => alias.Performances)
+                        .ThenInclude(perf => perf.Section)
+                        .ThenInclude(section => section.Text)
                     .Where(user => user.NormalizedUserName == name.ToUpper())
                 select appUser;
 

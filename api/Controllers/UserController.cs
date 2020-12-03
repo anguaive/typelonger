@@ -52,10 +52,11 @@ namespace api.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpPatch("{name}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Patch(string name,  [FromBody] ViewModels.User user)
+        public async Task<IActionResult> Patch(string name, [FromBody] ViewModels.User user)
         {
             var result = await _repository.Patch(name, user);
             return result ? (IActionResult) NoContent() : NotFound();

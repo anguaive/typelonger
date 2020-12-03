@@ -73,7 +73,21 @@ namespace api.Controllers
                 return null;
             }
 
-            var detailsView =  new AliasDetailsView
+
+            var topPerformancesQuery = from p in alias.Performances
+                    .OrderByDescending(p => p.Points)
+                    .Take(10)
+                select p;
+
+            var recentPerformancesQuery = from p in alias.Performances
+                    .OrderByDescending(p => p.DateOfCompletion)
+                    .Take(10)
+                select p;
+
+            var topPerformances = topPerformancesQuery.Select(perf => perf.ToListView()).ToList();
+            var recentPerformances = recentPerformancesQuery.Select(perf => perf.ToListView()).ToList();
+
+            var detailsView = new AliasDetailsView
             {
                 Id = alias.Id,
                 Name = alias.Name,
@@ -82,7 +96,9 @@ namespace api.Controllers
                 Time = alias.Time,
                 Wpm = alias.Wpm,
                 Accuracy = alias.Accuracy,
-                Rank = alias.Rank
+                Rank = alias.Rank,
+                TopPerformances = topPerformances,
+                RecentPerformances = recentPerformances
             };
 
             return detailsView;

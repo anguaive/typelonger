@@ -1,7 +1,7 @@
 export interface Performance {
-    title: string;
-    section: string;
-    when: Date;
+    textTitle: string;
+    sectionTitle: string;
+    date: Date;
     points: number;
     time: number;
     accuracy: number;

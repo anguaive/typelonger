@@ -4,6 +4,7 @@ import { Performance } from '../../utils/types';
 import { formatTime } from '../../utils/utils';
 
 const PerformanceCard = (perf: Performance) => {
+    console.log(perf);
     const playedBy = perf.aliasName ? (
         <div className="performance__played-by">
             Played by {perf.aliasName} ({perf.userName})
@@ -12,10 +13,10 @@ const PerformanceCard = (perf: Performance) => {
 
     return (
         <>
-            <div className="performance__title">{perf.title}</div>
+            <div className="performance__title">{perf.textTitle}</div>
             <div className="performance__section--when">
-                <div className="performance__section">{perf.section}</div>
-                <div className="performance__when">{new Date(perf.when).toDateString()}</div>
+                <div className="performance__section">{perf.sectionTitle}</div>
+                <div className="performance__when">{new Date(perf.date).toDateString()}</div>
             </div>
             {playedBy}
             <div className="performance__stats">

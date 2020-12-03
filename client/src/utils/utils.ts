@@ -54,8 +54,8 @@ export const getPerfActions = (perf: Performance, location: any, history: any) =
 };
 
 // Format milliseconds to hours
-export const formatHours = (time: number): string => {
-    return (time / 1000 / 60 / 60).toFixed(2);
+export const formatHours = (time: number): number => {
+    return Math.round(time / 1000 / 60 / 60);
 };
 
 // Format milliseconds to [hh:]mm:ss

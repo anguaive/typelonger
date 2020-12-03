@@ -42,16 +42,26 @@ namespace api.Controllers
                 return null;
             }
 
-            var time = performance.RawStats.Sum(stats => stats.Time);
-            var correctKeypressCount = performance.RawStats.Sum(stats => stats.CorrectKeypressCount);
-            var keypressCount =
-                performance.RawStats.Sum(stats => stats.CorrectKeypressCount + stats.IncorrectKeypressCount);
-            var wpm = (double)correctKeypressCount / 5 / ((double)time / 1000 / 60);
-            var accuracy = (correctKeypressCount / (double)keypressCount) * 100;
+
+            long time = 0;
+            int correctKeypressCount = 0,
+                keypressCount = 0;
+            double wpm = 0,
+                accuracy = 0;
+
+            if (performance.RawStats.Count != 0)
+            {
+                time = performance.RawStats.Sum(stats => stats.Time);
+                correctKeypressCount = performance.RawStats.Sum(stats => stats.CorrectKeypressCount);
+                keypressCount =
+                    performance.RawStats.Sum(stats => stats.CorrectKeypressCount + stats.IncorrectKeypressCount);
+                wpm = time == 0 ? 0 : (double) correctKeypressCount / 5 / ((double) time / 1000 / 60);
+                accuracy = keypressCount == 0 ? 0 : (correctKeypressCount / (double) keypressCount) * 100;
+            }
 
             var listView = new PerformanceListView
             {
-                Username = performance.Alias.User.UserName,
+                UserName = performance.Alias.User.UserName,
                 AliasName = performance.Alias.Name,
                 TextTitle = performance.Section.Text.Title,
                 SectionTitle = performance.Section.Title,
@@ -61,7 +71,7 @@ namespace api.Controllers
                 Wpm = wpm,
                 Accuracy = accuracy,
                 // TODO: Compute rank
-                Rank = PerformanceRank.Normal
+                Rank = PerformanceRank.Normal.ToString().ToLower()
             };
 
             return listView;

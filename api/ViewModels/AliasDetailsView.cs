@@ -14,7 +14,7 @@ namespace api.ViewModels
         public double Accuracy { get; set; }
         public long Time { get; set; }
         public int Rank { get; set; }
-        public List<Performance> TopPerformances { get; set; }
-        public List<Performance> RecentPerformances { get; set; }
+        public List<PerformanceListView> TopPerformances { get; set; }
+        public List<PerformanceListView> RecentPerformances { get; set; }
     }
 }

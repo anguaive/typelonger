@@ -12,7 +12,7 @@ namespace api.ViewModels
 
     public class PerformanceListView
     {
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string AliasName { get; set; }
         public string TextTitle { get; set; }
         public string SectionTitle { get; set; }
@@ -21,6 +21,6 @@ namespace api.ViewModels
         public long Time { get; set; }
         public double Wpm { get; set; }
         public double Accuracy { get; set; }
-        public PerformanceRank Rank { get; set; }
+        public string Rank { get; set; }
     }
 }

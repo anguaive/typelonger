@@ -18,10 +18,10 @@
     position: relative;
     gap: 1rem 1rem;
     overflow: hidden;
-    grid-template-columns: calc(var(--profile-row-height) - 2rem) 1fr 1fr;
+    grid-template-columns: calc(var(--profile-row-height) - 2rem) 4fr 5fr;
     grid-template-rows: 4rem 132px 1fr 4rem;
     grid-template-areas:
-        'picture name name'
+        'picture name stats'
         'picture aliases stats'
         'bio bio bio'
         'actions actions actions';
@@ -55,12 +55,26 @@
 
 .user-actions {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
     grid-area: actions;
+    margin-left: 1rem;
 }
 
-.user-actions > * {
-    margin-left: 1rem;
+.user-actions__buttons {
+    display: flex;
+    align-items: center;
+}
+
+.user-actions__buttons > button {
+    margin-right: 1rem;
+}
+
+.user-actions__registration-date {
+    display: flex;
+    align-items: center;
+    margin-right: 4rem;
+    font-size: 1.2rem;
 }
 
 #user-info .container,
@@ -84,9 +98,8 @@
 .user-info__username {
     padding-top: 1rem;
     padding-right: 1rem;
-    overflow: hidden;
     grid-area: name;
-    font-size: 3rem;
+    font-size: 2vw;
 }
 
 .user-info__bio {
@@ -142,8 +155,22 @@
 
 .user-info__stats {
     grid-area: stats;
-    position: absolute;
-    font-size: 1.4rem;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
+    margin: 1rem;
+    width: calc(100% - 4rem - 2rem);
+    height: calc(100% - 2.7rem);
+}
+
+.user-info__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    border: 2px solid var(--panel-border-color);
+    border-radius: 0.5rem;
 }
 
 .new-alias-enter {
