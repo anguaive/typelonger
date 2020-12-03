@@ -1,3 +1,5 @@
+import {getToken} from "./auth";
+
 const url = "https://localhost:5001/api";
 
 const handleErrors = (response: Response) => {
@@ -7,7 +9,7 @@ const handleErrors = (response: Response) => {
     return response;
 }
 
-const request = (to: string, param?: any): Promise<any> => {
+const get = (to: string, param?: any): Promise<any> => {
     let requestUrl = `${url}/${to}/${param ? param : ''}`;
     return fetch(requestUrl)
         .then(handleErrors)
@@ -15,19 +17,31 @@ const request = (to: string, param?: any): Promise<any> => {
         .catch(error => console.log(error));
 }
 
-
 export const getProfile = (username: string) => {
-    return request('user', username);
+    return get('user', username);
 }
 
 export const getTexts = () => {
-    return request('text');
+    return get('text');
 }
 
 export const getText = (id: number) => {
-    return request('text', id);
+    return get('text', id);
 }
 
 export const getSection = (id: number) => {
-    return request('section', id);
+    return get('section', id);
+}
+
+export const postAlias = (aliasName: string) => {
+    let requestUrl = `${url}/alias`;
+    return fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({aliasName})
+    })
+        .then(response => response.json());
 }

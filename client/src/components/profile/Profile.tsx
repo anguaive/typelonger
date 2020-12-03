@@ -9,7 +9,7 @@ import { User, SessionData } from '../../utils/types';
 import { getPerfActions } from '../../utils/utils';
 import Card from '../cards/Card';
 import InputPopup from '../input-popup/InputPopup';
-import { getProfile } from '../../utils/dbservice';
+import { getProfile, postAlias } from '../../utils/dbservice';
 import { SessionContext, logout } from '../../utils/auth';
 
 interface ProfileProps {
@@ -55,16 +55,12 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
     }
 
     const createNewAlias = (newName: string) => {
-        profile.aliases.push({
-            name: newName,
-            username: profile.name,
-            points: 0,
-            time: 0,
-            accuracy: 0,
-            wpm: 0,
-            topPerformances: [],
-            recentPerformances: [],
-        });
+        postAlias(newName)
+            .then(newAlias => {
+                let newProfile = {...profile};
+                newProfile.aliases.push(newAlias);
+                setProfile(newProfile);
+            });
     };
 
     const submitSearch = (value: string) => {
@@ -141,7 +137,7 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                                     <div className="user-info__stat">
                                         {profile.aliases[selectedAlias].points}{' '}
                                         <span className="unit">points</span>{' '}
-                                        <span className="user-info__rank">( #123 )</span>
+                                        <span className="user-info__rank">{profile.aliases[selectedAlias].rank}</span>
                                     </div>
                                     <div className="user-info__stat">
                                         {profile.aliases[selectedAlias].wpm.toFixed(2)}{' '}

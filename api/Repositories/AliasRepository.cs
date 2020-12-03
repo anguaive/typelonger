@@ -17,7 +17,7 @@ namespace api.Repositories
 
         public Task<AliasDetailsView> GetById(long id);
 
-        public Task<AliasDetailsView> Post(string username, Alias alias);
+        public Task<AliasDetailsView> Post(string username, string aliasName);
 
         public Task<bool> Patch(long id, AliasDetailsView alias);
     }
@@ -60,7 +60,7 @@ namespace api.Repositories
             return alias.ToDetailsView();
         }
 
-        public async Task<AliasDetailsView> Post(string username, Alias alias)
+        public async Task<AliasDetailsView> Post(string username, string aliasName)
         {
             var query = from u in _context.ApplicationUsers
                     .Where(user => user.NormalizedUserName == username.ToUpper())
@@ -69,14 +69,24 @@ namespace api.Repositories
 
             var user = await query.SingleOrDefaultAsync();
             var isAliasDuplicate = user.Aliases.FindIndex(a =>
-                string.Equals(a.Name, alias.Name, StringComparison.CurrentCultureIgnoreCase)) != -1;
+                string.Equals(a.Name, aliasName, StringComparison.CurrentCultureIgnoreCase)) != -1;
             if (isAliasDuplicate)
             {
                 return null;
             }
 
-            alias.DateOfCreation = DateTime.UtcNow;
-            alias.UserId = user.Id;
+            var alias = new Alias
+            {
+                Name = aliasName,
+                DateOfCreation = DateTime.UtcNow,
+                Points = 0,
+                Time = 0,
+                Wpm = 0,
+                Accuracy = 0,
+                Rank = 0,
+                UserId = user.Id,
+            };
+
             await _context.Aliases.AddAsync(alias);
 
             await _context.SaveChangesAsync();

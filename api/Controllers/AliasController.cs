@@ -50,11 +50,11 @@ namespace api.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Alias alias)
+        public async Task<ActionResult<AliasDetailsView>> Post([FromBody] NewAlias newAlias)
         {
             var username = User.Identity.Name;
 
-            var dbAlias = await _repository.Post(username, alias);
+            var dbAlias = await _repository.Post(username, newAlias.AliasName);
             if (dbAlias == null)
             {
                 return BadRequest();

@@ -12,12 +12,14 @@ export interface Performance {
 }
 
 export interface Alias {
+    id: number;
     name: string;
     username: string;
     points: number;
     time: number;
     accuracy: number;
     wpm: number;
+    rank: number;
     topPerformances: Performance[];
     recentPerformances: Performance[];
 }
