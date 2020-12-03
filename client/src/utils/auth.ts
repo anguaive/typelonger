@@ -1,5 +1,5 @@
 import {RegisterData, LoginData, SessionData} from './types';
-import React, {createContext, SetStateAction} from 'react';
+import {createContext} from 'react';
 
 type SessionContextType = {
     sessionData: SessionData;

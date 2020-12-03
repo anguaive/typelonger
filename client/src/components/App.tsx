@@ -1,6 +1,6 @@
-import React, { useState, useEffect, createContext } from 'react';
-import { Switch, Route, useLocation } from 'react-router-dom';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import React, {useState, useEffect} from 'react';
+import {Switch, Route, useLocation} from 'react-router-dom';
+import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import './App.css';
 import '../Colourschemes.css';
 import Menu from './Menu';
@@ -9,12 +9,12 @@ import Matchmaking from './Matchmaking';
 import Profile from './profile/Profile';
 import Rankings from './rankings/Rankings';
 import Auth from './auth/Auth';
-import Settings, { AppSettings, SETTINGS_STORAGE, defaultSettings } from './settings/Settings';
+import Settings, {AppSettings, SETTINGS_STORAGE, defaultSettings} from './settings/Settings';
 import NoMatch from './NoMatch';
 import TextDetails from './text-details/TextDetails';
 import Texts from './texts/Texts';
 import {Keypress, Paragraph, Position, SessionData} from '../utils/types';
-import {SessionContext} from "../utils/auth";
+import {SessionContext, authenticate, isSignedIn} from "../utils/auth";
 
 interface AppRoute {
     path: string;
