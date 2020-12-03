@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using api.Models;
+using api.Repositories;
 using api.Services;
 using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Alias = api.Models.Alias;
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
@@ -27,12 +29,14 @@ namespace api.Controllers
     {
         private readonly JwtOptions _jwtOptions;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserRepository _userRepository;
         private readonly ILogger _logger;
 
-        public AuthController(IOptions<JwtOptions> jwtOptions, UserManager<ApplicationUser> userManager, ILoggerFactory loggerFactory)
+        public AuthController(IOptions<JwtOptions> jwtOptions, UserManager<ApplicationUser> userManager, ILoggerFactory loggerFactory, IUserRepository userRepository)
         {
             _jwtOptions = jwtOptions.Value;
             _userManager = userManager;
+            _userRepository = userRepository;
             _logger = loggerFactory.CreateLogger<AuthController>();
         }
 
@@ -54,7 +58,7 @@ namespace api.Controllers
                 });
             }
 
-            // Check if the email is confirmed
+            // TODO: Check if the email is confirmed
 
             // Generate ID token
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
@@ -73,9 +77,46 @@ namespace api.Controllers
                 signingCredentials: signingCredentials
             );
 
-            _logger.LogInformation($"Successful login. Sending ID token for user: (id: {user.Id}, name: {user.UserName}");
-            return Ok(new {token = new JwtSecurityTokenHandler().WriteToken(token)});
+            var selectedAliasId = await _userRepository.GetSelectedAliasIdByName(username);
+
+            _logger.LogInformation($"Successful login. Sending ID token and session data for user: (id: {user.Id}, name: {user.UserName})");
+            return Ok(new {username, selectedAliasId, token = new JwtSecurityTokenHandler().WriteToken(token)});
         }
+
+        [AllowAnonymous]
+        [HttpGet("authenticate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Authenticate()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            _logger.LogDebug("Attempting to sign in via bearer token");
+
+            // RawToken format: Bearer xxx.yyy.zzz
+            var rawToken = Request.Headers[HeaderNames.Authorization][0].Split(" ")[1];
+
+
+            if (tokenHandler.CanReadToken(rawToken))
+            {
+                var processedToken = (JwtSecurityToken)tokenHandler.ReadToken(rawToken);
+                if (processedToken.ValidTo > DateTime.UtcNow)
+                {
+                    _logger.LogDebug("Valid token. Signing in");
+                    var username = processedToken.Payload.Claims.ToList()[0].Value;
+                    var selectedAliasId = await _userRepository.GetSelectedAliasIdByName(username);
+                    return Ok(new {username, selectedAliasId});
+                }
+
+                _logger.LogDebug("Token has expired. Giving up");
+            }
+            else
+            {
+                _logger.LogDebug("Invalid token format. Giving up");
+            }
+
+            return Unauthorized();
+        }
+
 
         [AllowAnonymous]
         [HttpPost("register")]

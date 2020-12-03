@@ -12,9 +12,8 @@ namespace api.Repositories
     public interface IUserRepository
     {
         public IEnumerable<ViewModels.User> Get();
-
         public Task<ViewModels.User> GetByName(string name);
-
+        public Task<long> GetSelectedAliasIdByName(string name);
         public Task<bool> Patch(string name, ViewModels.User user);
     }
 
@@ -55,6 +54,18 @@ namespace api.Repositories
             var user = await query.SingleOrDefaultAsync();
 
             return user.ToView();
+        }
+
+        public async Task<long> GetSelectedAliasIdByName(string name)
+        {
+            var query = from appUser in _context.ApplicationUsers
+                    .AsNoTracking()
+                    .Where(user => user.NormalizedUserName == name.ToUpper())
+                select appUser.SelectedAliasId;
+
+            var id = await query.SingleOrDefaultAsync();
+
+            return id;
         }
 
         public async Task<bool> Patch(string name, ViewModels.User user)
