@@ -101,7 +101,7 @@ export interface Keypress {
 
 export interface SessionData {
     name: string;
-    alias: string;
+    aliasId: number;
 }
 
 export interface ChartAreaProps {

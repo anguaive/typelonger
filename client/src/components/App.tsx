@@ -23,7 +23,7 @@ interface AppRoute {
 
 const App = () => {
     const [sessionData, setSessionData] = useState<SessionData>(
-        {name: 'Username', alias: ''});
+        {name: '', aliasId: -1});
 
     // State responsible for restoring the game state
     const [gameTextTitle, setGameTextTitle] = useState<string>('');
@@ -72,6 +72,28 @@ const App = () => {
         }
     };
 
+    // Authenticate the user if they possess a valid, non-expired token
+    useEffect(() => {
+        if (isSignedIn()) {
+            console.log("Authenticating with token...");
+            authenticate()
+                .then((response: { status: number, data: any }) => {
+                    switch(response.status) {
+                        case 200:
+                            setSessionData({name: response.data.username, aliasId: response.data.selectedAliasId});
+                            break;
+                        case 401:
+                            setSessionData({name: '', aliasId: -1});
+                            break;
+                        default:
+                            break;
+                    }
+                })
+                .catch(error => console.log(error));
+        }
+        // Run on every page refresh
+    }, []);
+
     useEffect(() => {
         document.body.className = settings.colourscheme;
     }, [settings]);
@@ -81,6 +103,8 @@ const App = () => {
         return () => {
             document.removeEventListener('keyup', keyboardHandler, false);
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const routes: AppRoute[] = [
@@ -109,7 +133,7 @@ const App = () => {
         },
         {
             path: '/matchmaking',
-            component: <Matchmaking />,
+            component: <Matchmaking/>,
         },
         {
             path: '/profile/:username',
@@ -122,11 +146,11 @@ const App = () => {
         },
         {
             path: '/rankings',
-            component: <Rankings />,
+            component: <Rankings/>,
         },
         {
             path: '/settings',
-            component: <Settings settings={settings} setSettings={setSettings} />,
+            component: <Settings settings={settings} setSettings={setSettings}/>,
         },
         {
             path: '/text',
@@ -134,18 +158,19 @@ const App = () => {
         },
         {
             path: '/texts',
-            component: <Texts />,
+            component: <Texts/>,
         },
         {
             path: '/auth',
-            component: <Auth />,
+            component: <Auth/>,
         },
-        { path: '*', component: <NoMatch /> },
+        {path: '*', component: <NoMatch/>},
     ];
 
     return (
-        <SessionContext.Provider value={{sessionData: sessionData, setSessionData: (sessionData) => setSessionData(sessionData)}}>
-            <Menu paused={paused} location={location} />
+        <SessionContext.Provider
+            value={{sessionData: sessionData, setSessionData: (sessionData) => setSessionData(sessionData)}}>
+            <Menu paused={paused} location={location}/>
             <TransitionGroup component={null}>
                 <CSSTransition key={location.key} classNames="page" timeout={300}>
                     <Switch location={location}>

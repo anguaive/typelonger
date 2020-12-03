@@ -28,6 +28,14 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
     const history = useHistory();
     const { username } = useParams();
 
+    const handleLogout = () => {
+        if(setSessionData) {
+            setSessionData({name: '', aliasId: -1});
+        }
+        logout();
+        history.push('/');
+    }
+
     useEffect(() => {
         if(username) {
             getProfile(username)
@@ -186,7 +194,7 @@ const Profile = ({ searchHidden, setSearchHidden }: ProfileProps) => {
                                 >
                                     Edit bio
                                 </button>
-                                <button className="button" onClick={() => logout()}>
+                                <button className="button" onClick={() => handleLogout()}>
                                     Log out
                                 </button>
                             </>

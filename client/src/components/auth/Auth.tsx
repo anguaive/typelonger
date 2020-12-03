@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, {useState, useEffect, useContext} from 'react';
+import {useHistory} from 'react-router-dom';
 import './Auth.css';
-import { RegisterData, LoginData } from '../../utils/types';
-import { register, login, setToken } from '../../utils/auth';
+import {RegisterData, LoginData} from '../../utils/types';
+import {SessionContext, register, login} from '../../utils/auth';
 
 interface UserValidationRules {
     [key: string]: number;
+
     nameMinLength: number;
     nameMaxLength: number;
     aliasMinLength: number;
@@ -43,6 +44,7 @@ const Auth = () => {
     );
     const [loginData, setLoginData] = useState<LoginData>(initialLoginData);
     const [loginWarning, setLoginWarning] = useState<string>('');
+    const {setSessionData} = useContext(SessionContext);
 
     // Reset the login warning if the form input changes
     useEffect(() => {
@@ -54,7 +56,7 @@ const Auth = () => {
     const handleRegisterChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        const newRegisterData = { ...registerData };
+        const newRegisterData = {...registerData};
         newRegisterData[event.target.name] = event.target.value;
         setRegisterData(newRegisterData);
 
@@ -70,31 +72,27 @@ const Auth = () => {
     };
 
     const handleLoginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newLoginData = { ...loginData };
+        const newLoginData = {...loginData};
         newLoginData[event.target.name] = event.target.value;
         setLoginData(newLoginData);
     };
 
     const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-            register(registerData)
+        register(registerData)
             .then((response) => console.log(response))
             .catch((error) => console.log(error));
     };
 
     const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-            login(loginData)
-            .then((response) => {
-                return response.json().then((data) => ({
-                    status: response.status,
-                    data,
-                }));
-            })
+        login(loginData)
             .then((response: { status: number; data: any }) => {
-                switch(response.status) {
+                switch (response.status) {
                     case 200: // Ok, token is returned
-                        setToken(response.data.token);
+                        if (setSessionData) {
+                            setSessionData({name: response.data.username, aliasId: response.data.selectedAliasId});
+                        }
                         history.push('/');
                         break;
                     case 400: // Bad request, error is returned
@@ -103,8 +101,10 @@ const Auth = () => {
                     default:
                         break;
                 }
+                return response;
             })
-            .catch((error) => console.log(error));
+            .catch(error => console.log(error));
+
     };
 
     const showHint = (event: React.FocusEvent<HTMLLabelElement>) => {
