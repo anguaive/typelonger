@@ -46,6 +46,7 @@
     object-fit: contain;
     display: inline-block;
     border: 2px solid black;
+    overflow: hidden;
 }
 
 .text-info__author {

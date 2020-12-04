@@ -33,6 +33,7 @@ export interface User {
 }
 
 export interface Section {
+    id: number;
     title: string;
     content?: string;
     length: number;
@@ -44,7 +45,7 @@ export interface Section {
 export interface Text {
     id: number;
     title: string;
-    coverPicture?: string;
+    coverURL?: string;
     author: string;
     dateOfUpload: Date;
     dateOfCreation: Date;
@@ -94,6 +95,12 @@ export interface ComputedStats {
     pg?: number;
 }
 
+export interface RawStats {
+    time: number;
+    correctKeypressCount: number;
+    incorrectKeypressCount: number;
+}
+
 export interface Keypress {
     position: Position;
     time: number;
@@ -104,6 +111,7 @@ export interface Keypress {
 export interface SessionData {
     name: string;
     aliasId: number;
+    sectionId: number;
 }
 
 export interface ChartAreaProps {

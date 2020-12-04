@@ -1,4 +1,5 @@
 import {getToken} from "./auth";
+import {RawStats} from "./types";
 
 const url = "https://localhost:5001/api";
 
@@ -42,6 +43,19 @@ export const postAlias = (aliasName: string) => {
             'Authorization': `Bearer ${getToken()}`
         },
         body: JSON.stringify({aliasName})
+    })
+        .then(response => response.json());
+}
+
+export const postPerformance = (sectionId: number, segmentStats: RawStats[]) => {
+    let requestUrl = `${url}/performance`;
+    return fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({sectionId, segmentStats})
     })
         .then(response => response.json());
 }

@@ -3,17 +3,18 @@ import React, {
     useEffect,
     useLayoutEffect,
     useRef,
-    useMemo,
+    useMemo, useContext,
 } from 'react';
 import useInterval from '@use-it/interval';
-import { shallowCompare } from '../../utils/utils';
-import { max } from 'd3-array';
-import { Keypress, Position, Paragraph, ComputedStats } from '../../utils/types';
-import { getSection } from '../../utils/dbservice';
+import {shallowCompare} from '../../utils/utils';
+import {max} from 'd3-array';
+import {Keypress, Position, Paragraph, ComputedStats, RawStats} from '../../utils/types';
+import {getSection, postPerformance} from '../../utils/dbservice';
 import './Game.css';
 import SegmentStatsChart from '../charts/SegmentStatsChart';
 import QuickStats from './QuickStats';
-import { useParams } from 'react-router-dom';
+import {useParams, useLocation} from 'react-router-dom';
+import {SessionContext} from "../../utils/auth";
 
 interface GameProps {
     paused: boolean;
@@ -40,6 +41,45 @@ const defaultTimerInterval = 5;
 // How often the quick stats visuals are updated
 const quickStatsInterval = 500;
 
+// The keypresses array is ordered by the timestamps, and the user can backtrack to previous
+// paragraphs/segments, so the array might look something like this:
+// [{pg:1, time:0}, ..., {pg:1, time: 2000}, {pg:2, time: 2200}, ..., {pg:2, time: 2400},
+// {pg:1, time: 2500}, ...]
+// We can't measure the time spent in pg1 by grouping all of pg1's keypresses into a single list
+// because we took a short detour to pg2. Subtracting the lowest pg1 timestamp (0) from the
+// highest (2500) would thus be incorrect. Instead, we gather all the distinct pg1 sequences
+// into a list, compute the total time spent in each sequence, and add them all up. This
+// doesn't take the keypresses between different pg sequences into account, so each sequence must start
+// with the previous sequence's last keypress.
+const computeSequencesLists = (kps: Keypress[]) => {
+    let previousKp: Keypress | null = null;
+    let sequencesLists: number[][][] = [];
+    for (let kp of kps) {
+        const kppg = kp.position.pg;
+        if (previousKp && previousKp.position.pg === kppg) {
+            sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
+                kp.time
+            );
+        } else {
+            if (!sequencesLists[kppg]) {
+                sequencesLists[kppg] = [];
+            }
+            sequencesLists[kppg].push([]);
+            if (previousKp) {
+                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
+                    previousKp.time
+                );
+            }
+            sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
+                kp.time
+            );
+        }
+        previousKp = kp;
+    }
+
+    return sequencesLists;
+}
+
 const initialPosition: Position = {
     pg: 0,
     char: -1,
@@ -47,24 +87,26 @@ const initialPosition: Position = {
 };
 
 const Game = ({
-    paused,
-    setPaused,
-    finished,
-    setFinished,
-    time,
-    setTime,
-    keypresses,
-    setKeypresses,
-    paragraphs,
-    setParagraphs,
-    position,
-    setPosition,
-    textTitle,
-    setTextTitle,
-    sectionTitle,
-    setSectionTitle
-}: GameProps) => {
+                  paused,
+                  setPaused,
+                  finished,
+                  setFinished,
+                  time,
+                  setTime,
+                  keypresses,
+                  setKeypresses,
+                  paragraphs,
+                  setParagraphs,
+                  position,
+                  setPosition,
+                  textTitle,
+                  setTextTitle,
+                  sectionTitle,
+                  setSectionTitle
+              }: GameProps) => {
     const {sectionId} = useParams();
+    const location = useLocation();
+    const {sessionData, setSessionData} = useContext(SessionContext);
     const textContainer = useRef<HTMLDivElement>(null);
     const scrollGuide = useRef<HTMLDivElement>(null);
     const caret = useRef<HTMLDivElement>(null);
@@ -152,10 +194,14 @@ const Game = ({
 
     // Fetch text
     useEffect(() => {
-        if(!paragraphs.length) {
+        if (sessionData && setSessionData && sessionData.sectionId !== sectionId) {
+            setSessionData({...sessionData, sectionId: sectionId});
             getSection(sectionId)
                 .then((data) => {
-                    if(data) {
+                    if (data) {
+                        setFinished(false);
+                        setTime(0);
+                        setPosition({pg: 0, char: -1, realChar: -1});
                         setTextTitle(data.textTitle);
                         setSectionTitle(data.title);
                         const pgs = data.contentParagraphs.map((text: string) => {
@@ -167,12 +213,14 @@ const Game = ({
                                 surplusCharIndices: [],
                             };
                         });
+                        setParagraphs(pgs);
+                        setKeypresses([]);
                         processParagraphs(pgs);
                     }
                 });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [sectionId]);
 
     // Move caret when position changes, and scroll text if entering new line
     useEffect(() => {
@@ -207,7 +255,7 @@ const Game = ({
             if (keypresses.length) {
                 for (const kp of keypresses) {
                     // Only look at chars behind the current position
-                    if(position.char > kp.position.char) {
+                    if (position.char > kp.position.char) {
                         const kpChar = getCharElement(kp.position);
                         kpChar?.classList.remove('text-correct', 'text-incorrect', 'text-surplus');
                         if (kp.correct) {
@@ -349,7 +397,7 @@ const Game = ({
             return pos;
         }
 
-        let newPos = { ...pos };
+        let newPos = {...pos};
         const currentPg = pgs[pos.pg];
         // To next paragraph, if there is one
         if (
@@ -365,21 +413,21 @@ const Game = ({
                     newPos,
                     pgs,
                     offset -
-                        (currentPg.text.length -
-                            currentPg.controlCharIndices.length -
-                            currentPg.displayedIgnoredCharIndices.filter(
-                                (iCI) => iCI > pos.char
-                            ).length -
-                            pos.char -
-                            1)
+                    (currentPg.text.length -
+                        currentPg.controlCharIndices.length -
+                        currentPg.displayedIgnoredCharIndices.filter(
+                            (iCI) => iCI > pos.char
+                        ).length -
+                        pos.char -
+                        1)
                 );
             }
         } else if (
             pos.char -
-                currentPg.displayedIgnoredCharIndices.filter(
-                    (dICI) => dICI < pos.char
-                ).length +
-                offset <
+            currentPg.displayedIgnoredCharIndices.filter(
+                (dICI) => dICI < pos.char
+            ).length +
+            offset <
             0
         ) {
             // To prev paragraph, if there is one
@@ -395,10 +443,10 @@ const Game = ({
                     newPos,
                     pgs,
                     offset +
-                        (pos.char -
-                            currentPg.displayedIgnoredCharIndices.filter(
-                                (dICI) => dICI < pos.char
-                            ).length)
+                    (pos.char -
+                        currentPg.displayedIgnoredCharIndices.filter(
+                            (dICI) => dICI < pos.char
+                        ).length)
                 );
             }
         } else {
@@ -501,17 +549,43 @@ const Game = ({
 
     // Check finish condition
     useEffect(() => {
-        if (finalPosition && shallowCompare(position, finalPosition)) {
+        if (sessionData && !finished && finalPosition && shallowCompare(position, finalPosition)) {
             setFinished(true);
             setPaused(true);
             setNewQuickStats();
-            // TODO: redirect to results page
+
+            let rawStats: RawStats[] = [];
+            let sequencesLists = computeSequencesLists(keypresses);
+
+            for (let i = 0; i < sequencesLists.length; i++) {
+                let seqList = sequencesLists[i];
+                if (seqList && seqList.length) {
+                    let sum = 0;
+                    for (let seq of seqList) {
+                        if (seq && seq.length) {
+                            sum += seq[seq.length - 1] - seq[0];
+                        }
+                    }
+                    rawStats.push({time: sum, incorrectKeypressCount: 0, correctKeypressCount: 0});
+                }
+            }
+
+
+            for (let pg = 0; pg < paragraphs.length; pg++) {
+                const kps = keypresses.filter((kp) => kp.position.pg === pg);
+                const correctKps = kps.filter((kp) => kp.correct);
+                rawStats[pg].correctKeypressCount = correctKps.length;
+                rawStats[pg].incorrectKeypressCount = kps.length - correctKps.length;
+            }
+
+            postPerformance(sessionData.sectionId, rawStats)
+                .catch(error => console.log(error));
         }
-    }, [position, finalPosition, setPaused, setFinished]);
+    }, [position, finalPosition, setPaused, finished, setFinished]);
 
     const insertCharElement = (pos: Position, newChar: string): Paragraph[] => {
         const currentPg = paragraphs[pos.pg];
-        const newPg = { ...currentPg };
+        const newPg = {...currentPg};
         newPg.text =
             currentPg.text.slice(0, pos.realChar) +
             newChar +
@@ -527,7 +601,7 @@ const Game = ({
 
     const removeCharElement = (pos: Position) => {
         const currentPg = paragraphs[pos.pg];
-        const newPg = { ...currentPg };
+        const newPg = {...currentPg};
         newPg.text =
             currentPg.text.slice(0, pos.realChar) +
             currentPg.text.slice(pos.realChar + 1);
@@ -556,7 +630,7 @@ const Game = ({
             const isCorrect = !samePositionKeypresses[samePositionKeypresses.length - 1].correct;
             setKeypresses([
                 ...keypresses,
-                { time: time, position: pos, letter: 'Backspace', correct: isCorrect },
+                {time: time, position: pos, letter: 'Backspace', correct: isCorrect},
             ]);
             if (currentElement.classList.contains('text-surplus')) {
                 removeCharElement(pos);
@@ -607,7 +681,7 @@ const Game = ({
     const handleKeypress = (event: React.KeyboardEvent<HTMLDivElement>) => {
         event.preventDefault();
 
-        let newPos = { ...position };
+        let newPos = {...position};
         if (event.key === 'Backspace') {
             newPos = offsetPosition(position, paragraphs, -1);
             tryInputBackspace(newPos);
@@ -643,40 +717,7 @@ const Game = ({
             return [];
         }
 
-        // The keypresses array is ordered by the timestamps, and the user can backtrack to previous
-        // paragraphs/segments, so the array might look something like this:
-        // [{pg:1, time:0}, ..., {pg:1, time: 2000}, {pg:2, time: 2200}, ..., {pg:2, time: 2400},
-        // {pg:1, time: 2500}, ...]
-        // We can't measure the time spent in pg1 by grouping all of pg1's keypresses into a single list
-        // because we took a short detour to pg2. Subtracting the lowest pg1 timestamp (0) from the
-        // highest (2500) would thus be incorrect. Instead, we gather all the distinct pg1 sequences
-        // into a list, compute the total time spent in each sequence, and add them all up. This
-        // doesn't take the keypresses between different pg sequences into account, so each sequence must start
-        // with the previous sequence's last keypress.
-        let previousKp: Keypress | null = null;
-        let sequencesLists: number[][][] = [];
-        for (let kp of keypresses) {
-            const kppg = kp.position.pg;
-            if (previousKp && previousKp.position.pg === kppg) {
-                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
-                    kp.time
-                );
-            } else {
-                if (!sequencesLists[kppg]) {
-                    sequencesLists[kppg] = [];
-                }
-                sequencesLists[kppg].push([]);
-                if (previousKp) {
-                    sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
-                        previousKp.time
-                    );
-                }
-                sequencesLists[kppg][sequencesLists[kppg].length - 1].push(
-                    kp.time
-                );
-            }
-            previousKp = kp;
-        }
+        let sequencesLists = computeSequencesLists(keypresses);
 
         for (let i = 0; i < sequencesLists.length; i++) {
             let seqList = sequencesLists[i];
@@ -687,7 +728,7 @@ const Game = ({
                         sum += seq[seq.length - 1] - seq[0];
                     }
                 }
-                statsList.push({ time: sum, wpm: 0, accuracy: 100 });
+                statsList.push({time: sum, wpm: 0, accuracy: 100});
             }
         }
 
@@ -708,7 +749,7 @@ const Game = ({
 
         return statsList;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [paused]);
+    }, [paused, sessionData]);
 
     // can be memoized
     const displayedText = useMemo(() => {
@@ -751,9 +792,9 @@ const Game = ({
                 })}
             </>
         );
-    }, [paragraphs]);
+    }, [paragraphs, sessionData]);
 
-    if(!textTitle || !sectionTitle) {
+    if (!textTitle || !sectionTitle) {
         return <div>Section not found!</div>
     }
 
@@ -784,7 +825,7 @@ const Game = ({
                 >
                     <div className="scroll-guide" ref={scrollGuide}></div>
                     {displayedText}
-                    <div className="caret" ref={caret} />
+                    <div className="caret" ref={caret}/>
                 </div>
             </section>
             <section id="scorebar"></section>

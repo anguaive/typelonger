@@ -27,8 +27,8 @@ const Profile = ({searchHidden, setSearchHidden}: ProfileProps) => {
     const {username} = useParams();
 
     const handleLogout = () => {
-        if (setSessionData) {
-            setSessionData({name: '', aliasId: -1});
+        if (sessionData && setSessionData) {
+            setSessionData({...sessionData, name: '', aliasId: -1});
         }
         logout();
         history.push('/');

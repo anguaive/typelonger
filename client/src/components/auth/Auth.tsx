@@ -44,7 +44,7 @@ const Auth = () => {
     );
     const [loginData, setLoginData] = useState<LoginData>(initialLoginData);
     const [loginWarning, setLoginWarning] = useState<string>('');
-    const {setSessionData} = useContext(SessionContext);
+    const {sessionData, setSessionData} = useContext(SessionContext);
 
     // Reset the login warning if the form input changes
     useEffect(() => {
@@ -90,8 +90,8 @@ const Auth = () => {
             .then((response: { status: number; data: any }) => {
                 switch (response.status) {
                     case 200: // Ok, token is returned
-                        if (setSessionData) {
-                            setSessionData({name: response.data.username, aliasId: response.data.selectedAliasId});
+                        if (sessionData && setSessionData) {
+                            setSessionData({...sessionData, name: response.data.username, aliasId: response.data.selectedAliasId});
                         }
                         history.push('/');
                         break;

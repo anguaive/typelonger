@@ -1,29 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import React, {useState, useEffect, useContext} from 'react';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
 import PerformanceCard from '../cards/PerformanceCard';
 import Card from '../cards/Card';
 import './TextDetails.css';
 import { Text } from '../../utils/types';
 import { getPerfActions } from '../../utils/utils';
+import { getText } from '../../utils/dbservice';
+import {SessionContext} from "../../utils/auth";
 
 const TextDetails = () => {
     const [text, setText] = useState<Text>();
+    const {sessionData, setSessionData} = useContext(SessionContext);
     const [selectedSection, setSelectedSection] = useState(0);
     const location = useLocation();
     const history = useHistory();
+    const {id} = useParams();
 
     useEffect(() => {
-        fetch('https://localhost:5001/api/texts')
-            .then((response) => response.json())
-            .then((data) => {
-                setText(data[0]);
-            });
+        getText(id)
+            .then(data => {console.log(data);setText(data)});
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (text === undefined) {
         return null;
     }
+
+    const handleSectionPlay = (sectionId: number) => {
+        history.push(`/game/${sectionId}`);
+    }
+
 
     // const ownTopPerf = text.sections[selectedSection].ownTopPerformance;
     const ownTopPerf = null;
@@ -34,13 +41,13 @@ const TextDetails = () => {
                 <span className="container-title">Text information</span>
                 <div id="text-info-grid" className="container">
                     <div className="text-info__title">{text.title}</div>
-                    <img src={text.coverPicture} className="text-info__cover-picture" alt="Text" />
+                    <img src={text.coverURL} className="text-info__cover-picture" alt="Text" />
                     <div className="text-info__author">by {text.author}</div>
                     {/*<div className="text-info__genre">{text.genre}</div>*/}
                     <div className="text-info__isbn">ISBN {text.isbn}</div>
                     <div className="text-info__stats">
                         <div className="text-info__popularity">
-                            {text.popularity} <span className="unit">popularity</span>
+                            {text.popularity || 0} <span className="unit">popularity</span>
                         </div>
                         <div className="text-info__word-count">
                             {text.sections
@@ -53,10 +60,6 @@ const TextDetails = () => {
                         </div>
                     </div>
                     <div className="text-info__dates">
-                        <div className="text-info__date-of-creation">
-                            {new Date(text.dateOfCreation).toDateString()}{' '}
-                            <span className="unit">creation</span>
-                        </div>
                         <div className="text-info__date-of-upload">
                             {new Date(text.dateOfUpload).toDateString()}{' '}
                             <span className="unit">upload</span>
@@ -78,7 +81,7 @@ const TextDetails = () => {
                                     handler: () => setSelectedSection(i),
                                 },
                                 { text: 'To lobby', handler: () => {} },
-                                { text: 'Play', handler: () => {} },
+                                { text: 'Play', handler: () => {handleSectionPlay(section.id)} },
                             ]}
                         >
                             <div className="section__title">{section.title}</div>

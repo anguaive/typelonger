@@ -23,7 +23,7 @@ interface AppRoute {
 
 const App = () => {
     const [sessionData, setSessionData] = useState<SessionData>(
-        {name: '', aliasId: -1});
+        {name: '', aliasId: -1, sectionId: 1});
 
     // State responsible for restoring the game state
     const [gameTextTitle, setGameTextTitle] = useState<string>('');
@@ -80,10 +80,10 @@ const App = () => {
                 .then((response: { status: number, data: any }) => {
                     switch(response.status) {
                         case 200:
-                            setSessionData({name: response.data.username, aliasId: response.data.selectedAliasId});
+                            setSessionData({...sessionData, name: response.data.username, aliasId: response.data.selectedAliasId});
                             break;
                         case 401:
-                            setSessionData({name: '', aliasId: -1});
+                            setSessionData({...sessionData, name: '', aliasId: -1});
                             break;
                         default:
                             break;
@@ -153,7 +153,7 @@ const App = () => {
             component: <Settings settings={settings} setSettings={setSettings}/>,
         },
         {
-            path: '/text',
+            path: '/text/:id',
             component: <TextDetails/>,
         },
         {

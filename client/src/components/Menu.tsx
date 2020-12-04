@@ -17,17 +17,17 @@ interface MenuProps {
     location: any;
 }
 
-const initialLinks: NavLink[] = [
-    { path: '/game/1', name: 'Play', icon: 'keyboard' },
-    { path: '/texts', name: 'Browse', icon: 'menu_book' },
-    { path: '/matchmaking', name: 'Matchmaking', icon: 'sports_esports' },
-    { path: '/rankings', name: 'Rankings', icon: 'emoji_events' },
-    { path: '/settings', name: 'Settings', icon: 'settings' },
-];
-
 const Menu = ({ paused, location }: MenuProps) => {
-    const [links, setLinks] = useState<NavLink[]>(initialLinks);
+    const [links, setLinks] = useState<NavLink[]>([]);
     const {sessionData, setSessionData} = useContext(SessionContext);
+
+    const initialLinks: NavLink[] = [
+        { path: `/game/${sessionData ? sessionData.sectionId : 1}`, name: 'Play', icon: 'keyboard' },
+        { path: '/texts', name: 'Browse', icon: 'menu_book' },
+        { path: '/matchmaking', name: 'Matchmaking', icon: 'sports_esports' },
+        { path: '/rankings', name: 'Rankings', icon: 'emoji_events' },
+        { path: '/settings', name: 'Settings', icon: 'settings' },
+    ];
 
     useEffect(() => {
         // Deep copy of initialLinks

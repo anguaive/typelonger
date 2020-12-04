@@ -9,6 +9,7 @@ using api.Data;
 using api.Models;
 using api.Repositories;
 using api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -23,14 +24,44 @@ namespace api.Controllers
             _repository = repository;
         }
 
-        // GET: api/Performance
         [HttpGet]
-        public ActionResult<IEnumerable<PerformanceListView>> GetPerformances()
+        public ActionResult<IEnumerable<PerformanceListView>> Get()
         {
             var performances = _repository.Get();
 
             return Ok(performances);
         }
+
+        [HttpGet("{id}")]
+
+        public ActionResult<PerformanceListView> GetById(long id)
+        {
+            var performance = _repository.GetById(id);
+
+            if (performance == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(performance);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<PerformanceListView>> Post([FromBody] NewPerformance newPerformance)
+        {
+            var username = User.Identity.Name;
+
+            var dbPerformance = await _repository.Post(username, newPerformance);
+            if (dbPerformance == null)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(GetById), new {id = dbPerformance.Id}, dbPerformance);
+        }
+
+
     }
 
     internal static class PerformanceControllerExtensions

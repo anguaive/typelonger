@@ -12,6 +12,7 @@ namespace api.ViewModels
 
     public class PerformanceListView
     {
+        public long Id { get; set; }
         public string UserName { get; set; }
         public string AliasName { get; set; }
         public string TextTitle { get; set; }
