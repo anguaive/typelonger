@@ -77,6 +77,8 @@ namespace api.Repositories
             var dbUser = await userQuery.SingleOrDefaultAsync();
 
             var aliasQuery = from alias in _context.Aliases
+                    .Include(alias => alias.Performances)
+                    .ThenInclude(performance => performance.RawStats)
                     .Where(alias => alias.Id == dbUser.SelectedAliasId)
                 select alias;
 
